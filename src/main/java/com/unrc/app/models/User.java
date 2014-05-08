@@ -19,4 +19,13 @@ public class User extends Model {
   public String adress(){
       return this.getString("adress");
   }
+  
+  public static User findUser(String email) {
+      return User.findFirst("email = ?", email);
+ 
+  }
+  
+  public static boolean deleteUser(String email) {
+      return User.findFirst("email = ?", email).delete();
+  }
 }

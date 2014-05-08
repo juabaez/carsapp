@@ -23,13 +23,13 @@ public class VehicleTest {
     @Before
     public void before(){
         Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/carsapp_test", "root", "");
-        System.out.println("UserTest setup");
+        System.out.println("VehicleTest setup");
         Base.openTransaction();
     }
 
     @After
     public void after(){
-        System.out.println("UserTest tearDown");
+        System.out.println("VehicleTest tearDown");
         Base.rollbackTransaction();
         Base.close();
     }
