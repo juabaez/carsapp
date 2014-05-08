@@ -9,8 +9,8 @@ CREATE TABLE users(
     PRIMARY KEY (email)
 );
 
-DROP TABLE IF EXISTS vehicle; -- Vehiculos
-CREATE TABLE vehicle(
+DROP TABLE IF EXISTS vehicles; -- Vehiculos
+CREATE TABLE vehicles(
     vehicle_id INT NOT NULL AUTO_INCREMENT,
     brand VARCHAR(30),
     year INT(4) UNSIGNED,

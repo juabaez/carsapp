@@ -20,11 +20,12 @@ public class App
         user.set("first_name", "Marilyn");
         user.set("last_name", "Monroe");
         user.set("email", "mmonroe@hotmail.com");
+        user.set("adress", "Peru 725");
         user.saveIt();
         
         System.out.println(user.toString());
 
-        User.createIt("first_name", "Marcelo", "last_name", "Uva", "email", "muva@exa.unrc.edu.ar");
+        User.createIt("first_name", "Marcelo", "last_name", "Uva", "email", "muva@exa.unrc.edu.ar", "adress", "Paraguay 123");
 
         Base.close();
     }
