@@ -2,9 +2,19 @@
 
 DROP TABLE IF EXISTS users; -- Usuarios
 CREATE TABLE users(
-    id INT(11) NOT NULL AUTO_INCREMENT,
-    email VARCHAR(60) UNIQUE,
-    first_name VARCHAR(56),
-    last_name VARCHAR(56),
-  CONSTRAINT users_pk PRIMARY KEY (id)
+    email VARCHAR(60) NOT NULL UNIQUE,
+    first_name VARCHAR(30),
+    last_name VARCHAR(30),
+    adress VARCHAR(60),
+    PRIMARY KEY (email)
 );
+
+DROP TABLE IF EXISTS vehicle; -- Vehiculos
+CREATE TABLE vehicle(
+    vehicle_id INT NOT NULL AUTO_INCREMENT,
+    brand VARCHAR(30),
+    year INT(4) UNSIGNED,
+    name VARCHAR(30),
+    PRIMARY KEY (vehicle_id)
+);
+
