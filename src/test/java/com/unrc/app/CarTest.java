@@ -5,7 +5,6 @@
  */
 package com.unrc.app;
 
-import com.unrc.app.models.Vehicle;
 import com.unrc.app.models.Car;
 
 import org.javalite.activejdbc.Base;
@@ -20,34 +19,35 @@ import static org.junit.Assert.assertEquals;
  *
  * @author lucho
  */
-public class VehicleTest {
+public class CarTest {
     @Before
     public void before(){
         Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/carsapp_test", "root", "");
-        System.out.println("VehicleTest setup");
+        System.out.println("CarTest setup");
         Base.openTransaction();
     }
 
     @After
     public void after(){
-        System.out.println("VehicleTest tearDown");
+        System.out.println("CarTest tearDown");
         Base.rollbackTransaction();
         Base.close();
     }
 
     @Test
     public void shouldValidateMandatoryFields(){
-        Vehicle vehicle = new Vehicle();
+        Car car = new Car();
 
-        the(vehicle).shouldNotBe("valid");
-        the(vehicle.errors().get("name")).shouldBeEqual("value is missing");
-        the(vehicle.errors().get("brand")).shouldBeEqual("value is missing");
-        the(vehicle.errors().get("year")).shouldBeEqual("value is missing");
+        the(car).shouldNotBe("valid");
+        the(car.errors().get("name")).shouldBeEqual("value is missing");
+        the(car.errors().get("brand")).shouldBeEqual("value is missing");
+        the(car.errors().get("year")).shouldBeEqual("value is missing");
+        the(car.errors().get("max_capacity")).shouldBeEqual("value is missing");
 
-        vehicle.set("name", "Partner", "brand", "Peugeot", "year", "2011");
+        car.set("name", "Ka", "brand", "Ford", "year", "2007", "max_capacity", "4");
 
         // Everything is good:
-        the(vehicle).shouldBe("valid");
+        the(car).shouldBe("valid");
     }
     
 }

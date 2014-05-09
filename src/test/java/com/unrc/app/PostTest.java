@@ -15,13 +15,13 @@ public class PostTest{
     @Before
     public void before(){
         Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/carsapp_test", "root", "");
-        System.out.println("UserTest setup");
+        System.out.println("PostTest setup");
         Base.openTransaction();
     }
 
     @After
     public void after(){
-        System.out.println("UserTest tearDown");
+        System.out.println("PostTest tearDown");
         Base.rollbackTransaction();
         Base.close();
     }
