@@ -7,6 +7,8 @@
 package com.unrc.app.models;
 
 import org.javalite.activejdbc.Model;
+import java.util.List;
+import java.util.LinkedList;
 
 /**
  *
@@ -32,5 +34,21 @@ public class Vehicle extends Model {
   
   public int year(){
       return this.getInteger("year");
+  }
+  
+  public static List<Vehicle> filter(String name, String brand, String year){
+      String query = "";
+      List<Vehicle> resultado;
+      if (name != null) {
+          query += "name = '" + name + "' ";
+      }
+      if (brand != null) {
+          query += " AND brand = '" + brand + "'";
+      }
+      if (year != null) {
+          query += " AND year = '" + year + "'";
+      }
+      resultado = Vehicle.find(query);
+      return resultado;
   }
 }

@@ -34,8 +34,10 @@ public class UserTest{
         the(user.errors().get("last_name")).shouldBeEqual("value is missing");
         the(user.errors().get("email")).shouldBeEqual("value is missing");
         the(user.errors().get("adress")).shouldBeEqual("value is missing");
+        the(user.errors().get("password")).shouldBeEqual("value is missing");
+        the(user.errors().get("city_postcode")).shouldBeEqual("value is missing");
 
-        user.set("first_name", "John", "last_name", "Doe", "email", "example@email.com", "adress", "Street One 123");
+        user.set("first_name", "John", "last_name", "Doe", "email", "example@email.com", "adress", "Street One 123", "password", "123456", "city_postcode", "4800");
 
         // Everything is good:
         the(user).shouldBe("valid");
