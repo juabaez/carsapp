@@ -26,11 +26,8 @@ CREATE TABLE users(
 DROP TABLE IF EXISTS phones;
 CREATE TABLE phones (
   type VARCHAR(20) NOT NULL,
-  number INT NOT NULL PRIMARY KEY,
-  user_email VARCHAR(40) NOT NULL,
-  CONSTRAINT fk_phones_users
-    FOREIGN KEY (user_email)
-    REFERENCES users (email)
+  cel_number INT NOT NULL PRIMARY KEY,
+  user_id int NOT NULL
 );
 
 /**********************/
@@ -40,7 +37,8 @@ CREATE TABLE vehicles (
   id int NOT NULL auto_increment PRIMARY KEY,
   brand VARCHAR(45) NOT NULL,
   name VARCHAR(45) NOT NULL,
-  year INT(4) NOT NULL
+  year INT(4) NOT NULL,
+  user_id INT NOT NULL
 );
 
 /**********************/
@@ -48,10 +46,8 @@ CREATE TABLE vehicles (
 DROP TABLE IF EXISTS cars;
 CREATE TABLE cars (
   id int NOT NULL PRIMARY KEY,
-  max_capacity INT NOT NULL,
-  CONSTRAINT fk_cars_vehicles
-    FOREIGN KEY (id)
-    REFERENCES vehicles (id)
+  vehicle_id int NOT NULL,
+  max_capacity INT NOT NULL
 );
 
 /**********************/
@@ -59,10 +55,8 @@ CREATE TABLE cars (
 DROP TABLE IF EXISTS motorcycles;
 CREATE TABLE motorcycles (
   id int NOT NULL PRIMARY KEY,
-  cc INT NOT NULL,
-  CONSTRAINT fk_motorcycles_vehicles
-    FOREIGN KEY (id)
-    REFERENCES vehicles (id)
+  vehicle_id int NOT NULL,
+  cilindrada INT NOT NULL
 );
 
 /**********************/
@@ -70,12 +64,10 @@ CREATE TABLE motorcycles (
 DROP TABLE IF EXISTS trucks;
 CREATE TABLE trucks (
   id int NOT NULL PRIMARY KEY,
+  vehicle_id int NOT NULL,
   heigth INT NOT NULL,
   max_capacity INT NOT NULL,
-  max_long INT NOT NULL,
-  CONSTRAINT fk_trucks_vehicles
-    FOREIGN KEY (id)
-    REFERENCES vehicles (id)
+  max_long INT NOT NULL
 );
 
 /**********************/
@@ -83,11 +75,9 @@ CREATE TABLE trucks (
 DROP TABLE IF EXISTS others;
 CREATE TABLE others (
   id int NOT NULL PRIMARY KEY,
-  max_capacity INT NOT NULL,
-  type VARCHAR(45) NOT NULL,
-  CONSTRAINT fk_others_vehicles
-    FOREIGN KEY (id)
-    REFERENCES vehicles (id)
+  vehicle_id int NOT NULL,
+  max_capacity INT,
+  type VARCHAR(45) NOT NULL
 );
 
 /**********************/
@@ -97,29 +87,9 @@ CREATE TABLE posts (
   id int NOT NULL auto_increment PRIMARY KEY,
   text VARCHAR(45) NOT NULL,
   vehicle_id INT NOT NULL,
-  user_email VARCHAR(45) NOT NULL,
-  CONSTRAINT fk_posts_vehicles
-    FOREIGN KEY (vehicle_id)
-    REFERENCES vehicles (id),
-  CONSTRAINT fk_posts_users
-    FOREIGN KEY (user_email)
-    REFERENCES users (email)
+  user_id INT NOT NULL
 );
 
-/**********************/
-/* Table for 'Owner' relation */
-DROP TABLE IF EXISTS owner;
-CREATE TABLE owner (
-  user_email VARCHAR(45) NOT NULL,
-  vehicle_id INT NOT NULL,
-  PRIMARY KEY (user_email, vehicle_id),
-  CONSTRAINT fk_users_has_vehicles_users
-    FOREIGN KEY (user_email)
-    REFERENCES users (email),
-  CONSTRAINT fk_users_has_vehicles
-    FOREIGN KEY (vehicle_id)
-    REFERENCES vehicles (id)
-);
 
 /**********************/
 /* Table for 'Rate' */
@@ -128,13 +98,7 @@ CREATE TABLE rates (
   id int NOT NULL auto_increment PRIMARY KEY,
   rate INT NOT NULL,
   post_id INT NOT NULL,
-  user_email VARCHAR(45) NOT NULL,
-  CONSTRAINT fk_rates_posts
-    FOREIGN KEY (post_id)
-    REFERENCES posts (id),
-  CONSTRAINT fk_rates_users
-    FOREIGN KEY (user_email)
-    REFERENCES users (email)
+  user_id int NOT NULL
 );
 
 /**********************/
@@ -144,13 +108,7 @@ CREATE TABLE questions (
   id int NOT NULL auto_increment PRIMARY KEY,
   question VARCHAR(80) NOT NULL,
   post_id INT NOT NULL,
-  user_email VARCHAR(60) NOT NULL,
-  CONSTRAINT fk_questions_posts
-    FOREIGN KEY (post_id)
-    REFERENCES posts (id),
-  CONSTRAINT fk_questions_users
-    FOREIGN KEY (user_email)
-    REFERENCES users (email)
+  user_id int NOT NULL
 );
 
 /**********************/
@@ -160,11 +118,5 @@ CREATE TABLE answers (
   id int NOT NULL auto_increment PRIMARY KEY,
   answer VARCHAR(80) NOT NULL,
   question_id INT NOT NULL,
-  user_email VARCHAR(60) NOT NULL,
-  CONSTRAINT fk_answers_questions
-    FOREIGN KEY (question_id)
-    REFERENCES questions (id),
-  CONSTRAINT fk_answers_users
-    FOREIGN KEY (user_email)
-    REFERENCES users (email)
+  user_id int NOT NULL
 );
