@@ -30,11 +30,8 @@ DROP TABLE IF EXISTS phones;
 CREATE TABLE phones (
   id INT NOT NULL auto_increment PRIMARY KEY,
   type VARCHAR(20) NOT NULL,
-<<<<<<< HEAD
   num INT NOT NULL,
-=======
-  cel_number INT NOT NULL PRIMARY KEY,
->>>>>>> 494dec83d5edad50ca4ecc8f6f59a234fb0add3d
+  cel_number INT NOT NULL,
   user_id int NOT NULL
 );
 
@@ -46,7 +43,6 @@ CREATE TABLE vehicles (
   id int NOT NULL auto_increment PRIMARY KEY,
   user_id INT NOT NULL,
   name VARCHAR(45) NOT NULL,
-<<<<<<< HEAD
   brand VARCHAR(45) NOT NULL,
   year INT(4) NOT NULL,
   type VARCHAR(20) NOT NULL,
@@ -54,11 +50,6 @@ CREATE TABLE vehicles (
   displacement INT,
   max_load INT,
   doors INT
-);
-
-=======
-  year INT(4) NOT NULL,
-  user_id INT NOT NULL
 );
 
 /**********************/
@@ -99,7 +90,6 @@ CREATE TABLE others (
   max_capacity INT,
   type VARCHAR(45) NOT NULL
 );
->>>>>>> 494dec83d5edad50ca4ecc8f6f59a234fb0add3d
 
 /**********************/
 /* Table for 'Post' */
@@ -108,11 +98,7 @@ CREATE TABLE posts (
   id int NOT NULL auto_increment PRIMARY KEY,
   user_id INT NOT NULL,
   vehicle_id INT NOT NULL,
-<<<<<<< HEAD
   text VARCHAR(45) NOT NULL
-=======
-  user_id INT NOT NULL
->>>>>>> 494dec83d5edad50ca4ecc8f6f59a234fb0add3d
 );
 
 
@@ -122,12 +108,8 @@ DROP TABLE IF EXISTS rates;
 CREATE TABLE rates (
   id int NOT NULL auto_increment PRIMARY KEY,
   post_id INT NOT NULL,
-<<<<<<< HEAD
   user_id int NOT NULL,
   rate INT NOT NULL
-=======
-  user_id int NOT NULL
->>>>>>> 494dec83d5edad50ca4ecc8f6f59a234fb0add3d
 );
 
 
@@ -137,12 +119,8 @@ DROP TABLE IF EXISTS questions;
 CREATE TABLE questions (
   id int NOT NULL auto_increment PRIMARY KEY,
   post_id INT NOT NULL,
-<<<<<<< HEAD
   user_id int NOT NULL,
   question VARCHAR(80) NOT NULL
-=======
-  user_id int NOT NULL
->>>>>>> 494dec83d5edad50ca4ecc8f6f59a234fb0add3d
 );
 
 
@@ -152,10 +130,6 @@ DROP TABLE IF EXISTS answers;
 CREATE TABLE answers (
   id int NOT NULL auto_increment PRIMARY KEY,
   question_id INT NOT NULL,
-<<<<<<< HEAD
   user_id int NOT NULL,
   answer VARCHAR(80) NOT NULL
-=======
-  user_id int NOT NULL
->>>>>>> 494dec83d5edad50ca4ecc8f6f59a234fb0add3d
 );
