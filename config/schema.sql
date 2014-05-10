@@ -50,6 +50,8 @@ CREATE TABLE vehicles (
   max_load INT,
   doors INT
 );
+
+
 /**********************/
 /* Table for 'Post' */
 DROP TABLE IF EXISTS posts;
