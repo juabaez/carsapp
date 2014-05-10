@@ -6,14 +6,14 @@ import org.javalite.activejdbc.Model;
  *
  * @author lucho
  */
-public class Car extends Vehicle {
+public class Truck extends Vehicle {
     static {
-        validatePresenceOf("name","brand","year", "passengers");
+        validatePresenceOf("name","brand","year", "max_load");
     }
 
     @Override
     public boolean saveIt(){
-        set("type", "car");
+        super.set("type", "truck");
         return super.saveIt();
     }
 }

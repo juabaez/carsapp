@@ -1,19 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.unrc.app;
 
 import com.unrc.app.models.Car;
+import com.unrc.app.models.User;
 
 import org.javalite.activejdbc.Base;
+import static org.javalite.test.jspec.JSpec.the;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.javalite.test.jspec.JSpec.the;
-import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -37,17 +31,34 @@ public class CarTest {
     @Test
     public void shouldValidateMandatoryFields(){
         Car car = new Car();
-
+        
         the(car).shouldNotBe("valid");
         the(car.errors().get("name")).shouldBeEqual("value is missing");
         the(car.errors().get("brand")).shouldBeEqual("value is missing");
         the(car.errors().get("year")).shouldBeEqual("value is missing");
-        the(car.errors().get("max_capacity")).shouldBeEqual("value is missing");
+        the(car.errors().get("passengers")).shouldBeEqual("value is missing");
 
-        car.set("name", "Ka", "brand", "Ford", "year", "2007", "max_capacity", "4");
-
-        // Everything is good:
+        car.set("user_id", "1", "name", "Partner", "brand", "Peugeot", "year", "2011", "passengers", "4");
+        car.saveIt();
+                
         the(car).shouldBe("valid");
     }
     
+    @Test
+    public void oneCarBelongsToUser(){
+        User user = new User();
+        Car car = new Car();
+        
+        the(car).shouldNotBe("valid");
+        
+        user.set("first_name", "John", "last_name", "Doe", "pass", "12345", "email", "example@email.com", "address", "Street One 123", "city_postcode", "4800");
+        user.saveIt();
+        
+        car.set("name", "Partner", "brand", "Peugeot", "year", "2011", "passengers", "4");
+        car.setParent(user);
+        car.saveIt();
+        
+        
+        the(car).shouldBe("valid");
+    }
 }

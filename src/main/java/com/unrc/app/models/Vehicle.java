@@ -8,7 +8,6 @@ package com.unrc.app.models;
 
 import org.javalite.activejdbc.Model;
 import java.util.List;
-import java.util.LinkedList;
 
 /**
  *
@@ -22,6 +21,14 @@ public class Vehicle extends Model {
   @Override
   public String toString() {
       return (this.getString("name") + " " + this.getString("brand") + "(" + this.getString("year")+ ")");
+  } 
+  
+  @Override
+  public boolean saveIt(){
+      if (this.get("type") == null) {
+          this.set("type", "other");
+      }
+      return super.saveIt();
   }
   
   public String name(){
