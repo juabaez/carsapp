@@ -1,28 +1,28 @@
 package com.unrc.app;
 
+import com.unrc.app.models.User;
 import com.unrc.app.models.City;
 import com.unrc.app.models.Post;
-import com.unrc.app.models.User;
 import com.unrc.app.models.Vehicle;
+import com.unrc.app.models.Question;
 
-import org.javalite.activejdbc.Base;
 import static org.javalite.test.jspec.JSpec.the;
+import org.javalite.activejdbc.Base;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PostTest{
-    
+public class QuestionTest {
     @Before
     public void before(){
         Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/carsapp_test", "root", "");
-        System.out.println("PostTest setup");
+        System.out.println("QuestionTest setup");
         Base.openTransaction();
     }
 
     @After
     public void after(){
-        System.out.println("PostTest tearDown");
+        System.out.println("QuestionTest tearDown");
         Base.rollbackTransaction();
         Base.close();
     }
@@ -33,14 +33,15 @@ public class PostTest{
         Vehicle vehicle = new Vehicle();
         Post post = new Post();
         City city = new City();
+        Question question = new Question();
         
         city.set("name", "Rio IV", "state", "Cordoba", "country", "Argentina", "postcode", "5800");
         city.saveIt();
         
-        the(post).shouldNotBe("valid");
-        the(post.errors().get("user_id")).shouldBeEqual("value is missing");
-        the(post.errors().get("vehicle_id")).shouldBeEqual("value is missing");
-        the(post.errors().get("text")).shouldBeEqual("value is missing");
+        the(question).shouldNotBe("valid");
+        the(question.errors().get("question")).shouldBeEqual("value is missing");
+        the(question.errors().get("post_id")).shouldBeEqual("value is missing");
+        the(question.errors().get("user_id")).shouldBeEqual("value is missing");
         
         user.set("first_name", "John", "last_name", "Doe", "pass", "12345", "email", "example@email.com", "address", "Street One 123");
         user.setParent(city);
@@ -55,6 +56,10 @@ public class PostTest{
         post.set("text", "Vendo Peugeot Partner 2011");
         post.saveIt();
         
-        the(post).shouldBe("valid");
+        question.set("question", "Me lo vendes?");
+        question.setParents(user, post);
+        question.saveIt();
+        
+        the(question).shouldBe("valid");
     }
 }

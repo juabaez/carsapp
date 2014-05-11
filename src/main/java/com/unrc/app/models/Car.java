@@ -1,14 +1,8 @@
 package com.unrc.app.models;
 
-import org.javalite.activejdbc.Model;
-
-/**
- *
- * @author lucho
- */
 public class Car extends Vehicle {
     static {
-        validatePresenceOf("name","brand","year", "passengers");
+        validatePresenceOf("name","brand","year", "passengers", "user_id");
     }
 
     @Override

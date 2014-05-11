@@ -2,6 +2,7 @@ package com.unrc.app;
 
 import com.unrc.app.models.User;
 import com.unrc.app.models.City;
+import com.unrc.app.models.Phone;
 
 import org.javalite.activejdbc.Base;
 import org.junit.After;
@@ -10,7 +11,7 @@ import org.junit.Test;
 
 import static org.javalite.test.jspec.JSpec.the;
 
-public class UserTest{
+public class PhoneTest{
     @Before
     public void before(){
         Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/carsapp_test", "root", "");
@@ -29,21 +30,23 @@ public class UserTest{
     public void shouldValidateMandatoryFields(){
         User user = new User();
         City city = new City();
+        Phone phone = new Phone();
+        
+        the(phone).shouldNotBe("valid");
+        the(phone.errors().get("type")).shouldBeEqual("value is missing");
+        the(phone.errors().get("num")).shouldBeEqual("value is missing");
+        the(phone.errors().get("user_id")).shouldBeEqual("value is missing");
         
         city.set("name", "Rio Cuarto", "state", "Cordoba", "country", "Argentina", "postcode", "5800");
         city.saveIt();
 
-        the(user).shouldNotBe("valid");
-        the(user.errors().get("first_name")).shouldBeEqual("value is missing");
-        the(user.errors().get("last_name")).shouldBeEqual("value is missing");
-        the(user.errors().get("pass")).shouldBeEqual("value is missing");
-        the(user.errors().get("email")).shouldBeEqual("value is missing");
-        the(user.errors().get("address")).shouldBeEqual("value is missing");
-        the(user.errors().get("city_id")).shouldBeEqual("value is missing");
-
         user.set("first_name", "John", "last_name", "Doe", "pass", "12345", "email", "example@email.com", "address", "Street One 123");
         user.setParent(city);
+        user.saveIt();
         
-        the(user).shouldBe("valid");
+        phone.set("type", "Móvil", "num", "3585123456");
+        phone.setParent(user);
+        
+        the(phone).shouldBe("valid");
     }
 }

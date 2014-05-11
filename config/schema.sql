@@ -8,7 +8,7 @@ CREATE TABLE users(
   pass VARCHAR(20) NOT NULL,
   email VARCHAR(60) NOT NULL unique,
   address VARCHAR(40) NOT NULL,
-  city_postcode INT NOT NULL
+  city_id INT NOT NULL
 );
 
 
@@ -91,6 +91,5 @@ DROP TABLE IF EXISTS answers;
 CREATE TABLE answers (
   id int NOT NULL auto_increment PRIMARY KEY,
   question_id INT NOT NULL,
-  user_id int NOT NULL,
   answer VARCHAR(80) NOT NULL
 );
