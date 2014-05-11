@@ -2,7 +2,10 @@ package com.unrc.app;
 
 import com.unrc.app.models.User;
 import com.unrc.app.models.City;
-import com.unrc.app.models.Other;
+import com.unrc.app.models.Vehicle;
+import com.unrc.app.models.Post;
+import com.unrc.app.models.Question;
+import com.unrc.app.models.Answer;
 
 import org.javalite.activejdbc.Base;
 import static org.javalite.test.jspec.JSpec.the;
@@ -10,7 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class OtherTest {
+public class AnswerTest {
     @Before
     public void before(){
         Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/carsapp_test", "root", "");
@@ -28,25 +31,39 @@ public class OtherTest {
     @Test
     public void shouldValidateMandatoryFields(){
         User user = new User();
-        Other other = new Other();
+        Vehicle vehicle = new Vehicle();
+        Post post = new Post();
         City city = new City();
+        Question question = new Question();
+        Answer answer = new Answer();
         
         city.set("name", "Rio IV", "state", "Cordoba", "country", "Argentina", "postcode", "5800");
         city.saveIt();
         
+        the(answer).shouldNotBe("valid");
+        the(answer.errors().get("answer")).shouldBeEqual("value is missing");
+        the(answer.errors().get("question_id")).shouldBeEqual("value is missing");
+        
         user.set("first_name", "John", "last_name", "Doe", "pass", "12345", "email", "example@email.com", "address", "Street One 123");
         user.setParent(city);
         user.saveIt();
-
-        the(other).shouldNotBe("valid");
-        the(other.errors().get("name")).shouldBeEqual("value is missing");
-        the(other.errors().get("brand")).shouldBeEqual("value is missing");
-        the(other.errors().get("year")).shouldBeEqual("value is missing");
-        the(other.errors().get("passengers")).shouldBeEqual("value is missing");
-
-        other.set("name", "Raptor", "brand", "Yamaha", "year", "2007", "passengers", "2");
-        other.setParent(user);
         
-        the(other).shouldBe("valid");
+        vehicle.set("name", "Partner", "brand", "Peugeot", "year", "2011");
+        vehicle.setParent(user);
+        vehicle.saveIt();
+        
+        post.setParent(user);
+        post.setParent(vehicle);
+        post.set("text", "Vendo Peugeot Partner 2011");
+        post.saveIt();
+        
+        question.set("question", "Me lo vendes?");
+        question.setParents(user, post);
+        question.saveIt();
+        
+        answer.set("answer", "Si, por supuesto.");
+        answer.setParent(question);
+        
+        the(answer).shouldBe("valid");
     }
 }
