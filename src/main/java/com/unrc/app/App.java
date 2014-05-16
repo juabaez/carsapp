@@ -8,6 +8,7 @@ import java.util.List;
 import com.unrc.app.models.Vehicle;
 import com.unrc.app.models.Car;
 import org.javalite.activejdbc.Model;
+import static spark.Spark.*;
 
 /**
  * Hello world!
