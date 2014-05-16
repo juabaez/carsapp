@@ -1,7 +1,11 @@
 package com.unrc.app.models;
 
-import org.javalite.activejdbc.Model;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
+import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
 
 public class Vehicle extends Model {
   static {
@@ -33,19 +37,35 @@ public class Vehicle extends Model {
       return this.getInteger("year");
   }
   
-  public static List<Vehicle> filter(String name, String brand, String year){
-      String query = "";
-      List<Vehicle> resultado;
-      if (name != null) {
-          query += "name = '" + name + "' ";
+  public static List<Vehicle> filter(String... args){
+      if ((args.length>0) && (args.length % 2 == 0)) {
+          String query = "";
+          String attribute;
+          String value;
+          int i = 0;
+          attribute = args[i];
+          i++;
+          value = args[i];
+          i++;
+          query += attribute + " = '" + value + "'";
+          while (i<args.length-1) {
+              attribute = args[i];
+              i++;
+              value = args[i];
+              i++;
+              query += " AND " + attribute + " = '" + value + "'";
+          }
+          return Vehicle.find(query);
+      } else return null;
+  }
+  
+  public static List<Vehicle> vehiclesFrom(String city) {
+      City aux = City.findFirst("name = ?", city);
+      List<User> users = aux.getAll(User.class);
+      List<Vehicle> vehicles = new LinkedList();
+      for(User u : users) {
+          vehicles.addAll(u.getAll(Vehicle.class));
       }
-      if (brand != null) {
-          query += " AND brand = '" + brand + "'";
-      }
-      if (year != null) {
-          query += " AND year = '" + year + "'";
-      }
-      resultado = Vehicle.find(query);
-      return resultado;
+      return vehicles;
   }
 }

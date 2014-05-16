@@ -1,5 +1,7 @@
 package com.unrc.app.models;
 
+import java.util.LinkedList;
+import java.util.List;
 import org.javalite.activejdbc.Model;
 
 public class User extends Model {
@@ -27,5 +29,10 @@ public class User extends Model {
   
   public static boolean deleteUser(String email) {
       return User.findFirst("email = ?", email).delete();
+  }
+  
+  public static List<User> findFrom(String city){
+      City aux = City.findFirst("name = ?", city);
+      return User.find("city_id = ?", aux.getId());
   }
 }

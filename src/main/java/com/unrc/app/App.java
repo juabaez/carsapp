@@ -1,9 +1,13 @@
 package com.unrc.app;
 
+import com.unrc.app.models.City;
 import org.javalite.activejdbc.Base;
 
 import com.unrc.app.models.User;
+import java.util.List;
 import com.unrc.app.models.Vehicle;
+import com.unrc.app.models.Car;
+import org.javalite.activejdbc.Model;
 
 /**
  * Hello world!
@@ -11,34 +15,58 @@ import com.unrc.app.models.Vehicle;
  */
 public class App 
 {
-    public static void main( String[] args )
+    public static void main(String[] args)
     {
         System.out.println("Hola mundo cruel!");
-
         Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/carsapp_development", "root", "");
+        Base.openTransaction();
+        /********************************************************************/
 
-        //Alternativa 1 para crear un usuario y guardarlo en la base de datos
+        City city = new City();
+        city.set("name", "Rio Cuarto", "state", "Cordoba", "country", "Argentina", "postcode", "5800");
+        city.saveIt();
+        
         User user = new User();
-        user.set("first_name", "Marilyn");
-        user.set("last_name", "Monroe");
-        user.set("email", "mmonroe@hotmail.com");
-        user.set("adress", "Peru 725");
-        user.set("password", "123456");
+        user.set("first_name", "John", "last_name", "Doe", "pass", "12345", "email", "example@email.com", "address", "Street One 123");
+        user.setParent(city);
         user.saveIt();
-        user.delete();
-
-        //Alternativa 2 para crear un usuario y guardarlo en la base de datos
-        User.createIt("first_name", "Marcelo", "last_name", "Uva", "email", "muva@exa.unrc.edu.ar", "adress", "Paraguay 123", "password", "123654");
-        User.deleteUser("muva@exa.unrc.edu.ar");
         
-        //Lo crea en la base de datos y ademas lo instancia
-        for (Vehicle v : Vehicle.filter("Partner", "Peugeot", null)) {
-            v.delete();
-        }
-        Vehicle vehicle = Vehicle.createIt("name","Partner","brand","Peugeot","year","2011");
-        System.out.println(Vehicle.filter("Partner", null, "2011"));
-
+        Car car = new Car();
+        car.set("name", "Ka", "brand", "Ford", "year", "2007", "passengers", "4");
+        car.setParent(user);
+        car.saveIt();
         
+        
+        City city2 = new City();
+        city2.set("name", "Rio Tercero", "state", "Cordoba", "country", "Argentina", "postcode", "5800");
+        city2.saveIt();
+        
+        User user2 = new User();
+        user2.set("first_name", "John", "last_name", "Doe", "pass", "12345", "email", "example2222@email.com", "address", "Street One 123");
+        user2.setParent(city2);
+        user2.saveIt();
+        
+        Car car2 = new Car();
+        car2.set("name", "Ka222", "brand", "Ford222", "year", "2007", "passengers", "4");
+        car2.setParent(user2);
+        car2.saveIt();
+        
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        List<Vehicle> lista = Vehicle.filter("brand", "Ford");
+        System.out.println(lista.toString());
+        System.out.println(Vehicle.vehiclesFrom("Rio Tercero"));
+        
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        /********************************************************************/
+        Base.rollbackTransaction();
         Base.close();
     }
     
