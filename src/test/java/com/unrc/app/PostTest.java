@@ -41,6 +41,7 @@ public class PostTest{
         the(post.errors().get("user_id")).shouldBeEqual("value is missing");
         the(post.errors().get("vehicle_id")).shouldBeEqual("value is missing");
         the(post.errors().get("text")).shouldBeEqual("value is missing");
+        the(post.errors().get("price")).shouldBeEqual("value is missing");
         
         user.set("first_name", "John", "last_name", "Doe", "pass", "12345", "email", "example@email.com", "address", "Street One 123");
         user.setParent(city);
@@ -52,7 +53,7 @@ public class PostTest{
         
         post.setParent(user);
         post.setParent(vehicle);
-        post.set("text", "Vendo Peugeot Partner 2011");
+        post.set("text", "Vendo Peugeot Partner 2011", "price", "28000");
         post.saveIt();
         
         the(post).shouldBe("valid");

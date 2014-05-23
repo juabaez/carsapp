@@ -14,13 +14,13 @@ public class OtherTest {
     @Before
     public void before(){
         Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/carsapp_test", "root", "");
-        System.out.println("VehicleTest setup");
+        System.out.println("OtherTest setup");
         Base.openTransaction();
     }
 
     @After
     public void after(){
-        System.out.println("VehicleTest tearDown");
+        System.out.println("OtherTest tearDown");
         Base.rollbackTransaction();
         Base.close();
     }
@@ -42,9 +42,8 @@ public class OtherTest {
         the(other.errors().get("name")).shouldBeEqual("value is missing");
         the(other.errors().get("brand")).shouldBeEqual("value is missing");
         the(other.errors().get("year")).shouldBeEqual("value is missing");
-        the(other.errors().get("passengers")).shouldBeEqual("value is missing");
 
-        other.set("name", "Raptor", "brand", "Yamaha", "year", "2007", "passengers", "2");
+        other.set("name", "Raptor", "brand", "Yamaha", "year", "2007");
         other.setParent(user);
         
         the(other).shouldBe("valid");

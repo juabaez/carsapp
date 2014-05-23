@@ -2,7 +2,7 @@ package com.unrc.app.models;
 
 public class Other extends Vehicle {
     static {
-        validatePresenceOf("name", "brand", "year", "user_id", "passengers");
+        validatePresenceOf("name", "brand", "year", "plate", "user_id");
     }
 
     @Override

@@ -3,9 +3,7 @@ package com.unrc.app;
 import com.unrc.app.models.City;
 import com.unrc.app.models.Truck;
 import com.unrc.app.models.User;
-import com.unrc.app.models.Vehicle;
 
-import static org.javalite.test.jspec.JSpec.the;
 import org.javalite.activejdbc.Base;
 import static org.javalite.test.jspec.JSpec.the;
 import org.junit.After;
@@ -34,26 +32,43 @@ public class TruckTest {
 
     @Test
     public void shouldValidateMandatoryFields(){
-        User user = new User();
-        Truck truck = new Truck();
         City city = new City();
-        
-        city.set("name", "Rio IV", "state", "Cordoba", "country", "Argentina", "postcode", "5800");
+        city
+            .name("Rio IV")
+            .state("Cordoba")
+            .country("Argentina")
+            .postcode("5800");
         city.saveIt();
         
-        user.set("first_name", "John", "last_name", "Doe", "pass", "12345", "email", "example@email.com", "address", "Street One 123");
+        User user = new User();
+        user
+            .firstName("John")
+            .lastName("Doe")
+            .email("johndoe@hotmail.com")
+            .pass("123456")
+            .address("Sobremonte 123");
+        
         user.setParent(city);
         user.saveIt();
 
+        Truck truck = new Truck();
         the(truck).shouldNotBe("valid");
         the(truck.errors().get("name")).shouldBeEqual("value is missing");
         the(truck.errors().get("brand")).shouldBeEqual("value is missing");
         the(truck.errors().get("year")).shouldBeEqual("value is missing");
+        the(truck.errors().get("plate")).shouldBeEqual("value is missing");
         the(truck.errors().get("max_load")).shouldBeEqual("value is missing");
-        the(truck.errors().get("user_id")).shouldBeEqual("value is missing");
 
-        truck.set("name", "Actross", "brand", "Volvo", "year", "2007", "max_load", "100");
+        //Please, first write the specific type of vehicle attributes(max_load)
+        //and after the global attributes(name, brand, etc...)
+        truck
+            .maxLoad(2000)
+            .brand("Volvo")
+            .name("Actros")
+            .year(2007)
+            .plate("JHI702");
         truck.setParent(user);
+        truck.saveIt();
         
         the(truck).shouldBe("valid");
     }

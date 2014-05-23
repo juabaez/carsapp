@@ -12,6 +12,16 @@ CREATE TABLE users(
 );
 
 
+/******************************/
+/* Table for 'Administrator'   */
+DROP TABLE IF EXISTS administrators;
+CREATE TABLE administrators(
+  id INT NOT NULL auto_increment PRIMARY KEY,
+  pass VARCHAR(20) NOT NULL,
+  email VARCHAR(60) NOT NULL unique
+);
+
+
 /**********************/
 /* Table for 'City'   */
 DROP TABLE IF EXISTS cities;
@@ -40,6 +50,7 @@ CREATE TABLE phones (
 DROP TABLE IF EXISTS vehicles;
 CREATE TABLE vehicles (
   id int NOT NULL auto_increment PRIMARY KEY,
+  plate VARCHAR(12) NOT NULL unique,
   user_id INT NOT NULL,
   name VARCHAR(45) NOT NULL,
   brand VARCHAR(45) NOT NULL,
@@ -59,6 +70,7 @@ CREATE TABLE posts (
   id int NOT NULL auto_increment PRIMARY KEY,
   user_id INT NOT NULL,
   vehicle_id INT NOT NULL,
+  price INT NOT NULL,
   text VARCHAR(45) NOT NULL
 );
 

@@ -54,7 +54,7 @@ public class AnswerTest {
         
         post.setParent(user);
         post.setParent(vehicle);
-        post.set("text", "Vendo Peugeot Partner 2011");
+        post.set("text", "Vendo Peugeot Partner 2011", "price", "28000");
         post.saveIt();
         
         question.set("question", "Me lo vendes?");

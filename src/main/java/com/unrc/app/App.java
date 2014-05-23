@@ -28,7 +28,12 @@ public class App
         city.saveIt();
         
         User user = new User();
-        user.set("first_name", "John", "last_name", "Doe", "pass", "12345", "email", "example@email.com", "address", "Street One 123");
+        user
+            .firstName("Lucho")
+            .lastName("Rocha")
+            .email("rocha.lucho@gmail.com")
+            .pass("123456")
+            .address("Peru 725");
         user.setParent(city);
         user.saveIt();
         
@@ -66,6 +71,10 @@ public class App
         System.out.println();
         System.out.println();
         System.out.println();
+        
+              get("/hello", (request, response) -> {
+         return "Hello World!";
+      });
         /********************************************************************/
         Base.rollbackTransaction();
         Base.close();

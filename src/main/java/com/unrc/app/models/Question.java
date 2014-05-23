@@ -9,7 +9,7 @@ public class Question extends Model {
   
   public boolean addAnswer(String text, User user) {
       Answer answer = new Answer();
-      answer.set("question", text);
+      answer.answer(text);
       answer.setParents(user, this);
       return answer.saveIt();
   }

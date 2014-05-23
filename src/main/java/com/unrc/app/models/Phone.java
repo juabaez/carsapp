@@ -6,4 +6,26 @@ public class Phone extends Model {
     static {
         validatePresenceOf("type", "num", "user_id");
     }
+    
+    public enum phoneType {
+        personal, home, work;
+    }
+    
+    public Phone type(phoneType t) {
+        this.set("type", t);
+        return this;
+    }
+    
+    public String type(){
+        return this.getString("type");
+    }
+    
+    public Phone num(int i) {
+        this.set("num", i);
+        return this;
+    }
+    
+    public int num(){
+        return this.getInteger("num");
+    }
 }

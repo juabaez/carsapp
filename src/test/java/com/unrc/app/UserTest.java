@@ -27,12 +27,16 @@ public class UserTest{
 
     @Test
     public void shouldValidateMandatoryFields(){
-        User user = new User();
         City city = new City();
-        
-        city.set("name", "Rio Cuarto", "state", "Cordoba", "country", "Argentina", "postcode", "5800");
+        city
+            .name("Rio IV")
+            .state("Cordoba")
+            .country("Argentina")
+            .postcode("5800");
         city.saveIt();
-
+        
+        User user = new User();
+        
         the(user).shouldNotBe("valid");
         the(user.errors().get("first_name")).shouldBeEqual("value is missing");
         the(user.errors().get("last_name")).shouldBeEqual("value is missing");
@@ -40,10 +44,16 @@ public class UserTest{
         the(user.errors().get("email")).shouldBeEqual("value is missing");
         the(user.errors().get("address")).shouldBeEqual("value is missing");
         the(user.errors().get("city_id")).shouldBeEqual("value is missing");
-
-        user.set("first_name", "John", "last_name", "Doe", "pass", "12345", "email", "example@email.com", "address", "Street One 123");
-        user.setParent(city);
         
+        user
+            .firstName("John")
+            .lastName("Doe")
+            .email("johndoe@hotmail.com")
+            .pass("123456")
+            .address("Sobremonte 123");
+        user.setParent(city);
+        user.saveIt();
+
         the(user).shouldBe("valid");
     }
 }

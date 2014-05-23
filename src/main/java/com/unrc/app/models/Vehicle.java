@@ -9,7 +9,7 @@ import org.javalite.activejdbc.Model;
 
 public class Vehicle extends Model {
   static {
-      validatePresenceOf("name", "brand", "year", "user_id");
+      validatePresenceOf("name", "brand", "year", "plate", "user_id");
   }
   
   @Override
@@ -25,6 +25,26 @@ public class Vehicle extends Model {
       return super.saveIt();
   }
   
+  public Vehicle name(String s){
+      this.set("name", s);
+      return this;
+  }
+  
+  public Vehicle brand(String s){
+      this.set("brand", s);
+      return this;
+  }
+  
+  public Vehicle year(int i){
+      this.set("year", i);
+      return this;
+  }
+  
+  public Vehicle plate(String s){
+      this.set("plate", s);
+      return this;
+  }
+  
   public String name(){
       return this.getString("name");
   }
@@ -35,6 +55,10 @@ public class Vehicle extends Model {
   
   public int year(){
       return this.getInteger("year");
+  }
+  
+  public String plate(){
+      return this.getString("plate");
   }
   
   public static List<Vehicle> filter(String... args){
