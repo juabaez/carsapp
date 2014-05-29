@@ -27,24 +27,38 @@ public class OtherTest {
 
     @Test
     public void shouldValidateMandatoryFields(){
-        User user = new User();
-        Other other = new Other();
         City city = new City();
+        city
+            .name("Rio IV")
+            .state("Cordoba")
+            .country("Argentina")
+            .postcode("5800")
+            .saveIt();
         
-        city.set("name", "Rio IV", "state", "Cordoba", "country", "Argentina", "postcode", "5800");
-        city.saveIt();
-        
-        user.set("first_name", "John", "last_name", "Doe", "pass", "12345", "email", "example@email.com", "address", "Street One 123");
-        user.setParent(city);
+        User user = new User();
+        user
+            .firstName("John")
+            .lastName("Doe")
+            .email("johndoe@hotmail.com")
+            .pass("123456")
+            .address("Sobremonte 123")
+            .setParent(city);
         user.saveIt();
+        
+        Other other = new Other();
 
         the(other).shouldNotBe("valid");
         the(other.errors().get("name")).shouldBeEqual("value is missing");
         the(other.errors().get("brand")).shouldBeEqual("value is missing");
         the(other.errors().get("year")).shouldBeEqual("value is missing");
 
-        other.set("name", "Raptor", "brand", "Yamaha", "year", "2007");
-        other.setParent(user);
+        other
+            .name("Raptor")
+            .brand("Yamaha")
+            .year(2007)
+            .plate("ABC123")
+            .setParent(user);
+        other.saveIt();
         
         the(other).shouldBe("valid");
     }

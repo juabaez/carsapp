@@ -32,8 +32,8 @@ public class VehicleTest {
             .name("Rio IV")
             .state("Cordoba")
             .country("Argentina")
-            .postcode("5800");
-        city.saveIt();
+            .postcode("5800")
+            .saveIt();
         
         User user = new User();
         user
@@ -41,8 +41,8 @@ public class VehicleTest {
             .lastName("Doe")
             .email("johndoe@hotmail.com")
             .pass("123456")
-            .address("Sobremonte 123");
-        user.setParent(city);
+            .address("Sobremonte 123")
+            .setParent(city);
         user.saveIt();
 
         Vehicle vehicle = new Vehicle();
@@ -56,8 +56,8 @@ public class VehicleTest {
             .brand("Ford")
             .name("Ka")
             .year(2007)
-            .plate("GDQ202");
-        vehicle.setParent(user);
+            .plate("GDQ202")
+            .setParent(user);
         vehicle.saveIt();
         
         the(vehicle).shouldBe("valid");

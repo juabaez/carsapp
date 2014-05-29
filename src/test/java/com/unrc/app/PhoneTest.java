@@ -28,8 +28,24 @@ public class PhoneTest{
 
     @Test
     public void shouldValidateMandatoryFields(){
-        User user = new User();
         City city = new City();
+        city
+            .name("Rio IV")
+            .state("Cordoba")
+            .country("Argentina")
+            .postcode("5800")
+            .saveIt();
+        
+        User user = new User();
+        user
+            .firstName("John")
+            .lastName("Doe")
+            .email("johndoe@hotmail.com")
+            .pass("123456")
+            .address("Sobremonte 123");
+        user.setParent(city);
+        user.saveIt();
+        
         Phone phone = new Phone();
         
         the(phone).shouldNotBe("valid");
@@ -37,15 +53,11 @@ public class PhoneTest{
         the(phone.errors().get("num")).shouldBeEqual("value is missing");
         the(phone.errors().get("user_id")).shouldBeEqual("value is missing");
         
-        city.set("name", "Rio Cuarto", "state", "Cordoba", "country", "Argentina", "postcode", "5800");
-        city.saveIt();
-
-        user.set("first_name", "John", "last_name", "Doe", "pass", "12345", "email", "example@email.com", "address", "Street One 123");
-        user.setParent(city);
-        user.saveIt();
-        
-        phone.set("type", "Móvil", "num", "3585123456");
-        phone.setParent(user);
+        phone
+            .type(Phone.phoneType.home)
+            .num(4628083)
+            .setParent(user);
+        phone.saveIt();
         
         the(phone).shouldBe("valid");
     }

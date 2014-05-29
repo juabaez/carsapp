@@ -12,7 +12,7 @@ public class Phone extends Model {
     }
     
     public Phone type(phoneType t) {
-        this.set("type", t);
+        this.set("type", t.name());
         return this;
     }
     

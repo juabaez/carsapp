@@ -2,9 +2,6 @@ package com.unrc.app.models;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
-import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
 public class Vehicle extends Model {

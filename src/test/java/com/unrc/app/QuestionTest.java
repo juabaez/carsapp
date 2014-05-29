@@ -43,40 +43,36 @@ public class QuestionTest {
             .lastName("Doe")
             .email("johndoe@hotmail.com")
             .pass("123456")
-            .address("Sobremonte 123");
-        user.setParent(city);
+            .address("Sobremonte 123")
+            .setParent(city);
         user.saveIt();
         
         Vehicle vehicle = new Vehicle();
         vehicle
-                .brand("Ford")
-                .name("Ka")
-                .year(2007)
-                .plate("GDQ202");
-        vehicle.setParent(user);
+            .brand("Ford")
+            .name("Ka")
+            .year(2007)
+            .plate("GDQ202")
+            .setParent(user);
         vehicle.saveIt();
         
         Post post = new Post();
         post
-                .text("Vendo Peugeot Partner 2011")
-                .price(28000);
-        post.setParents(user, vehicle);
+            .text("Vendo Peugeot Partner 2011")
+            .price(28000)
+            .setParents(user, vehicle);
         post.saveIt();
         
         Question question = new Question();
-        //NO OLVIDAR!!! Falta completar la clase Question para crear el objeto
-        //y despues terminar el test para validar un objeto Question.
-        
-        
         
         the(question).shouldNotBe("valid");
         the(question.errors().get("question")).shouldBeEqual("value is missing");
         the(question.errors().get("post_id")).shouldBeEqual("value is missing");
         the(question.errors().get("user_id")).shouldBeEqual("value is missing");
         
-        
-        question.set("question", "Me lo vendes?");
-        question.setParents(user, post);
+        question
+            .question("Me lo vendes?")
+            .setParents(user, post);
         question.saveIt();
         
         the(question).shouldBe("valid");

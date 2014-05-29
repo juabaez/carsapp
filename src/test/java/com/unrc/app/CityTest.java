@@ -35,7 +35,12 @@ public class CityTest{
         the(city.errors().get("country")).shouldBeEqual("value is missing");
         the(city.errors().get("postcode")).shouldBeEqual("value is missing");
         
-        city.set("name", "Rio Cuarto", "state", "Cordoba", "country", "Argentina", "postcode", "5800");
+        city
+            .name("Rio IV")
+            .state("Cordoba")
+            .country("Argentina")
+            .postcode("5800")
+            .saveIt();
         
         the(city).shouldBe("valid");
     }

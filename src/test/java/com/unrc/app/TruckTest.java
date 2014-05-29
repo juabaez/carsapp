@@ -37,8 +37,8 @@ public class TruckTest {
             .name("Rio IV")
             .state("Cordoba")
             .country("Argentina")
-            .postcode("5800");
-        city.saveIt();
+            .postcode("5800")
+            .saveIt();
         
         User user = new User();
         user
@@ -46,9 +46,8 @@ public class TruckTest {
             .lastName("Doe")
             .email("johndoe@hotmail.com")
             .pass("123456")
-            .address("Sobremonte 123");
-        
-        user.setParent(city);
+            .address("Sobremonte 123")
+            .setParent(city);
         user.saveIt();
 
         Truck truck = new Truck();
@@ -66,8 +65,8 @@ public class TruckTest {
             .brand("Volvo")
             .name("Actros")
             .year(2007)
-            .plate("JHI702");
-        truck.setParent(user);
+            .plate("JHI702")
+            .setParent(user);
         truck.saveIt();
         
         the(truck).shouldBe("valid");

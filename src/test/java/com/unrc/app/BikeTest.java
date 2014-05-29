@@ -27,16 +27,25 @@ public class BikeTest {
 
     @Test
     public void shouldValidateMandatoryFields(){
-        User user = new User();
-        Bike bike = new Bike();
         City city = new City();
+        city
+            .name("Rio IV")
+            .state("Cordoba")
+            .country("Argentina")
+            .postcode("5800")
+            .saveIt();
         
-        city.set("name", "Rio IV", "state", "Cordoba", "country", "Argentina", "postcode", "5800");
-        city.saveIt();
-        
-        user.set("first_name", "John", "last_name", "Doe", "pass", "12345", "email", "example@email.com", "address", "Street One 123");
-        user.setParent(city);
+        User user = new User();
+        user
+            .firstName("John")
+            .lastName("Doe")
+            .email("johndoe@hotmail.com")
+            .pass("123456")
+            .address("Sobremonte 123")
+            .setParent(city);
         user.saveIt();
+        
+        Bike bike = new Bike();
         
         the(bike).shouldNotBe("valid");
         the(bike.errors().get("name")).shouldBeEqual("value is missing");
@@ -44,8 +53,14 @@ public class BikeTest {
         the(bike.errors().get("year")).shouldBeEqual("value is missing");
         the(bike.errors().get("displacement")).shouldBeEqual("value is missing");
 
-        bike.set("name", "XTZ", "brand", "Yamaha", "year", "2007", "displacement", "250");
-        bike.setParent(user);
+        bike
+            .displacement(250)
+            .name("XTZ")
+            .brand("Yamaha")
+            .year(2007)
+            .plate("ABC321")
+            .setParent(user);
+        bike.saveIt();
         
         the(bike).shouldBe("valid");
     }

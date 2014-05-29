@@ -28,16 +28,25 @@ public class CarTest {
 
     @Test
     public void shouldValidateMandatoryFields(){
-        User user = new User();
-        Car car = new Car();
         City city = new City();
+        city
+            .name("Rio IV")
+            .state("Cordoba")
+            .country("Argentina")
+            .postcode("5800")
+            .saveIt();
         
-        city.set("name", "Rio IV", "state", "Cordoba", "country", "Argentina", "postcode", "5800");
-        city.saveIt();
-        
-        user.set("first_name", "John", "last_name", "Doe", "pass", "12345", "email", "example@email.com", "address", "Street One 123");
-        user.setParent(city);
+        User user = new User();
+        user
+            .firstName("John")
+            .lastName("Doe")
+            .email("johndoe@hotmail.com")
+            .pass("123456")
+            .address("Sobremonte 123")
+            .setParent(city);
         user.saveIt();
+        
+        Car car = new Car();
 
         the(car).shouldNotBe("valid");
         the(car.errors().get("name")).shouldBeEqual("value is missing");
@@ -45,8 +54,14 @@ public class CarTest {
         the(car.errors().get("year")).shouldBeEqual("value is missing");
         the(car.errors().get("passengers")).shouldBeEqual("value is missing");
 
-        car.set("name", "Ka", "brand", "Ford", "year", "2007", "passengers", "4");
-        car.setParent(user);
+        car
+            .passengers(4)
+            .name("Ka")
+            .brand("Ford")
+            .year(2007)
+            .plate("GDQ202")
+            .setParent(user);
+        car.saveIt();
         
         the(car).shouldBe("valid");
     }

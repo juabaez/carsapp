@@ -32,8 +32,8 @@ public class UserTest{
             .name("Rio IV")
             .state("Cordoba")
             .country("Argentina")
-            .postcode("5800");
-        city.saveIt();
+            .postcode("5800")
+            .saveIt();
         
         User user = new User();
         
@@ -50,8 +50,8 @@ public class UserTest{
             .lastName("Doe")
             .email("johndoe@hotmail.com")
             .pass("123456")
-            .address("Sobremonte 123");
-        user.setParent(city);
+            .address("Sobremonte 123")
+            .setParent(city);
         user.saveIt();
 
         the(user).shouldBe("valid");

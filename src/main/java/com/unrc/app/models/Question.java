@@ -13,4 +13,13 @@ public class Question extends Model {
       answer.setParents(user, this);
       return answer.saveIt();
   }
+  
+  public String question(){
+      return this.getString("question");
+  }
+  
+  public Question question(String s){
+      this.set("question", s);
+      return this;
+  }
 }
