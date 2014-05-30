@@ -67,9 +67,26 @@ public class User extends Model {
       return User.findFirst("email = ?", email);
   }
   
-  public static List<User> findUsersFrom(String city){
-      City aux = City.findFirst("name = ?", city);
-      return User.find("city_id = ?", aux.getId());
+  public static List<User> filter(String... args){
+      if ((args.length>0) && (args.length % 2 == 0)) {
+          String query = "";
+          String attribute;
+          String value;
+          int i = 0;
+          attribute = args[i];
+          i++;
+          value = args[i];
+          i++;
+          query += attribute + " = '" + value + "'";
+          while (i<args.length-1) {
+              attribute = args[i];
+              i++;
+              value = args[i];
+              i++;
+              query += " AND " + attribute + " = '" + value + "'";
+          }
+          return User.find(query);
+      } else return null;
   }
 
     public boolean addVehicle(String type, String... args){

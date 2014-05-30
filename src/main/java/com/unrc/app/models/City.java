@@ -1,5 +1,6 @@
 package com.unrc.app.models;
 
+import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 /**
  *
@@ -13,6 +14,15 @@ public class City extends Model {
     public City name(String s){
         this.set("name", s);
         return this;
+    }
+  
+  public static LazyList<City> findAll(){
+      return Model.findAll();
+  }
+    
+    @Override
+    public String toString(){
+        return (this.getString("name") + "(" +this.getString("state") + ")");
     }
     
     public City state(String s){

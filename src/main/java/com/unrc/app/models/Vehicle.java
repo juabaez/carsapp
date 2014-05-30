@@ -2,6 +2,7 @@ package com.unrc.app.models;
 
 import java.util.LinkedList;
 import java.util.List;
+import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
 public class Vehicle extends Model {
@@ -13,6 +14,10 @@ public class Vehicle extends Model {
   public String toString() {
       return (this.getString("name") + " " + this.getString("brand") + "(" + this.getString("year")+ ")");
   } 
+  
+  public static LazyList<Vehicle> findAll(){
+      return Model.findAll();
+  }
   
   @Override
   public boolean saveIt(){
@@ -80,9 +85,8 @@ public class Vehicle extends Model {
       } else return null;
   }
   
-  public static List<Vehicle> vehiclesFrom(String city) {
-      City aux = City.findFirst("name = ?", city);
-      List<User> users = aux.getAll(User.class);
+  public static List<Vehicle> vehiclesFrom(City city) {
+      List<User> users = city.getAll(User.class);
       List<Vehicle> vehicles = new LinkedList();
       for(User u : users) {
           vehicles.addAll(u.getAll(Vehicle.class));

@@ -1,5 +1,6 @@
 package com.unrc.app.models;
 
+import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
 public class Administrator extends Model {
@@ -13,6 +14,15 @@ public class Administrator extends Model {
                 .email("email")
                 .pass("pass");
         return admin.saveIt();
+    }
+    
+    @Override
+    public String toString(){
+        return this.getString("email");
+    }
+    
+    public static LazyList<Administrator> findAll(){
+        return Model.findAll();
     }
     
     public Administrator email(String s){

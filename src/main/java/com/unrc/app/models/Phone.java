@@ -1,5 +1,6 @@
 package com.unrc.app.models;
 
+import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
 public class Phone extends Model {
@@ -9,6 +10,10 @@ public class Phone extends Model {
     
     public enum phoneType {
         personal, home, work;
+    }
+    
+    public static LazyList<Phone> findAll(){
+        return Model.findAll();
     }
     
     public Phone type(phoneType t) {
@@ -27,5 +32,9 @@ public class Phone extends Model {
     
     public int num(){
         return this.getInteger("num");
+    }
+    
+    public String toString(){
+        return this.getString("type") + ": " + this.getString("num");
     }
 }

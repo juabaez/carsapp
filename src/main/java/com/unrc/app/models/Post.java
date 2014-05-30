@@ -1,6 +1,7 @@
 package com.unrc.app.models;
 
 import java.util.List;
+import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
 public class Post extends Model {
@@ -12,9 +13,22 @@ public class Post extends Model {
       this.set("text", s);
       return this;
   }
+    
+    public static LazyList<Post> findAll(){
+        return Model.findAll();
+    }
+  
+  @Override
+  public String toString(){
+      return this.getString("text");
+  }
   
   public String text(){
       return this.getString("text");
+  }
+  
+  public String author(){
+      return User.findById(this.getInteger("user_id")).toString();
   }
   
   public Post price(int i) {

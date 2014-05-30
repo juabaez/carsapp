@@ -63,6 +63,7 @@ CREATE TABLE vehicles (
 );
 
 
+
 /**********************/
 /* Table for 'Post' */
 DROP TABLE IF EXISTS posts;
@@ -71,7 +72,7 @@ CREATE TABLE posts (
   user_id INT NOT NULL,
   vehicle_id INT NOT NULL,
   price INT NOT NULL,
-  text VARCHAR(45) NOT NULL
+  text VARCHAR(255) NOT NULL
 );
 
 
