@@ -14,9 +14,9 @@ public class Post extends Model {
       return this;
   }
     
-    public static LazyList<Post> findAll(){
-        return Model.findAll();
-    }
+  public static LazyList<Post> findAll(){
+      return Model.findAll();
+  }
   
   @Override
   public String toString(){
@@ -28,7 +28,8 @@ public class Post extends Model {
   }
   
   public String author(){
-      return User.findById(this.getInteger("user_id")).toString();
+      User u = User.filter("id", this.getString("user_id")).get(0);
+      return u.firstName() + " " + u.lastName();
   }
   
   public Post price(int i) {

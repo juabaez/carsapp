@@ -43,6 +43,13 @@
 		</tr>
 		<tr>
 			<td>
+				Codigo Postal:
+			</td>
+			<td> 
+				<input type=text name=postcode><br>
+			</td>
+		<tr>
+			<td>
 			</td>
 			<td>
 				<input type=submit value=Enviar>
@@ -50,7 +57,7 @@
 		</tr>
 	</table>
 </form>
-<hr>
+
 <b>Formulario Ciudad</b>
 <form action="/cities" method = post>
 	<table border="0">
@@ -59,7 +66,7 @@
 				Nombre Ciudad:
 			</td>
 			<td>
-				<input type=text name=nombre><br>
+				<input type=text name=name><br>
 			</td>
 		</tr>
 		<tr>
@@ -67,7 +74,7 @@
 				Codigo Postal:
 			</td>
 			<td>  
-				<input type=text name=cp><br>
+				<input type=text name=postcode><br>
 			</td>
 		</tr>
 		<tr>
@@ -75,7 +82,7 @@
 				Provincia:
 			</td>
 			<td>
-				<input type=text name=provincia><br>
+				<input type=text name=state><br>
 			</td>
 		</tr>
 		<tr>
@@ -83,7 +90,7 @@
 				Pais:
 			</td>
 			<td>
-				<input type=text name=pais><br>
+				<input type=text name=country><br>
 			</td>
 		<tr>
 			<td>
@@ -94,7 +101,6 @@
 		</tr>
 	</table>
 </form>
-<hr>
 
 <b>Formulario Vehiculo</b>
 <form action="/vehicles" method = post>
@@ -104,7 +110,7 @@
 				Nombre:
 			</td>
 			<td>
-				<input type=text name=nombre><br>
+				<input type=text name=name><br>
 			</td>
 		</tr>
 		<tr>
@@ -112,7 +118,7 @@
 				Modelo:
 			</td>
 			<td>
-				<input type=text name=modelo><br>
+				<input type=text name=brand><br>
 			</td>
 		</tr>
 		<tr>
@@ -120,7 +126,7 @@
 				Ano:
 			</td>
 			<td>
-				<input type=text name=año><br>
+				<input type=text name=year><br>
 			</td>
 		</tr>
 		<tr>
@@ -128,11 +134,11 @@
 				Tipo:
 			</td>
 			<td>	
-				<select name="tipo">
-					<option value="1">auto
-					<option value="2">camion
-					<option value="3">moto
-					<option value="4">otro
+				<select name="type">
+					<option value="car">auto
+					<option value="truck">camion
+					<option value="bike">moto
+					<option value="other">otro
 				</select><br>
 			</td>
 		</tr>
@@ -141,10 +147,11 @@
 				Cantidad de puertas:
 			</td>
 			<td>
-				<select name="puerta">
+				<select name="doors">
 					<option value="0">-
-					<option value="1">3
-					<option value="2">5
+					<option value="3">3
+					<option value="4">4
+					<option value="5">5
 				</select><br>
 			</td>
 		</tr>
@@ -153,7 +160,7 @@
 				Cantidad Pasajeros:
 			</td>
 			<td>
-				<input type=text name=cantPasajeros><br>
+				<input type=text name=passengers><br>
 			</td>
 		</tr>
 		<tr>
@@ -161,7 +168,7 @@
 				Carga Maxima:
 			</td>
 			<td>
-				<input type=text name=cargaMax><br>
+				<input type=text name=max_load><br>
 			</td>
 		</tr>
 		<tr>
@@ -169,15 +176,15 @@
 				Cilindrada:
 			</td>
 			<td>
-				<select name="cilindrada">
-					<option value="0">70 cc
-					<option value="1">90 cc
-					<option value="2">110 cc
-					<option value="3">125 cc
-					<option value="4">150 cc
-					<option value="5">200 cc
-					<option value="6">250 cc
-					<option value="7">otro
+				<select name="displacement">
+					<option value="70">70 cc
+					<option value="90">90 cc
+					<option value="110">110 cc
+					<option value="125">125 cc
+					<option value="150">150 cc
+					<option value="200">200 cc
+					<option value="250">250 cc
+					<option value="0">otro
 				</select><br><br>
 			</td>
 		</tr>
@@ -190,7 +197,6 @@
 		</tr>
 	<table>
 </form>
-<hr>
 
 <b>Formulario Post</b>
 <form action="/posts" method = post>
@@ -202,7 +208,7 @@
 		</tr>
 		<tr>
 			<td>
-				<textarea rows=3 name=descripcion>
+				<textarea rows=3 name=text>
 					Escriba aqui su descripcion
 				</textarea>
 			</td>
@@ -216,7 +222,6 @@
 		</tr>
 	<table>
 </form>
-<hr>
 
 <b>Formulario Preguntar</b>
 <form action="/questions" method = post>
@@ -228,7 +233,7 @@
 		</tr>
 		<tr>
 			<td>
-				<textarea rows=3 name=descripcion>
+				<textarea rows=3 name=question>
 					Escriba aqui su pregunta
 				</textarea>
 			</td>
@@ -242,7 +247,6 @@
 		</tr>
 	<table>
 </form>
-<hr>
 
 <b>Formulario Responder</b>
 <form action="/answers" method = post>
@@ -254,7 +258,7 @@
 		</tr>
 		<tr>
 			<td>
-				<textarea rows=3 name=descripcion>
+				<textarea rows=3 name=answer>
 					Escriba aqui su respuesta
 				</textarea>
 			</td>
@@ -268,4 +272,3 @@
 		</tr>
 	<table>
 </form>
-<hr>
