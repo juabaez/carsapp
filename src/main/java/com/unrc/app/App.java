@@ -10,11 +10,11 @@ import com.unrc.app.models.Post;
 import com.unrc.app.models.Truck;
 import com.unrc.app.models.User;
 import com.unrc.app.models.Vehicle;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.javalite.activejdbc.Base;
-import org.javalite.activejdbc.LazyList;
-import org.javalite.activejdbc.Model;
-import static org.javalite.test.jspec.JSpec.the;
+import spark.ModelAndView;
 import spark.Spark;
 import static spark.Spark.*;
 
@@ -32,24 +32,39 @@ public class App
             Base.close();
         });
         
-        
-        get("/users", (request, response) -> {
-            String body = "<table border=\"0\"> \n";
-            body += "<tr><td colspan=\"3\"><b>Usuarios</b></td></tr> \n";
-            body += "<span style=\"color:blue\"> \n";
-            for(User u : User.findAll()) {
-                body += "<tr><td>" + u.toString() + "</td><td>[" + u.email() +"]</td></tr> \n";
-            }
-            body += "</span></table></body> \n";
-            return body;
-        });
+        get("/users", 
+            (request, response) -> {
+                String p = request.queryParams("page");
+                
+                int page = p != null ? Integer.valueOf(p) : 0;
+                int usersPerPage = 3;
+                int min = (page - 1) * usersPerPage + 1;
+                int max = page * usersPerPage;
+                
+                Map<String, Object> attributes = new HashMap<>();
+                List<User> users = User.all();
+                
+                if (p != null) {
+                    users.removeIf((User) -> {
+                        int id = User.getInteger("id");
+                        return !((min <= id) && (id <= max));
+                    });
+                }
+                
+                attributes.put("users_count", users.size());
+                attributes.put("users", users);
+                return new ModelAndView(attributes, "users.moustache");
+            },
+            new MustacheTemplateEngine()
+        );
         
         
         get("/admins", (request, response) -> {
             String body = "<table border=\"0\"> \n";
             body += "<tr><td colspan=\"3\"><b>Administradores</b></td></tr> \n";
             body += "<span style=\"color:blue\"> \n";
-            for(Administrator admin : Administrator.findAll()) {
+            List<Administrator> admins = Administrator.all();
+            for(Administrator admin : admins) {
                 body += "<tr><td>" + admin.toString() + "</td></tr>";
             }
             body += "</span></table></body> \n";
@@ -61,7 +76,8 @@ public class App
             String body = "<table border=\"0\"> \n";
             body += "<tr><td colspan=\"3\"><b>Ciudades</b></td></tr> \n";
             body += "<span style=\"color:blue\"> \n";
-            for(City c : City.findAll()) {
+            List<City> cities = City.all();
+            for(City c : cities) {
                 body += "<tr><td>" + c.toString() + "</td></tr>";
             }
             body += "</span></table></body> \n";
@@ -73,7 +89,8 @@ public class App
             String body = "<table border=\"0\"> \n";
             body += "<tr><td colspan=\"3\"><b>Telefonos</b></td></tr> \n";
             body += "<span style=\"color:blue\"> \n";
-            for(Phone p : Phone.findAll()) {
+            List<Phone> phones = Phone.all();
+            for(Phone p : phones) {
                 body += "<tr><td>" + p.type() + "</td><td>" + p.num() + "</td></tr>";
             }
             body += "</span></table></body> \n";
@@ -85,7 +102,8 @@ public class App
             String body = "<table border=\"0\"> \n";
             body += "<tr><td colspan=\"3\"><b>Vehiculos</b></td></tr> \n";
             body += "<span style=\"color:blue\"> \n";
-            for(Vehicle v : Vehicle.findAll()) {
+            List<Vehicle> vehicles = (List<Vehicle>) Vehicle.all();
+            for(Vehicle v : (List<Vehicle>)vehicles) {
                 body += "<tr><td>" + v.toString() + "</td></tr>";
             }
             body += "</table</span></body> \n";
@@ -97,7 +115,8 @@ public class App
             String body = "<table border=\"0\"> \n";
             body += "<tr><td><b>Publicaciones</b></td><td>Autor</td></tr> \n";
             body += "<span style=\"color:blue\"> \n";
-            for(Post p : Post.findAll()) {
+            List<Post> posts = Post.all();
+            for(Post p : posts) {
                 body += "<tr><td>" + p.toString() + "</td><td>" + p.author() + "</td></tr>";
             }
             body += "</table</span></body> \n";
@@ -125,6 +144,7 @@ public class App
             String pass = request.queryParams("pass");
             String email = request.queryParams("email");
             String address = request.queryParams("address");
+            City c = City.findFirst("postcode = ?", request.queryParams("postcode"));
             User u = new User();
             u
                     .firstName(first_name)
@@ -132,7 +152,7 @@ public class App
                     .email(email)
                     .address(address)
                     .pass(pass)
-                    .set("city_id", "1");
+                    .setParent(c);
             boolean exit = u.saveIt();
             String body;
             if (exit) body = "Usuario correctamente registrado!";
@@ -140,7 +160,6 @@ public class App
             body += "<input type=button onclick=\"javascript: history.back()\" value=\"Atras\">";
             return body;
         });
-        
         
         post("/cities", (request, response) -> {
             String name = request.queryParams("name");
@@ -157,6 +176,7 @@ public class App
             String body;
             if (exit) body = "Ciudad correctamente registrada!";
             else body = "El registro no pudo completarse.";
+            body += "<input type=button onclick=\"javascript: history.back()\" value=\"Atras\">";
             return body;
         });
         

@@ -1,5 +1,6 @@
 package com.unrc.app.models;
 
+import java.util.List;
 import org.javalite.activejdbc.Model;
 
 public class Rate extends Model {
@@ -14,5 +15,8 @@ public class Rate extends Model {
     
     public int rate(){
         return this.getInteger("rate");
+    }
+    public static List<Rate> all(){
+        return Rate.findAll();
     }
 }

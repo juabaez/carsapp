@@ -15,16 +15,16 @@ public class Vehicle extends Model {
       return (this.getString("name") + " " + this.getString("brand") + "(" + this.getString("year")+ ")");
   } 
   
-  public static LazyList<Vehicle> findAll(){
-      return Model.findAll();
-  }
-  
   @Override
   public boolean saveIt(){
       if (this.get("type") == null) {
           this.set("type", "other");
       }
       return super.saveIt();
+  }
+  
+  public static List<?> all(){
+      return Vehicle.findAll();
   }
   
   public Vehicle name(String s){

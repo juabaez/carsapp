@@ -1,7 +1,6 @@
 package com.unrc.app.models;
 
 import java.util.List;
-import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
 public class User extends Model {
@@ -21,8 +20,8 @@ public class User extends Model {
       return user.saveIt();
   }
   
-  public static LazyList<User> findAll(){
-      return Model.findAll();
+  public static List<User> all(){
+      return User.findAll();
   }
   
   public User firstName(String s) {

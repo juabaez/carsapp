@@ -1,11 +1,8 @@
 package com.unrc.app.models;
 
-import org.javalite.activejdbc.LazyList;
+import java.util.List;
 import org.javalite.activejdbc.Model;
-/**
- *
- * @author lucho
- */
+
 public class City extends Model {
     static {
         validatePresenceOf("name", "state", "country", "postcode");
@@ -15,14 +12,14 @@ public class City extends Model {
         this.set("name", s);
         return this;
     }
-  
-  public static LazyList<City> findAll(){
-      return Model.findAll();
-  }
+    
+    public static List<City> all(){
+        return City.findAll();
+    }
     
     @Override
     public String toString(){
-        return (this.getString("name") + "(" +this.getString("state") + ")");
+        return (this.getString("name") + "(" +this.getString("postcode") + ")");
     }
     
     public City state(String s){

@@ -1,5 +1,7 @@
 package com.unrc.app.models;
 
+import java.util.List;
+
 public class Bike extends Vehicle {
     static {
         validatePresenceOf("name", "brand", "year", "plate", "displacement", "user_id");
@@ -11,6 +13,9 @@ public class Bike extends Vehicle {
         return super.saveIt();
     }
     
+    public static List<Bike> all(){
+        return Bike.findAll();
+    }
     public Bike displacement(int i) {
         this.set("displacement", i);
         return this;
