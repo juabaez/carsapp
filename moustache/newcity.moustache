@@ -1,0 +1,33 @@
+<form action="/cities" method=POST>
+	<table border="0" class="reg_table">
+        <tr>
+            <td colspan="2"><b>Por favor, asegurese de que la ciudad no este registrada.</b></td>
+        </tr><tr>
+            <td>Ciudades disponibles:</td>
+            <td>
+                <select>
+                        {{#cities}}
+					    <option>{{toString}}</option>
+                        {{/cities}}  
+                </select>        
+            </td>
+        </tr><tr>
+            <td colspan="2"><b>Formulario de registro de ciudad:</b></td>
+        </tr><tr>
+            <td>Nombre:</td>
+            <td><input type=text name=name></td>
+        </tr><tr>
+            <td>Codigo Postal:</td>
+            <td><input type=text name=postcode></td>
+        </tr><tr>
+            <td>Provincia:</td>
+            <td><input type=text name=state></td>
+        </tr><tr>
+            <td>Pais:</td>
+            <td><input type=text name=country></td>
+        </tr><tr>
+            <td colspan="2" align="center"><input type=submit value="Registrar ciudad" class="s_button"></td>
+        </tr>
+    </table>
+    <div id="resultado"></div>
+</form>

@@ -1,23 +1,12 @@
 package com.unrc.app.models;
 
+import java.util.LinkedList;
 import java.util.List;
 import org.javalite.activejdbc.Model;
 
 public class User extends Model {
   static {
       validatePresenceOf("first_name", "last_name", "pass", "email", "address", "city_id");
-  }
-  
-  public boolean createUser(String first_name, String last_name, String email, String address, String pass, City city) {
-      User user = new User();
-      user
-              .firstName(first_name)
-              .lastName(last_name)
-              .email(email)
-              .address(address)
-              .pass(pass)
-              .setParent(city);
-      return user.saveIt();
   }
   
   public static List<User> all(){
@@ -126,5 +115,17 @@ public class User extends Model {
                 return vehicle.saveIt();
         }
     } else return false;
+    }
+    
+    public static List<User> fromXtoY(int x, int y) {
+        List<User> l = new LinkedList();
+        if ((x>0) && (y>=x)) {
+            int q = y-x;
+            x--;
+            q++;
+            String query = "SELECT * FROM users LIMIT " + x + ", " + q;
+            l = User.findBySQL(query);
+        }
+        return l;
     }
 }

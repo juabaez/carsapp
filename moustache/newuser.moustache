@@ -1,5 +1,5 @@
 <form action="/users" method=POST>
-	<table border="0">
+	<table border="0" class="reg_table">
     <tr>
         <td colspan="2"><b>Formulario de registro de usuario:</b></td>
     </tr><tr>
@@ -18,10 +18,16 @@
         <td>Email:</td>
         <td><input type=text name=email></td>
     </tr><tr>
-        <td>Codigo postal:</td>
-        <td><input type=text name=postcode></td>
+        <td>Ciudad:</td>
+        <td>
+            <select name=postcode>
+                    {{#cities}}
+					<option value="{{postcode}}">{{toString}}</option>
+                    {{/cities}}  
+            </select>        
+        </td>
     </tr><tr>
-        <td colspan="2" align="center"><input type=submit value=Registrarme style="width: 150px"></td>
+        <td colspan="2" align="center"><input type=submit value=Registrarme class="s_button"></td>
     </tr>
     </table>
 </form>

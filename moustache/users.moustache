@@ -1,7 +1,12 @@
-<h1>Usuarios</h1>
-<h2>Cantidad: {{users_count}}</h2>
+<!--
 
-<table border="0" cellspacing="0" cellpadding="3">
+<h1>Usuarios</h1>
+ <h2>Cantidad: {{users_count}}</h2>
+
+-->
+
+
+<table border="0" cellspacing="0" cellpadding="3" class="userstable"> 
 <tr><td><b>Nombre</b></td><td><b>E-Mail</b></td></tr>
 {{#users}}
     <tr><td>{{toString}}</td><td>{{email}}</td></tr>

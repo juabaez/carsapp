@@ -35,25 +35,46 @@ public class App
         get("/users", 
             (request, response) -> {
                 String p = request.queryParams("page");
+                String upp = request.queryParams("upp");
                 
                 int page = p != null ? Integer.valueOf(p) : 0;
-                int usersPerPage = 3;
+                int usersPerPage = upp != null? Integer.valueOf(upp) : 0;
                 int min = (page - 1) * usersPerPage + 1;
                 int max = page * usersPerPage;
                 
                 Map<String, Object> attributes = new HashMap<>();
-                List<User> users = User.all();
-                
-                if (p != null) {
-                    users.removeIf((User) -> {
-                        int id = User.getInteger("id");
-                        return !((min <= id) && (id <= max));
-                    });
-                }
+                List<User> users = User.fromXtoY(min, max);
                 
                 attributes.put("users_count", users.size());
                 attributes.put("users", users);
-                return new ModelAndView(attributes, "users.moustache");
+                
+                return new ModelAndView(attributes, "./moustache/users.moustache");
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        get("/newuser", 
+            (request, response) -> {
+                Map<String, Object> attributes = new HashMap<>();
+                List<City> cities = City.all();
+                
+                attributes.put("cities_count", cities.size());
+                attributes.put("cities", cities);
+                
+                return new ModelAndView(attributes, "./moustache/newuser.moustache");
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        get("/newcity", 
+            (request, response) -> {
+                Map<String, Object> attributes = new HashMap<>();
+                List<City> cities = City.all();
+                
+                attributes.put("cities_count", cities.size());
+                attributes.put("cities", cities);
+                
+                return new ModelAndView(attributes, "./moustache/newcity.moustache");
             },
             new MustacheTemplateEngine()
         );
@@ -144,20 +165,27 @@ public class App
             String pass = request.queryParams("pass");
             String email = request.queryParams("email");
             String address = request.queryParams("address");
-            City c = City.findFirst("postcode = ?", request.queryParams("postcode"));
-            User u = new User();
-            u
-                    .firstName(first_name)
-                    .lastName(last_name)
-                    .email(email)
-                    .address(address)
-                    .pass(pass)
-                    .setParent(c);
-            boolean exit = u.saveIt();
-            String body;
-            if (exit) body = "Usuario correctamente registrado!";
-            else body = "El registro no pudo completarse.";
-            body += "<input type=button onclick=\"javascript: history.back()\" value=\"Atras\">";
+            String body = "";
+            Boolean error = false;
+            if ((first_name == null)
+                    || (last_name == null)
+                    || (pass == null)
+                    || (email == null)
+                    || (address == null)) error = true;
+            if (!error) {
+                City c = City.findFirst("postcode = '" + request.queryParams("postcode") +"'");
+                User u = new User();
+                u
+                        .firstName(first_name)
+                        .lastName(last_name)
+                        .email(email)
+                        .address(address)
+                        .pass(pass)
+                        .setParent(c);
+                        boolean exit = u.saveIt();
+                if (exit) body += "Usuario correctamente registrado!";
+            }
+            else body += "El registro no pudo completarse.";
             return body;
         });
         
