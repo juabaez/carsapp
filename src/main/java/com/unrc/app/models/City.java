@@ -7,6 +7,10 @@ public class City extends Model {
     static {
         validatePresenceOf("name", "state", "country", "postcode");
     }
+
+    public static City findByPostCode(String zip) {
+        return City.findFirst("postcode = ?", zip);
+    }
     
     public City name(String s){
         this.set("name", s);

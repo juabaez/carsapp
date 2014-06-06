@@ -128,4 +128,8 @@ public class User extends Model {
         }
         return l;
     }
+
+    public String pass() {
+        return this.getString("pass");
+    }
 }

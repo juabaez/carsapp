@@ -11,10 +11,17 @@ import com.unrc.app.models.Truck;
 import com.unrc.app.models.User;
 import com.unrc.app.models.Vehicle;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 import org.javalite.activejdbc.Base;
 import spark.ModelAndView;
+import spark.Request;
+import spark.Session;
 import spark.Spark;
 import static spark.Spark.*;
 
@@ -160,51 +167,156 @@ public class App
         
         
         post("/users", (request, response) -> {
+            System.out.println("Trying to do a post with: ");
             String first_name = request.queryParams("first_name");
+            System.out.println("first_name");
+            System.out.println(first_name);
             String last_name = request.queryParams("last_name");
+            System.out.println("last_name");
+            System.out.println(last_name);
             String pass = request.queryParams("pass");
+            System.out.println("pass");
+            System.out.println(pass);
             String email = request.queryParams("email");
+            System.out.println("email");
+            System.out.println(email);
             String address = request.queryParams("address");
-            String body = "";
-            Boolean error = false;
+            System.out.println("address");
+            System.out.println(address);
+            String body = "<!DOCTYPE html><body><script>";
+            Boolean exit = false, error = false;
             if ((first_name == null)
-                    || (last_name == null)
-                    || (pass == null)
-                    || (email == null)
-                    || (address == null)) error = true;
+                || (last_name == null)
+                || (pass == null)
+                || (email == null)
+                || (address == null)) error = true;
             if (!error) {
-                City c = City.findFirst("postcode = '" + request.queryParams("postcode") +"'");
+                City c = City.findByPostCode(request.queryParams("postcode"));
                 User u = new User();
                 u
-                        .firstName(first_name)
-                        .lastName(last_name)
-                        .email(email)
-                        .address(address)
-                        .pass(pass)
-                        .setParent(c);
-                        boolean exit = u.saveIt();
-                if (exit) body += "Usuario correctamente registrado!";
+                    .firstName(first_name)
+                    .lastName(last_name)
+                    .email(email)
+                    .address(address)
+                    .pass(pass)
+                    .setParent(c);
+                try {
+                    exit = u.saveIt();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+                if (exit) body += "alert('Usuario correctamente registrado!'); window.history.back(-1);";
+                else body += "alert('El registro no pudo completarse!'); window.history.back(-1);";
+            } else {
+                body += "alert('El registro no pudo completarse porque un campo estaba vacio.'); window.history.back(-1);";
             }
-            else body += "El registro no pudo completarse.";
+            body += "</script></body>";
             return body;
         });
         
+        post("/login", (request, response) -> {
+            String body = "<!DOCTYPE html><body><script>";
+            String email = request.queryParams("email");
+            String pwd = request.queryParams("pwd");
+            boolean allOk = false;
+            User u = User.findByEmail(email);
+            if (u != null ? u.pass().equals(pwd) : false) allOk = true;
+            if(allOk){
+                Session session = request.session(true);
+                session.attribute("email", email);
+                session.maxInactiveInterval(30*60);
+                response.cookie("email", email, session.maxInactiveInterval());
+                body += "alert('Bienvenido " + u.firstName() + "!');  top.location='/';";
+                body += "</script></body>";
+                return body;
+            }else{
+                body += "alert('El email indicado no existe o la contraseña no coincide.!'); window.history.back(-1);";
+                body += "</script></body>";
+                return body;
+            }
+        });
+        
+        get("/login", (request, response) -> {
+            if(!sesionExists(request)) {
+                response.redirect("login.html");
+            }
+            return "Usted ya ha iniciado sesion!";
+        });
+        
+        get("/logout", (request, response) -> {
+            String body = "";
+            Cookie[] cookies = request.raw().getCookies();
+            for(Cookie co : cookies) {
+                if(co.getName().equals("user")){
+                    response.removeCookie(co.getName());
+                }
+            }
+            Session session = request.session(false);
+            if (session == null) {
+                body += "No hay ninguna sesion activa.";
+            } else {
+                session.invalidate();
+                body += "Sesion cerrada correctamente.";
+            }
+            return body;
+        });
+        
+        get("/sesioninfo", (request, response) -> {
+            String body = "<!DOCTYPE html>";
+            Session session = request.session(false);
+            if (sesionExists(request)) {
+                Set<String> attrb = request.session(false).attributes();
+                for (String s : attrb) {
+                    body += "[" + s + "]:" + request.session().attribute(s) + "<br>";
+                }
+            }
+            else {
+                body += "<body><script>";
+                body += "alert('No hay ninguna sesion activa!'); top.location='/';";
+                body += "</script></body>";
+            }
+            return body;
+        });
+        
+        get("/cookiesinfo", (request, response) -> {
+            String body = "<!DOCTYPE html>";
+            Cookie[] cookies = request.raw().getCookies();
+            for(Cookie co : cookies) {
+                body += "[" + co.getName() + "]: " + co.getValue() + "<br />";
+            }
+            return body;
+        });
+        
+    
         post("/cities", (request, response) -> {
+            String body = "<body><script>";
+            Boolean exit = false, error = false;
             String name = request.queryParams("name");
             String state = request.queryParams("state");
             String country = request.queryParams("country");
             String postcode = request.queryParams("postcode");
-            City c = new City();
-            c
+            if ((name == null)
+                || (state == null)
+                || (country == null)
+                || (postcode == null)) error = true;
+            if (!error) {
+                City c = new City();
+                c
                     .name(name)
                     .state(state)
                     .country(country)
                     .postcode(postcode);
-            boolean exit = c.saveIt();
-            String body;
-            if (exit) body = "Ciudad correctamente registrada!";
-            else body = "El registro no pudo completarse.";
-            body += "<input type=button onclick=\"javascript: history.back()\" value=\"Atras\">";
+                try {
+                    exit = c.saveIt();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+                if (exit) body += "alert('Ciudad correctamente registrada!'); window.history.back(-1);";
+                else body += "alert('El registro no pudo completarse!'); window.history.back(-1);";
+            } else {
+                body += "alert('El registro no pudo completarse porque algun campo estaba vacio!'); window.history.back(-1);";
+            }
+            body += "</script></body>";
             return body;
         });
         
@@ -266,5 +378,9 @@ public class App
             body += "<input type=button onclick=\"javascript: history.back()\" value=\"Atras\">";
             return body;
         });
+    }
+    
+    public static boolean sesionExists(Request r) {
+        return r.session(false) != null; 
     }
 }
