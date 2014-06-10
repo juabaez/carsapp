@@ -44,8 +44,8 @@ public class App
                 String p = request.queryParams("page");
                 String upp = request.queryParams("upp");
                 
-                int page = p != null ? Integer.valueOf(p) : 0;
-                int usersPerPage = upp != null? Integer.valueOf(upp) : 0;
+                int page = p != null ? Integer.valueOf(p) : 1;
+                int usersPerPage = upp != null? Integer.valueOf(upp) : 10000;
                 int min = (page - 1) * usersPerPage + 1;
                 int max = page * usersPerPage;
                 
@@ -92,9 +92,7 @@ public class App
             body += "<tr><td colspan=\"3\"><b>Administradores</b></td></tr> \n";
             body += "<span style=\"color:blue\"> \n";
             List<Administrator> admins = Administrator.all();
-            for(Administrator admin : admins) {
-                body += "<tr><td>" + admin.toString() + "</td></tr>";
-            }
+            body += admins.stream().map((admin) -> "<tr><td>" + admin.toString() + "</td></tr>").reduce(body, String::concat);
             body += "</span></table></body> \n";
             return body;
         });
@@ -105,9 +103,7 @@ public class App
             body += "<tr><td colspan=\"3\"><b>Ciudades</b></td></tr> \n";
             body += "<span style=\"color:blue\"> \n";
             List<City> cities = City.all();
-            for(City c : cities) {
-                body += "<tr><td>" + c.toString() + "</td></tr>";
-            }
+            body += cities.stream().map((c) -> "<tr><td>" + c.toString() + "</td></tr>").reduce(body, String::concat);
             body += "</span></table></body> \n";
             return body;
         });
@@ -118,9 +114,7 @@ public class App
             body += "<tr><td colspan=\"3\"><b>Telefonos</b></td></tr> \n";
             body += "<span style=\"color:blue\"> \n";
             List<Phone> phones = Phone.all();
-            for(Phone p : phones) {
-                body += "<tr><td>" + p.type() + "</td><td>" + p.num() + "</td></tr>";
-            }
+            body += phones.stream().map((p) -> "<tr><td>" + p.type() + "</td><td>" + p.num() + "</td></tr>").reduce(body, String::concat);
             body += "</span></table></body> \n";
             return body;
         });
@@ -131,9 +125,7 @@ public class App
             body += "<tr><td colspan=\"3\"><b>Vehiculos</b></td></tr> \n";
             body += "<span style=\"color:blue\"> \n";
             List<Vehicle> vehicles = (List<Vehicle>) Vehicle.all();
-            for(Vehicle v : (List<Vehicle>)vehicles) {
-                body += "<tr><td>" + v.toString() + "</td></tr>";
-            }
+            body += vehicles.stream().map((v) -> "<tr><td>" + v.toString() + "</td></tr>").reduce(body, String::concat);
             body += "</table</span></body> \n";
             return body;
         });
@@ -144,9 +136,7 @@ public class App
             body += "<tr><td><b>Publicaciones</b></td><td>Autor</td></tr> \n";
             body += "<span style=\"color:blue\"> \n";
             List<Post> posts = Post.all();
-            for(Post p : posts) {
-                body += "<tr><td>" + p.toString() + "</td><td>" + p.author() + "</td></tr>";
-            }
+            body += posts.stream().map((p) -> "<tr><td>" + p.toString() + "</td><td>" + p.author() + "</td></tr>").reduce(body, String::concat);
             body += "</table</span></body> \n";
             return body;
         });
@@ -158,9 +148,7 @@ public class App
             String body = "<table border=\"0\"> \n";
             body += "<tr><td colspan=\"3\"><b>Usuarios de " + c.toString() + "</b></td></tr> \n";
             body += "<span style=\"color:blue\"> \n";
-            for(User u : c.getAll(User.class)) {
-                body += "<tr><td>" + u.toString() + "</td><td>[" + u.email() +"]</td></tr> \n";
-            } 
+            body += c.getAll(User.class).stream().map((u) -> "<tr><td>" + u.toString() + "</td><td>[" + u.email() +"]</td></tr> \n").reduce(body, String::concat); 
             body += "</table</span></body> \n";
             return body;
         });
@@ -183,7 +171,7 @@ public class App
             String address = request.queryParams("address");
             System.out.println("address");
             System.out.println(address);
-            String body = "<!DOCTYPE html><body><script>";
+            String body = "";
             Boolean exit = false, error = false;
             if ((first_name == null)
                 || (last_name == null)
@@ -205,29 +193,25 @@ public class App
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
-                if (exit) body += "alert('Usuario correctamente registrado!'); window.history.back(-1);";
-                else body += "alert('El registro no pudo completarse!'); window.history.back(-1);";
+                if (exit) body += "Usuario correctamente registrado!";
+                else body += "El registro no pudo completarse.";
             } else {
-                body += "alert('El registro no pudo completarse porque un campo estaba vacio.'); window.history.back(-1);";
+                body += "El registro no pudo completarse porque un campo estaba vacio";
             }
-            body += "</script></body>";
             return body;
         });
         
         post("/login", (request, response) -> {
-            String body = "<!DOCTYPE html><body><script>";
+            String body = "";
             String email = request.queryParams("email");
             String pwd = request.queryParams("pwd");
-            boolean allOk = false;
             User u = User.findByEmail(email);
-            if (u != null ? u.pass().equals(pwd) : false) allOk = true;
-            if(allOk){
+            if (u != null ? u.pass().equals(pwd) : false) {
                 Session session = request.session(true);
                 session.attribute("email", email);
                 session.maxInactiveInterval(30*60);
-                response.cookie("email", email, session.maxInactiveInterval());
-                body += "alert('Bienvenido " + u.firstName() + "!');  top.location='/';";
-                body += "</script></body>";
+                response.cookie("rememberme", email, session.maxInactiveInterval());
+                body += "Bienvenido " + u + "!";
                 return body;
             }else{
                 body += "alert('El email indicado no existe o la contraseña no coincide.!'); window.history.back(-1);";
@@ -240,16 +224,17 @@ public class App
             if(!sesionExists(request)) {
                 response.redirect("login.html");
             }
-            return "Usted ya ha iniciado sesion!";
+            return "Usted ya ha iniciado sesion con el email: " + request.session(false).attribute("email");
         });
         
         get("/logout", (request, response) -> {
             String body = "";
             Cookie[] cookies = request.raw().getCookies();
             for(Cookie co : cookies) {
-                if(co.getName().equals("user")){
+                if(co.getName().equals("rememberme")){
                     response.removeCookie(co.getName());
                 }
+                break;
             }
             Session session = request.session(false);
             if (session == null) {
@@ -262,18 +247,15 @@ public class App
         });
         
         get("/sesioninfo", (request, response) -> {
-            String body = "<!DOCTYPE html>";
+            String body = "";
             Session session = request.session(false);
-            if (sesionExists(request)) {
+            if (session != null) {
                 Set<String> attrb = request.session(false).attributes();
-                for (String s : attrb) {
-                    body += "[" + s + "]:" + request.session().attribute(s) + "<br>";
-                }
+                body += "Sesion attributes: <br />";
+                body += attrb.stream().map((s) -> "[" + s + "]:" + request.session().attribute(s) + "<br />").reduce(body, String::concat);
             }
             else {
-                body += "<body><script>";
-                body += "alert('No hay ninguna sesion activa!'); top.location='/';";
-                body += "</script></body>";
+                body += "No hay ninguna sesion activa!";
             }
             return body;
         });

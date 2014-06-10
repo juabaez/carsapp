@@ -2,10 +2,25 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
   <link rel="stylesheet" type="text/css" href="style.css" />
-
   <title>CARSAPP - Index</title>
-
+  <script type='text/javascript' src='jquery.js'></script>
+  <script type='text/javascript' src='jquery.getParams.js'></script>
   <script type='text/javascript' src='ajax.js'></script>
+  <script type='text/javascript'>
+      function verusuarios(direccion){
+        if (direccion === "adelante") {  
+          document.usuarios.page.value++; 
+          $('#boton').click(); 
+        }
+        if (direccion === "atras") { 
+            document.usuarios.page.value--;
+          $('#boton').click(); 
+        }  
+        if (!direccion) {
+            traer('users', 'columnacen');
+        }
+      }
+  </script>
 </head>
 
 <body>
@@ -15,9 +30,9 @@
   <div class="popmenu">UserCP
     <div>
       <ul>
-        <li><a href="#" onclick="httpreq({url:'login', container: 'columnacen', method: 'GET', async: true})">Iniciar sesion</a></li>
-	<li><a href="#" onclick="httpreq({url:'myVehicles', container: 'columnacen', method: 'GET', async: true})">Mis Vehiculos</a><li>        
-	<li><a href="#" onclick="httpreq({url:'logout', container: 'columnacen', method: 'GET', async: true})">Cerrar sesion</a></li>
+	    <li><a href="#" onclick="">Mis Vehiculos</a></li>    
+        <li><a href="#" onclick="traer('login', 'columnacen')">Iniciar sesion</a></li>    
+	    <li><a href="#" onclick="traer('logout', 'columnacen')">Cerrar sesion</a></li>
       </ul>
     </div>
   </div>
@@ -25,8 +40,8 @@
   <div class="popmenu">Registrar
     <div>
       <ul>
-        <li><a href="#" onclick="httpreq({url:'newuser', container: 'columnacen', method: 'GET', async: true})">Usuario</a></li>
-        <li><a href="#" onclick="httpreq({url:'newcity', container: 'columnacen', method: 'GET', async: true})">Ciudad</a></li>
+        <li><a href="#" onclick="traer('newuser', 'columnacen')">Usuario</a></li>
+        <li><a href="#" onclick="traer('newcity', 'columnacen')">Ciudad</a></li>
       </ul>
     </div>
   </div>
@@ -34,20 +49,27 @@
   <div class="popmenu">Buscar
     <div>
       <ul>
-        <li><a href="#" onclick="httpreq({url:'users?page=1&upp=100', container: 'columnacen', method: 'GET', async: true})">Usuarios</a></li>
-        <li><a href="#" onclick="httpreq({url:'cities', container: 'columnacen', method: 'GET', async: true})">Ciudades</a></li>
-        <li><a href="#" onclick="httpreq({url:'vehicles', container: 'columnacen', method: 'GET', async: true})">Vehiculos</a></li>
+          <li><a href="#" onclick="verusuarios('atras')">Usuarios(Pag prev.)</a></li>
+          <li><a href="#" onclick="verusuarios('adelante')">Usuarios(Pag sig.)</a></li>
+          <li><a href="#" onclick="verusuarios()">Usuarios(Todos)</a></li>
+        <li><a href="#" onclick="traer('cities', 'columnacen')">Ciudades</a></li>
+        <li><a href="#" onclick="traer('vehicles', 'columnacen')">Vehiculos</a></li>
       </ul>
     </div>
   </div>
     
-</div><hr width="90%" align="center" style="margin: 0 auto" />
+</div><hr width="60%" align="center" style="margin: 0 auto" />
 <div id="cuerpo">
     
-  <div id="columnaizq">Prueba para probar si la prueba pasa la prueba para probar si la prueba pasa la prueba para probar si la prueba pasa la prueba para probar si la prueba pasa la prueba para probar si la prueba pasa la prueba para probar si la prueba pasa la prueba para probar si la prueba pasa la prueba para probar si la prueba pasa la prueba para probar si la prueba pasa la prueba para probar si la prueba pasa la prueba para probar si la prueba pasa la prueba</div>
-  <div id="columnader"> 12  345678 91 2 34 5 67 89  1234567 89123 45 67 89123 45 6 789 1 234 567891 23456789 12 34567  891 23456789123456 78 91  23 4567891 234 56789123 45 678 1234567 8 9123 56789  123 4567 891 2345 6789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456<br /></div>
+  <div id="columnaizq"></div>
+  <div id="columnader"></div>
   <div id="columnacen"></div>  
   
 </div>
 
+<form name="usuarios" id="usuarios">
+<input type="hidden" name="page" value="0">
+<input type="hidden" name="upp" value="5">
+<input type="button" style="position: absolute; visibility: hidden;" value=":)" id="boton" onclick="traer('users', 'columnacen', 'usuarios');">
+</form>
 </body>
