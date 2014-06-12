@@ -10,6 +10,9 @@
             <td>Año</td>
             <td><input type=text name=year></td>
         </tr><tr>
+            <td>Patente</td>
+            <td><input type=text name=plate></td>
+        </tr><tr>
             <td>Tipo:</td>
             <td>    
                 <select name="type">
@@ -32,7 +35,7 @@
                 </td>
         </tr><tr>
             <td>Cantidad Pasajeros:</td>
-            <td><input type=text name=passengerss></td>
+            <td><input type=text name=passengers></td>
         </tr><tr>
             <td>Carga Maxima:</td>
             <td><input type=text name=max_load></td>

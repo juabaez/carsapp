@@ -131,7 +131,7 @@ public class App
          */
         get("/users/new", 
             (request, response) -> {
-                if (!yaInicio(request)) {
+                if (null == existsSession(request)) {
                     Map<String, Object> attributes = new HashMap<>();
                     List<City> cities = City.all();
                     
@@ -140,8 +140,9 @@ public class App
                     
                     return new ModelAndView(attributes, "./moustache/newuser.moustache");
                 } else {
-                    response.redirect("/sesioninfo");
-                    return null;
+                    Map<String, Object> attributes = new HashMap<>();
+                    attributes.put("user_email", request.attribute("user_email").toString());
+                    return new ModelAndView(attributes, "./moustache/alreadylogged.moustache");
                 }
             },
             new MustacheTemplateEngine()
@@ -219,15 +220,14 @@ public class App
         
         get("/vehicles/new", 
             (request, response) -> {
-                if(yaInicio(request)) {
+                if(null != existsSession(request)) {
                     Map<String, Object> attributes = new HashMap<>();
                     
                     attributes.put("user_id", request.session(false).attribute("user_id").toString());
 
                     return new ModelAndView(attributes, "./moustache/newvehicle.moustache");
                 } else {
-                    response.redirect("/notlogged.html");
-                    return null;
+                    return new ModelAndView(null, "./moustache/notlogged.moustache");
                 }
             },
             new MustacheTemplateEngine()
@@ -235,23 +235,76 @@ public class App
         
         post("/vehicles", (request, response) -> {
             String name = request.queryParams("name");
+            System.out.println(name);
             String brand = request.queryParams("brand");
-            String year = request.queryParams("year");
+            System.out.println(brand);
+            int year = Integer.parseInt(request.queryParams("year"));
+            System.out.println(year);
+            String plate = request.queryParams("plate");
+            System.out.println(plate);
+            String type = request.queryParams("type");
+            System.out.println(type);
             Integer user_id = request.session(false).attribute("user_id");
             String body = "";
-            boolean exit;
+            boolean exit = false;
             
-            if ((name.equals("")) || (price.equals(9999))) {
-                
-                exit = v.saveIt();
+            if (!(name.equals("") || brand.equals("") || (year == 9999) || plate.equals(""))){
+                switch(type) {
+                    case "car":
+                        int passengers = Integer.getInteger(request.queryParams("passengers"));
+                        Car c = new Car();
+                        c
+                            .passengers(passengers)
+                            .name(name)
+                            .year(year)
+                            .brand(brand)
+                            .plate(plate)
+                            .setParent(User.findById(user_id));
+                        exit = c.saveIt();
+                        break;
+                    case "bike":
+                        int displacement = Integer.getInteger(request.queryParams("displacement"));
+                        Bike b = new Bike();
+                        b
+                            .displacement(displacement)
+                            .name(name)
+                            .year(year)
+                            .brand(brand)
+                            .plate(plate);
+                        exit = b.saveIt();
+                        break;
+                    case "truck":
+                        int max_load = Integer.getInteger(request.queryParams("max_load"));
+                        Truck t = new Truck();
+                        t
+                            .maxLoad(max_load)
+                            .name(name)
+                            .year(year)
+                            .brand(brand)
+                            .plate(plate);
+                        exit = t.saveIt();
+                        break;
+                    case "other":
+                        Other o = new Other();
+                        o
+                            .name(name)
+                            .year(year)
+                            .brand(brand)
+                            .plate(plate);
+                        exit = o.saveIt();
+                        break;
+                }
                 if (!exit) body = "Vehiculo correctamente registrado!";
                 else body = "El vehiculo no pudo ser cargado en la base de datos.";
+            } else {
+                body += "El registro no pudo completarse porque algun campo estaba vacio!";
             }
             return body;
         });
+        
         get("/posts/new", 
             (request, response) -> {
-                if(yaInicio(request)) {
+                if(null != existsSession(request)) {
                     Map<String, Object> attributes = new HashMap<>();
                     List<Vehicle> vehicles = (List<Vehicle>) Vehicle.all();
 
@@ -261,8 +314,7 @@ public class App
 
                     return new ModelAndView(attributes, "./moustache/newpost.moustache");
                 } else {
-                    response.redirect("/notlogged.html");
-                    return null;
+                    return new ModelAndView(null, "./moustache/notlogged.moustache");
                 }
             },
             new MustacheTemplateEngine()
@@ -316,15 +368,15 @@ public class App
         
         get("/login", (request, response) -> {
             response.status(200);
-            if(!yaInicio(request)) response.redirect("/login.html");
+            if(null == existsSession(request)) response.redirect("/login.html");
             else return "Usted ya ha iniciado sesion con el email: " + request.session(false).attribute("user_email");
             return null;
         });
         
         get("/logout", (request, response) -> {
             String body = "";
-            Session session = request.session(false);
-            if (session == null) {
+            Session session = existsSession(request);
+            if (null == session) {
                 body += "No hay ninguna sesion activa.";
             } else {
                 session.invalidate();
@@ -335,8 +387,11 @@ public class App
         
         get("/sesioninfo", (request, response) -> {
             String body = "";
-            if (yaInicio(request)) {
-                body += "Usted ya ha iniciado sesion como: " + request.attribute("user_email").toString();
+            Session s;
+            if (null != (s = existsSession(request))) {
+                body += "Usted ya ha iniciado sesion!";
+                System.out.println(s.attribute("user_email").toString());
+                System.out.println(s.attribute("user_id").toString());
             }
             else {
                 body += "No hay ninguna sesion activa!";
@@ -350,12 +405,14 @@ public class App
      * Metodo auxiliar para controlar si un 
      * usuario ya inicio sesion en el sitio.
      */
-    public static boolean yaInicio(Request request) {
+    public static Session existsSession(Request request) {
         Session session = request.session(false);
-        if (session != null) {
+        if (null != session) {
             Set<String> attrb = request.session(false).attributes();
-            return attrb.contains("user_email") && attrb.contains("user_id");
+            if (attrb.contains("user_email") && attrb.contains("user_id"))
+                return session;
+            else return null;
         }
-        else return false;
+        else return null;
     }
 }
