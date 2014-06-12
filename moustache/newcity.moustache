@@ -1,14 +1,12 @@
-<form action="/cities" method=POST>
+<form id="formulario">
 	<table border="0" class="reg_table">
         <tr>
-            <td colspan="2"><b>Por favor, asegurese de que la ciudad no este registrada.</b></td>
-        </tr><tr>
             <td>Ciudades disponibles:</td>
             <td>
                 <select>
-                        {{#cities}}
-					    <option>{{toString}}</option>
-                        {{/cities}}  
+                  {{#cities}}
+                      <option>{{toString}}</option>
+                  {{/cities}}  
                 </select>        
             </td>
         </tr><tr>
@@ -25,9 +23,9 @@
         </tr><tr>
             <td>Pais:</td>
             <td><input type=text name=country></td>
-        </tr><tr>
-            <td colspan="2" align="center"><input type=submit value="Registrar ciudad" class="s_button"></td>
-        </tr>
+            <td colspan="2" align="center">
+                <input type=button onclick="postear('cities/new', 'columnacen', 'formulario')" value="Registrar" class="s_button">
+            </td>
+          </tr>
     </table>
-    <div id="resultado"></div>
 </form>

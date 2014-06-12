@@ -1,7 +1,13 @@
 function traer(url, contenedor, formulario) {
-    $.get(url, $("#" + formulario).serialize(), function(returnData) {
-        escribir(returnData, contenedor);
-    });
+    if (formulario) {
+        $.get(url, $("#" + formulario).serialize(), function(returnData) {
+            escribir(returnData, contenedor);
+        });
+    } else {
+        $.get(url, function(returnData) {
+            escribir(returnData, contenedor);
+        });
+    };    
 };
 
 function postear(url, contenedor, formulario) {

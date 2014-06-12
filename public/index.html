@@ -30,9 +30,12 @@
   <div class="popmenu">UserCP
     <div>
       <ul>
-	    <li><a href="#" onclick="">Mis Vehiculos</a></li>    
+        <li><a href="#" onclick="traer('myvehicles', 'columnacen')">Mis vehiculos</a></li>    
+        <li><a href="#" onclick="traer('vehicles/new', 'columnacen')">Nuevo vehiculo</a></li>   
+        <li><a href="#" onclick="traer('myposts', 'columnacen')">Mis anuncios</a></li>   
+        <li><a href="#" onclick="traer('posts/new', 'columnacen')">Nuevo anuncio</a></li>   
         <li><a href="#" onclick="traer('login', 'columnacen')">Iniciar sesion</a></li>    
-	    <li><a href="#" onclick="traer('logout', 'columnacen')">Cerrar sesion</a></li>
+        <li><a href="#" onclick="traer('logout', 'columnacen')">Cerrar sesion</a></li>
       </ul>
     </div>
   </div>
@@ -40,25 +43,25 @@
   <div class="popmenu">Registrar
     <div>
       <ul>
-        <li><a href="#" onclick="traer('newuser', 'columnacen')">Usuario</a></li>
-        <li><a href="#" onclick="traer('newcity', 'columnacen')">Ciudad</a></li>
+        <li><a href="#" onclick="traer('users/new', 'columnacen')">Usuario</a></li>
+        <li><a href="#" onclick="traer('cities/new', 'columnacen')">Ciudad</a></li>
       </ul>
     </div>
   </div>
 
-  <div class="popmenu">Buscar
+  <div class="popmenu">Ver
     <div>
       <ul>
-          <li><a href="#" onclick="verusuarios('atras')">Usuarios(Pag prev.)</a></li>
-          <li><a href="#" onclick="verusuarios('adelante')">Usuarios(Pag sig.)</a></li>
-          <li><a href="#" onclick="verusuarios()">Usuarios(Todos)</a></li>
+        <li><a href="#" onclick="verusuarios('atras')">Usuarios(Pag prev.)</a></li>
+        <li><a href="#" onclick="verusuarios('adelante')">Usuarios(Pag sig.)</a></li>
+        <li><a href="#" onclick="verusuarios()">Usuarios(Todos)</a></li>
         <li><a href="#" onclick="traer('cities', 'columnacen')">Ciudades</a></li>
         <li><a href="#" onclick="traer('vehicles', 'columnacen')">Vehiculos</a></li>
       </ul>
     </div>
   </div>
     
-</div><hr width="60%" align="center" style="margin: 0 auto" />
+</div><hr width="80%" align="center" style="margin: 0 auto" />
 <div id="cuerpo">
     
   <div id="columnaizq"></div>

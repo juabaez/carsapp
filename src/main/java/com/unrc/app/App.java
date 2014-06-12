@@ -11,13 +11,10 @@ import com.unrc.app.models.Truck;
 import com.unrc.app.models.User;
 import com.unrc.app.models.Vehicle;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
 import org.javalite.activejdbc.Base;
 import spark.ModelAndView;
 import spark.Request;
@@ -32,10 +29,12 @@ public class App
         externalStaticFileLocation("./public"); // Static files 
         
         Spark.before((request, response) -> {
-            Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/carsapp_development", "root", "");
+            if (!Base.hasConnection()) 
+                Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/carsapp_development", "root", "");
         });
         
         Spark.after((request, response) -> {
+            if (Base.hasConnection()) 
             Base.close();
         });
         
@@ -60,7 +59,20 @@ public class App
             new MustacheTemplateEngine()
         );
         
-        get("/newuser", 
+        get("/admins", 
+            (request, response) -> {
+                Map<String, Object> attributes = new HashMap<>();
+                List<Administrator> admins = Administrator.all();
+                
+                attributes.put("admins_count", admins.size());
+                attributes.put("admins", admins);
+                
+                return new ModelAndView(attributes, "./moustache/admins.moustache");
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        get("/cities",
             (request, response) -> {
                 Map<String, Object> attributes = new HashMap<>();
                 List<City> cities = City.all();
@@ -68,12 +80,105 @@ public class App
                 attributes.put("cities_count", cities.size());
                 attributes.put("cities", cities);
                 
-                return new ModelAndView(attributes, "./moustache/newuser.moustache");
+                return new ModelAndView(attributes, "./moustache/cities.moustache");
             },
             new MustacheTemplateEngine()
         );
         
-        get("/newcity", 
+        get("/phones",
+            (request, response) -> {
+                Map<String, Object> attributes = new HashMap<>();
+                List<Phone> phones = Phone.all();
+                
+                attributes.put("phones_count", phones.size());
+                attributes.put("phones", phones);
+                
+                return new ModelAndView(attributes, "./moustache/phones.moustache");
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        get("/vehicles",
+            (request, response) -> {
+                Map<String, Object> attributes = new HashMap<>();
+                List<Vehicle> vehicles = (List<Vehicle>) Vehicle.all();
+                
+                attributes.put("vehicles_count", vehicles.size());
+                attributes.put("vehicles", vehicles);
+                
+                return new ModelAndView(attributes, "./moustache/vehicles.moustache");
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        get("/posts",
+            (request, response) -> {
+                Map<String, Object> attributes = new HashMap<>();
+                List<Post> posts = Post.all();
+                
+                attributes.put("posts_count", posts.size());
+                attributes.put("posts", posts);
+                
+                return new ModelAndView(attributes, "./moustache/posts.moustache");
+            },
+            new MustacheTemplateEngine()
+        );
+          
+        
+        /**
+         * 
+         * 
+         */
+        get("/users/new", 
+            (request, response) -> {
+                if (!yaInicio(request)) {
+                    Map<String, Object> attributes = new HashMap<>();
+                    List<City> cities = City.all();
+                    
+                    attributes.put("cities_count", cities.size());
+                    attributes.put("cities", cities);
+                    
+                    return new ModelAndView(attributes, "./moustache/newuser.moustache");
+                } else {
+                    response.redirect("/sesioninfo");
+                    return null;
+                }
+            },
+            new MustacheTemplateEngine()
+        ); 
+        
+        post("/users", (request, response) -> {
+            String first_name = request.queryParams("first_name");
+            String last_name = request.queryParams("last_name");
+            String pass = request.queryParams("pass");
+            String email = request.queryParams("email");
+            String address = request.queryParams("address");
+            String body = "";
+            
+            if ((first_name.equals(""))
+                || (last_name.equals(""))
+                || (pass.equals(""))
+                || (email.equals(""))
+                || (address.equals(""))) {
+                City c = City.findByPostCode(request.queryParams("postcode"));
+                User u = new User();
+                u
+                    .firstName(first_name)
+                    .lastName(last_name)
+                    .email(email)
+                    .address(address)
+                    .pass(pass)
+                    .setParent(c);
+                if (u.saveIt()) body += "Usuario correctamente registrado!";
+                else body += "El servidor denego el registro con los datos indicados.";
+            } else {
+                body += "El registro no pudo completarse porque un campo estaba vacio";
+            }
+            return body;
+        });
+        
+        
+        get("/cities/new", 
             (request, response) -> {
                 Map<String, Object> attributes = new HashMap<>();
                 List<City> cities = City.all();
@@ -86,156 +191,138 @@ public class App
             new MustacheTemplateEngine()
         );
         
-        
-        get("/admins", (request, response) -> {
-            String body = "<table border=\"0\"> \n";
-            body += "<tr><td colspan=\"3\"><b>Administradores</b></td></tr> \n";
-            body += "<span style=\"color:blue\"> \n";
-            List<Administrator> admins = Administrator.all();
-            body += admins.stream().map((admin) -> "<tr><td>" + admin.toString() + "</td></tr>").reduce(body, String::concat);
-            body += "</span></table></body> \n";
-            return body;
-        });
-        
-        
-        get("/cities", (request, response) -> {
-            String body = "<table border=\"0\"> \n";
-            body += "<tr><td colspan=\"3\"><b>Ciudades</b></td></tr> \n";
-            body += "<span style=\"color:blue\"> \n";
-            List<City> cities = City.all();
-            body += cities.stream().map((c) -> "<tr><td>" + c.toString() + "</td></tr>").reduce(body, String::concat);
-            body += "</span></table></body> \n";
-            return body;
-        });
-        
-        
-        get("/phones", (request, response) -> {
-            String body = "<table border=\"0\"> \n";
-            body += "<tr><td colspan=\"3\"><b>Telefonos</b></td></tr> \n";
-            body += "<span style=\"color:blue\"> \n";
-            List<Phone> phones = Phone.all();
-            body += phones.stream().map((p) -> "<tr><td>" + p.type() + "</td><td>" + p.num() + "</td></tr>").reduce(body, String::concat);
-            body += "</span></table></body> \n";
-            return body;
-        });
-        
-        
-        get("/vehicles", (request, response) -> {
-            String body = "<table border=\"0\"> \n";
-            body += "<tr><td colspan=\"3\"><b>Vehiculos</b></td></tr> \n";
-            body += "<span style=\"color:blue\"> \n";
-            List<Vehicle> vehicles = (List<Vehicle>) Vehicle.all();
-            body += vehicles.stream().map((v) -> "<tr><td>" + v.toString() + "</td></tr>").reduce(body, String::concat);
-            body += "</table</span></body> \n";
-            return body;
-        });
-        
-        
-        get("/posts", (request, response) -> {
-            String body = "<table border=\"0\"> \n";
-            body += "<tr><td><b>Publicaciones</b></td><td>Autor</td></tr> \n";
-            body += "<span style=\"color:blue\"> \n";
-            List<Post> posts = Post.all();
-            body += posts.stream().map((p) -> "<tr><td>" + p.toString() + "</td><td>" + p.author() + "</td></tr>").reduce(body, String::concat);
-            body += "</table</span></body> \n";
-            return body;
-        });
-        
-        
-        get("/users/from/:zip", (request, response) -> {
-            String zip = request.params(":zip");
-            City c = City.findFirst("postcode = ?", zip);
-            String body = "<table border=\"0\"> \n";
-            body += "<tr><td colspan=\"3\"><b>Usuarios de " + c.toString() + "</b></td></tr> \n";
-            body += "<span style=\"color:blue\"> \n";
-            body += c.getAll(User.class).stream().map((u) -> "<tr><td>" + u.toString() + "</td><td>[" + u.email() +"]</td></tr> \n").reduce(body, String::concat); 
-            body += "</table</span></body> \n";
-            return body;
-        });
-        
-        
-        post("/users", (request, response) -> {
-            System.out.println("Trying to do a post with: ");
-            String first_name = request.queryParams("first_name");
-            System.out.println("first_name");
-            System.out.println(first_name);
-            String last_name = request.queryParams("last_name");
-            System.out.println("last_name");
-            System.out.println(last_name);
-            String pass = request.queryParams("pass");
-            System.out.println("pass");
-            System.out.println(pass);
-            String email = request.queryParams("email");
-            System.out.println("email");
-            System.out.println(email);
-            String address = request.queryParams("address");
-            System.out.println("address");
-            System.out.println(address);
+        post("/cities", (request, response) -> {
             String body = "";
-            Boolean exit = false, error = false;
-            if ((first_name == null)
-                || (last_name == null)
-                || (pass == null)
-                || (email == null)
-                || (address == null)) error = true;
-            if (!error) {
-                City c = City.findByPostCode(request.queryParams("postcode"));
-                User u = new User();
-                u
-                    .firstName(first_name)
-                    .lastName(last_name)
-                    .email(email)
-                    .address(address)
-                    .pass(pass)
-                    .setParent(c);
-                try {
-                    exit = u.saveIt();
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-                if (exit) body += "Usuario correctamente registrado!";
-                else body += "El registro no pudo completarse.";
+            String name = request.queryParams("name");
+            String state = request.queryParams("state");
+            String country = request.queryParams("country");
+            String postcode = request.queryParams("postcode");
+            
+            if ((name.equals(""))
+                || (state.equals(""))
+                || (country.equals(""))
+                || (postcode.equals(""))) {
+                    City c = new City();
+                    c
+                        .name(name)
+                        .state(state)
+                        .country(country)
+                        .postcode(postcode);
+                    if (c.saveIt()) body += "Ciudad correctamente registrada!";
+                    else body += "El servidor denego el registro con los datos indicados.";
             } else {
-                body += "El registro no pudo completarse porque un campo estaba vacio";
+                body += "El registro no pudo completarse porque algun campo estaba vacio!";
             }
             return body;
         });
         
-        post("/login", (request, response) -> {
+        
+        get("/vehicles/new", 
+            (request, response) -> {
+                if(yaInicio(request)) {
+                    Map<String, Object> attributes = new HashMap<>();
+                    
+                    attributes.put("user_id", request.session(false).attribute("user_id").toString());
+
+                    return new ModelAndView(attributes, "./moustache/newvehicle.moustache");
+                } else {
+                    response.redirect("/notlogged.html");
+                    return null;
+                }
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        post("/vehicles", (request, response) -> {
+            String name = request.queryParams("name");
+            String brand = request.queryParams("brand");
+            String year = request.queryParams("year");
+            Integer user_id = request.session(false).attribute("user_id");
             String body = "";
+            boolean exit;
+            
+            if ((name.equals("")) || (price.equals(9999))) {
+                
+                exit = v.saveIt();
+                if (!exit) body = "Vehiculo correctamente registrado!";
+                else body = "El vehiculo no pudo ser cargado en la base de datos.";
+            }
+            return body;
+        });
+        get("/posts/new", 
+            (request, response) -> {
+                if(yaInicio(request)) {
+                    Map<String, Object> attributes = new HashMap<>();
+                    List<Vehicle> vehicles = (List<Vehicle>) Vehicle.all();
+
+                    attributes.put("vehicles_count", vehicles.size());
+                    attributes.put("vehicles", vehicles);
+                    attributes.put("user_id", request.session(false).attribute("user_id").toString());
+
+                    return new ModelAndView(attributes, "./moustache/newpost.moustache");
+                } else {
+                    response.redirect("/notlogged.html");
+                    return null;
+                }
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        post("/posts", (request, response) -> {
+            Integer price = Integer.getInteger(request.queryParams("price"), 9999);
+            String text = request.queryParams("text");
+            String vehicle_id = request.queryParams("vehicle_id");
+            String user_id = request.session(false).attribute("user_id");
+            String body = "";
+            boolean exit;
+            
+            if ((text.equals("")) || (price.equals(9999))) {
+                Post p = new Post();
+                p
+                    .price(price)
+                    .text(body)
+                    .setParents(User.findById(user_id), Vehicle.findById(vehicle_id));
+                exit = p.saveIt();
+                if (!exit) body = "Anuncio correctamente publicado!";
+                else body = "El anuncio no pudo ser publicado.";
+            }
+            return body;
+        });
+        
+        
+        /**
+         * Metodos para manejar
+         * la sesion del usuario
+         */
+        post("/login", (request, response) -> {
+            String body = "<body><script>";
             String email = request.queryParams("email");
             String pwd = request.queryParams("pwd");
             User u = User.findByEmail(email);
             if (u != null ? u.pass().equals(pwd) : false) {
                 Session session = request.session(true);
-                session.attribute("email", email);
+                session.attribute("user_email", email);
+                session.attribute("user_id", u.getId());
                 session.maxInactiveInterval(30*60);
-                response.cookie("rememberme", email, session.maxInactiveInterval());
-                body += "Bienvenido " + u + "!";
-                return body;
-            }else{
-                body += "alert('El email indicado no existe o la contraseña no coincide.!'); window.history.back(-1);";
+                response.cookie("user_email", email, session.maxInactiveInterval());
+                body += "alert('Bienvenido " + u + "!'); document.location = '/';";
                 body += "</script></body>";
+                return body;
+            } else {
+                body += "El email indicado no existe o la contraseña no coincide.";
                 return body;
             }
         });
         
         get("/login", (request, response) -> {
-            if(!sesionExists(request)) {
-                response.redirect("login.html");
-            }
-            return "Usted ya ha iniciado sesion con el email: " + request.session(false).attribute("email");
+            response.status(200);
+            if(!yaInicio(request)) response.redirect("/login.html");
+            else return "Usted ya ha iniciado sesion con el email: " + request.session(false).attribute("user_email");
+            return null;
         });
         
         get("/logout", (request, response) -> {
             String body = "";
-            Cookie[] cookies = request.raw().getCookies();
-            for(Cookie co : cookies) {
-                if(co.getName().equals("rememberme")){
-                    response.removeCookie(co.getName());
-                }
-                break;
-            }
             Session session = request.session(false);
             if (session == null) {
                 body += "No hay ninguna sesion activa.";
@@ -248,121 +335,27 @@ public class App
         
         get("/sesioninfo", (request, response) -> {
             String body = "";
-            Session session = request.session(false);
-            if (session != null) {
-                Set<String> attrb = request.session(false).attributes();
-                body += "Sesion attributes: <br />";
-                body += attrb.stream().map((s) -> "[" + s + "]:" + request.session().attribute(s) + "<br />").reduce(body, String::concat);
+            if (yaInicio(request)) {
+                body += "Usted ya ha iniciado sesion como: " + request.attribute("user_email").toString();
             }
             else {
                 body += "No hay ninguna sesion activa!";
             }
             return body;
         });
-        
-        get("/cookiesinfo", (request, response) -> {
-            String body = "<!DOCTYPE html>";
-            Cookie[] cookies = request.raw().getCookies();
-            for(Cookie co : cookies) {
-                body += "[" + co.getName() + "]: " + co.getValue() + "<br />";
-            }
-            return body;
-        });
-        
-    
-        post("/cities", (request, response) -> {
-            String body = "<body><script>";
-            Boolean exit = false, error = false;
-            String name = request.queryParams("name");
-            String state = request.queryParams("state");
-            String country = request.queryParams("country");
-            String postcode = request.queryParams("postcode");
-            if ((name == null)
-                || (state == null)
-                || (country == null)
-                || (postcode == null)) error = true;
-            if (!error) {
-                City c = new City();
-                c
-                    .name(name)
-                    .state(state)
-                    .country(country)
-                    .postcode(postcode);
-                try {
-                    exit = c.saveIt();
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-                if (exit) body += "alert('Ciudad correctamente registrada!'); window.history.back(-1);";
-                else body += "alert('El registro no pudo completarse!'); window.history.back(-1);";
-            } else {
-                body += "alert('El registro no pudo completarse porque algun campo estaba vacio!'); window.history.back(-1);";
-            }
-            body += "</script></body>";
-            return body;
-        });
-        
-        
-        post("/vehicles", (request, response) -> {
-            boolean exit = false;
-            String name = request.queryParams("name");
-            int year = Integer.getInteger(request.queryParams("year"));
-            String brand = request.queryParams("brand");
-            String plate = request.queryParams("plate");
-            String type = request.queryParams("type");
-            switch(type) {
-                case "car":
-                    int passengers = Integer.getInteger(request.queryParams("passengers"));
-                    Car c = new Car();
-                    c
-                        .passengers(passengers)
-                        .name(name)
-                        .year(year)
-                        .brand(brand)
-                        .plate(plate);
-                    exit = c.saveIt();
-                    break;
-                case "bike":
-                    int displacement = Integer.getInteger(request.queryParams("displacement"));
-                    Bike b = new Bike();
-                    b
-                        .displacement(displacement)
-                        .name(name)
-                        .year(year)
-                        .brand(brand)
-                        .plate(plate);
-                    exit = b.saveIt();
-                    break;
-                case "truck":
-                    int max_load = Integer.getInteger(request.queryParams("max_load"));
-                    Truck t = new Truck();
-                    t
-                        .maxLoad(max_load)
-                        .name(name)
-                        .year(year)
-                        .brand(brand)
-                        .plate(plate);
-                    exit = t.saveIt();
-                    break;
-                case "other":
-                    Other o = new Other();
-                    o
-                        .name(name)
-                        .year(year)
-                        .brand(brand)
-                        .plate(plate);
-                    exit = o.saveIt();
-                    break;
-            }
-            String body;
-            if (exit) body = "Vehiculo correctamente registrado!";
-            else body = "El registro no pudo completarse.";
-            body += "<input type=button onclick=\"javascript: history.back()\" value=\"Atras\">";
-            return body;
-        });
     }
     
-    public static boolean sesionExists(Request r) {
-        return r.session(false) != null; 
+    
+    /**
+     * Metodo auxiliar para controlar si un 
+     * usuario ya inicio sesion en el sitio.
+     */
+    public static boolean yaInicio(Request request) {
+        Session session = request.session(false);
+        if (session != null) {
+            Set<String> attrb = request.session(false).attributes();
+            return attrb.contains("user_email") && attrb.contains("user_id");
+        }
+        else return false;
     }
 }

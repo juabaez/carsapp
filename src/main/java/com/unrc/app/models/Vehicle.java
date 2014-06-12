@@ -15,6 +15,10 @@ public class Vehicle extends Model {
       return (this.getString("name") + " " + this.getString("brand") + "(" + this.getString("year")+ ")");
   } 
   
+  public String owner(){
+      return this.parent(User.class).toString();
+  }
+  
   @Override
   public boolean saveIt(){
       if (this.get("type") == null) {

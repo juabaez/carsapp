@@ -1,0 +1,20 @@
+<table class="reg_table">
+    <tr>
+        <td colspan="2"><b>Vehiculos:</b></td>
+    </tr><tr class="tr_header">
+      <td>
+        Nombre
+      </td><td>
+        Dueño
+      </td>
+    </tr>
+    {{#vehicles}}
+      <tr>
+          <td>
+          {{toString}}
+          </td><td>
+          {{owner}}
+          </td>
+      </tr>
+    {{/vehicles}} 
+</table>
