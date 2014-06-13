@@ -1,0 +1,64 @@
+<form id='formulario'>
+    <table class="reg_table">
+        <tr>
+            <td>Nombre:</td>
+            <td><input type=text name=name></td>
+        </tr><tr>
+            <td>Marca:</td>
+            <td><input type=text name=brand></td>
+        </tr><tr>
+            <td>Año</td>
+            <td><input type=text name=year></td>
+        </tr><tr>
+            <td>Patente</td>
+            <td><input type=text name=plate></td>
+        </tr><tr>
+            <td>Tipo:</td>
+            <td>    
+                <select name="type">
+                    <option value="car">auto</option>
+                    <option value="truck">camion</option>
+                    <option value="bike">moto</option>
+                    <option value="other">otro</option>
+                </select><br>
+            </td>
+        </tr><tr>
+            <td>Cantidad de puertas:</td>
+                <td>
+                    <select name="doors">
+                        <option value="0">-</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </td>
+        </tr><tr>
+            <td>Cantidad Pasajeros:</td>
+            <td><input type=text name=passengers></td>
+        </tr><tr>
+            <td>Carga Maxima:</td>
+            <td><input type=text name=max_load></td>
+        </tr><tr>
+            <td>Cilindrada:</td>
+            <td>
+                <select name="displacement">
+                    <option value="70">70 cc</option>
+                    <option value="90">90 cc</option>
+                    <option value="110">110 cc</option>
+                    <option value="125">125 cc</option>
+                    <option value="150">150 cc</option>
+                    <option value="200">200 cc</option>
+                    <option value="250">250 cc</option>
+                    <option value="400">400 cc</option>
+                    <option value="600">600 cc</option>
+                    <option value="1100">1100 cc</option>
+                    <option value="0">otro</option>
+                </select>
+            </td>
+        </tr><tr>
+            <td colspan="2"><input type=button onclick="postear('vehicles','columnacen','formulario')" value=Enviar></td>
+        </tr>
+    </table>
+    <input type="hidden" name="user_id" value="{{user_id}}">
+</form>

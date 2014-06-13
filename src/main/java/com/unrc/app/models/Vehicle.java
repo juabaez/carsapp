@@ -2,7 +2,6 @@ package com.unrc.app.models;
 
 import java.util.LinkedList;
 import java.util.List;
-import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 
 public class Vehicle extends Model {
@@ -14,6 +13,10 @@ public class Vehicle extends Model {
   public String toString() {
       return (this.getString("name") + " " + this.getString("brand") + "(" + this.getString("year")+ ")");
   } 
+  
+  public String owner(){
+      return this.parent(User.class).toString();
+  }
   
   @Override
   public boolean saveIt(){

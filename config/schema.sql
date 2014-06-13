@@ -27,7 +27,7 @@ CREATE TABLE administrators(
 DROP TABLE IF EXISTS cities;
 CREATE TABLE cities (
   id INT NOT NULL auto_increment PRIMARY KEY,
-  postcode INT NOT NULL,
+  postcode INT NOT NULL unique,
   name VARCHAR(20) NOT NULL,
   state VARCHAR(20) NOT NULL,
   country VARCHAR(20) NOT NULL

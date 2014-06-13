@@ -1,33 +1,35 @@
-<form action="/users" method=POST name='formulario'>
-	<table class="reg_table">
-    <tr>
-        <td colspan="2"><b>Formulario de registro de usuario:</b></td>
-    </tr><tr>
-        <td>Nombre:</td>
-        <td><input type=text name='first_name'></td>
-    </tr><tr>
-        <td>Apellido:</td>
-        <td><input type=text name='last_name'></td>
-    </tr><tr>
-        <td>Password:</td>
-        <td><input type=password name='pass'></td>
-    </tr><tr>
-        <td>Direccion:</td>
-        <td><input type=text name='address'></td>
-    </tr><tr>
-        <td>Email:</td>
-        <td><input type=text name='email'></td>
-    </tr><tr>
-        <td>Ciudad:</td>
-        <td>
-            <select name='postcode'>
+<form id='formulario'>
+    <table class="reg_table">
+        <tr>
+            <td colspan="2"><b>Formulario de registro de usuario:</b></td>
+        </tr><tr>
+            <td>Nombre:</td>
+            <td><input type=text name='first_name'></td>
+        </tr><tr>
+            <td>Apellido:</td>
+            <td><input type=text name='last_name'></td>
+        </tr><tr>
+            <td>Contraseña:</td>
+            <td><input type=password name='pass'></td>
+        </tr><tr>
+            <td>Direccion:</td>
+            <td><input type=text name='address'></td>
+        </tr><tr>
+            <td>E-Mail:</td>
+            <td><input type=text name='email'></td>
+        </tr><tr>
+            <td>Ciudad:</td>
+            <td>
+                <select name='postcode'>
                     {{#cities}}
-					<option value="{{postcode}}">{{toString}}</option>
+                        <option value="{{postcode}}">{{toString}}</option>
                     {{/cities}}  
-            </select>        
-        </td>
-    </tr><tr>
-        <td colspan="2" align="center"><input type=submit value="Registrarme" class="s_button"></td>
-    </tr>
+                </select>        
+            </td>
+        </tr><tr>
+            <td colspan="2" align="center">
+                <input type=button onclick="postear('users/new', 'columnacen', 'formulario')" value="Registrarme" class="s_button">
+            </td>
+        </tr>
     </table>
 </form>
