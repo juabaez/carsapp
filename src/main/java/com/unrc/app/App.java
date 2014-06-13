@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.node.Node;
 import org.javalite.activejdbc.Base;
 import spark.ModelAndView;
 import spark.Request;
@@ -24,6 +26,9 @@ import static spark.Spark.*;
 
 public class App 
 {
+    
+    public static Node node;
+    public static Client client;
     public static void main(String[] args) { 
         
         externalStaticFileLocation("./public"); // Static files 
@@ -110,8 +115,8 @@ public class App
             (request, response) -> {
                 if (null != existsSession(request)) {
                     Map<String, Object> attributes = new HashMap<>();
-                    Integer user_id = request.session(false).attribute("user_id");
-                    List<Vehicle> vehicles = (List<Vehicle>) Vehicle.filter("user_id", user_id.toString());
+                    String user_email = request.session(false).attribute("user_email");
+                    List<Vehicle> vehicles = User.findByEmail(user_email).getAll(Vehicle.class);
 
                     attributes.put("vehicles", vehicles);
 
@@ -140,8 +145,8 @@ public class App
             (request, response) -> {
                 if (null != existsSession(request)) {
                     Map<String, Object> attributes = new HashMap<>();
-                    Integer user_id = request.session(false).attribute("user_id");
-                    List<Post> posts = Post.filter("user_id", user_id.toString());
+                    String user_email = request.session(false).attribute("user_email");
+                    List<Post> posts =  User.findByEmail(user_email).getAll(Post.class);
 
                     attributes.put("posts", posts);
 
@@ -165,7 +170,7 @@ public class App
                     return new ModelAndView(attributes, "./moustache/newuser.moustache");
                 } else {
                     Map<String, Object> attributes = new HashMap<>();
-                    attributes.put("user_email", request.attribute("user_email").toString());
+                    attributes.put("user_email", request.session(false).attribute("user_email").toString());
                     return new ModelAndView(attributes, "./moustache/alreadylogged.moustache");
                 }
             },
@@ -181,13 +186,14 @@ public class App
             String email = request.queryParams("email");
             String address = request.queryParams("address");
             String postcode = request.queryParams("postcode");
+            
             String body = "";
             
-            if ((first_name.equals(""))
+            if (!((first_name.equals(""))
                 || (last_name.equals(""))
                 || (pass.equals(""))
                 || (email.equals(""))
-                || (address.equals(""))) {
+                || (address.equals("")))) {
                 City c = City.findByPostCode(postcode);
                 User u = new User();
                 u
@@ -379,10 +385,12 @@ public class App
             (request, response) -> {
                 if(null != existsSession(request)) {
                     Map<String, Object> attributes = new HashMap<>();
-                    List<Vehicle> vehicles = (List<Vehicle>) Vehicle.all();
+                    
+                    String user_email = request.session(false).attribute("user_email");
+                    
+                    List<Vehicle> vehicles = User.findByEmail(user_email).getAll(Vehicle.class);
 
                     attributes.put("vehicles", vehicles);
-                    attributes.put("user_id", request.session(false).attribute("user_id").toString());
 
                     return new ModelAndView(attributes, "./moustache/newpost.moustache");
                 } else {
@@ -396,7 +404,7 @@ public class App
             Integer price = Integer.getInteger(request.queryParams("price"), 9999);
             String text = request.queryParams("text");
             String vehicle_id = request.queryParams("vehicle_id");
-            String user_id = request.session(false).attribute("user_id");
+            String user_email = request.session(false).attribute("user_email");
             String body = "";
             boolean exit;
             
@@ -404,10 +412,9 @@ public class App
                 Post p = new Post();
                 p
                     .price(price)
-                    .text(body)
-                    .setParents(User.findById(user_id), Vehicle.findById(vehicle_id));
-                exit = p.saveIt();
-                if (!exit) body = "Anuncio correctamente publicado!";
+                    .text(text)
+                    .setParents(User.findByEmail(user_email), Vehicle.findById(vehicle_id));
+                if (p.saveIt()) body = "Anuncio correctamente publicado!";
                 else body = "El anuncio no pudo ser publicado.";
             }
             return body;
@@ -466,7 +473,29 @@ public class App
             return body;
         });
         //</editor-fold>
+        
+        //<editor-fold desc="Sparks for elastic search">
+        get("/abrir", (request, response) -> {
+            node = org.elasticsearch.node
+                                .NodeBuilder
+                                .nodeBuilder()
+                                .clusterName("carsapp")
+                                .local(true)
+                                .node();
+
+            client = node.client();  
+            return "servidor abierto!!!!!!!!!!!!!!!!!!!!";
+        });
+        
+        get("/cerrar", (request, response) -> {
+            client.close();
+            node.close();
+            return "servidor cerrado!!!!!!!!!!!!!!!!!!!!";
+        });
+        //</editor-fold>
     }
+    
+    
     
     
     //<editor-fold desc="existsSession(Request)">
@@ -488,6 +517,8 @@ public class App
         else return null;
     }
     //</editor-fold>
+    
+    
 }
 
 //

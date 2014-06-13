@@ -94,14 +94,16 @@ a:hover {
 
 #columnaizq {
     width: 15%;
-    float: left;
+    position: absolute;
+    left: 50px;
     text-align: justify;
     overflow: hidden;
     }
 
 #columnader {
     width: 15%;
-    float: right;
+    position: absolute;
+    right: 50px;
     text-align: justify;
     overflow: hidden;
     }

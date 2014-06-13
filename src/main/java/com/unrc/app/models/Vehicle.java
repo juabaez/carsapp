@@ -1,22 +1,40 @@
 package com.unrc.app.models;
 
+import com.unrc.app.App;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.node.Node;
 import org.javalite.activejdbc.Model;
 
 public class Vehicle extends Model {
-  static {
-      validatePresenceOf("name", "brand", "year", "plate", "user_id");
-  }
+    static {
+        validatePresenceOf("name", "brand", "year", "plate", "user_id");
+    }
+
+    @Override
+    public String toString() {
+        return (this.getString("name") + " " + this.getString("brand") + "(" + this.getString("year")+ ")");
+    } 
+
+    public String owner(){
+        return this.parent(User.class).toString();
+    }
   
-  @Override
-  public String toString() {
-      return (this.getString("name") + " " + this.getString("brand") + "(" + this.getString("year")+ ")");
-  } 
-  
-  public String owner(){
-      return this.parent(User.class).toString();
-  }
+    @Override
+      public void afterCreate(){
+      Map<String, Object> json = new HashMap<>();
+      json.put("name", this.toString());
+      json.put("owner", this.owner());
+
+      App.client.prepareIndex("vehicles", "vehicle")
+                  .setSource(json)
+                  .execute()
+                  .actionGet();
+
+    }
   
   @Override
   public boolean saveIt(){

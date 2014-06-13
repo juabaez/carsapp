@@ -28,7 +28,7 @@
             </td>
         </tr><tr class="tr_header">
             <td colspan="2" align="center">
-                <input type=button onclick="postear('users/new', 'columnacen', 'formulario')" value="Registrarme" class="s_button">
+                <input type=button onclick="postear('users', 'columnacen', 'formulario')" value="Registrarme" class="s_button">
             </td>
         </tr>
     </table>

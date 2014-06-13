@@ -35,8 +35,8 @@ INSERT INTO `carsapp_development`.`vehicles` (`plate`, `user_id`, `name`, `brand
     VALUES ('AMY471', '2', 'Clio', 'Renault', '2002', 'car', '4');
 
 INSERT INTO `carsapp_development`.`posts` (`user_id`, `vehicle_id`, `price`, `text`) 
-    VALUES ('1', '1', '45000', 'Hola, vendo mi Clio... Es modelo 2002 y esta en excelente estado.');
+    VALUES ('2', '2', '45000', 'Hola, vendo mi Clio... Es modelo 2002 y esta en excelente estado.');
 
 INSERT INTO `carsapp_development`.`posts` (`user_id`, `vehicle_id`, `price`, `text`) 
-    VALUES ('2', '2', '45000', 'Hola, vendo mi Ford Ka... Es modelo 2007 y esta en muy buen estado.');
+    VALUES ('1', '1', '45000', 'Hola, vendo mi Ford Ka... Es modelo 2007 y esta en muy buen estado.');
 

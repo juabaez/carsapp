@@ -1,6 +1,11 @@
 package com.unrc.app.models;
 
+import com.unrc.app.App;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.node.Node;
 import org.javalite.activejdbc.Model;
 
 public class Post extends Model {
@@ -23,8 +28,8 @@ public class Post extends Model {
     }
 
     public String author(){
-        User u = User.filter("id", this.getString("user_id")).get(0);
-        return u.firstName() + " " + u.lastName();
+        System.out.println((User.class).toString());
+        return this.parent(User.class).toString();
     }
 
     public Post price(int i) {
@@ -37,7 +42,8 @@ public class Post extends Model {
     }
     
     public String vehicle(){
-        return Vehicle.findById(this.get("vehicle_id")).toString();
+        System.out.println((Vehicle.class).toString());
+        return this.parent(Vehicle.class).toString();
     }
 
     public boolean addQuestion(String text, User user) {
@@ -79,5 +85,18 @@ public class Post extends Model {
   
     public static List<Post> all(){
         return Post.findAll();
+    }
+          
+    @Override
+      public void afterCreate(){
+
+      Map<String, Object> json = new HashMap<>();
+      json.put("text", this.text());
+      json.put("author", this.author());
+
+      App.client.prepareIndex("posts", "post")
+                  .setSource(json)
+                  .execute()
+                  .actionGet();
     }
 }
