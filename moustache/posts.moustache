@@ -1,18 +1,22 @@
 <table class="info_table">
     <tr class="tr_header">
       <td>
-        Nombre
+        Autor
       </td><td>
-        Dueño
+        Texto
+      </td><td>
+        Precio
       </td>
     </tr>
-    {{#vehicles}}
+    {{#posts}}
       <tr>
           <td>
-          {{toString}}
+            {{author}}
           </td><td>
-          {{owner}}
+            {{text}}
+          </td><td>
+            {{price}}
           </td>
       </tr>
-    {{/vehicles}} 
+    {{/posts}} 
 </table>

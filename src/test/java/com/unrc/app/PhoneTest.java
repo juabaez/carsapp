@@ -1,15 +1,14 @@
 package com.unrc.app;
 
-import com.unrc.app.models.User;
 import com.unrc.app.models.City;
 import com.unrc.app.models.Phone;
-
+import com.unrc.app.models.Phone.PhoneType;
+import com.unrc.app.models.User;
 import org.javalite.activejdbc.Base;
+import static org.javalite.test.jspec.JSpec.the;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.javalite.test.jspec.JSpec.the;
 
 public class PhoneTest{
     @Before
@@ -54,8 +53,8 @@ public class PhoneTest{
         the(phone.errors().get("user_id")).shouldBeEqual("value is missing");
         
         phone
-            .type(Phone.phoneType.home)
-            .num(4628083)
+            .type(PhoneType.home)
+            .num("4628083")
             .setParent(user);
         phone.saveIt();
         

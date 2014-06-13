@@ -1,5 +1,8 @@
 body {
-    background-color: #3A3A3A;
+    background: #000000;
+    font-family: sans-serif;
+    font-size: 14px;
+    background-image: url("./bg.png");
     color: #FFFFFF;
     top: 0;
     bottom: 0;
@@ -12,21 +15,34 @@ a {
 
 a:hover {
     color: white;
-    text-decoration: underline;
+    font-weight: bold;
+    text-decoration: none;
     }
+
+#header {
+    font-size:64px;
+    font-family: sans-serif;
+    font-weight: bold;
+    margin: 0 auto;
+    text-align: center;
+}
 
 #menuprincipal {
     margin: 0 auto;
     display:table;
+    width: 600px;
     }
 
 #cuerpo {
+    background-color: #0F0F0F;
+    background-color: rgba(25,25,25, 0.5);
+    width: 600px;
     margin: 0 auto;
-    width: 80%;
-}
+    }
 
 #columnacen {
     margin: 0 auto;
+    width: 600px;
     text-align: center;
     }
 
@@ -35,11 +51,46 @@ a:hover {
     text-align: left;
     }
     
+.info_table {
+    margin: 0 auto;
+    text-align: left;
+    border: 2px solid;
+    border-color: #203040;
+    border-collapse:collapse;
+    }
+
+.info_table td,tr{
+    border: 2px solid;
+    border-color: #203040;
+    padding: 5px 10px;   
+    }
+
+.info_table .tr_header {
+    text-align: center;
+    font-weight: bold;
+    padding-bottom: 50px;
+    background-color: rgba(50,100,125, 0.1);
+}
 
 .reg_table {
     margin: 0 auto;
-    text-align: left;
+    border: 2px solid;
+    border-color: #203040;
+    border-collapse:collapse;
     }
+
+.reg_table .tr_header {
+    text-align: center;
+    font-weight: bold;
+    padding-bottom: 50px;
+    background-color: rgba(50,50,150, 0.1);
+}
+.reg_table td,tr{
+    border: 2px solid;
+    border-color: #203040;
+    padding: 5px 10px;   
+    }
+
 
 #columnaizq {
     width: 15%;
@@ -55,13 +106,12 @@ a:hover {
     overflow: hidden;
     }
 
-.reg_form {
-    
-  }
-
 .s_button {
-    color: #3AAACA;
-    border: 0px;
+    color: #FFFFFF;
+    background-color: rgba(0,0,0, 0);
+    border: 2px;
+    border-style: solid;
+    border-color: #FFFFFF;
   }
 
 .popmenu {
@@ -70,8 +120,14 @@ a:hover {
 	line-height: 20px;
     height: 20px;
     padding: 0;
-    background-color: #15252F;
+    background-color: #0F0F0F;
+    background-color: rgba(0,0,0, 0.2);
     width: 200px;
+    }
+
+.popmenu:hover {
+    font-weight: bold;
+    text-decoration: none;
     }
 
 .popmenu div{
@@ -85,9 +141,11 @@ a:hover {
     }
  
 .popmenu ul {
+    font-weight: normal;
 	margin: 0;
 	padding: 0;
-    background-color: rgba(0,70,100, 0.8);
+    background-color: #224477;
+    background-color: rgba(0,30,40, 0.8);
     }
 
 .popmenu ul li {

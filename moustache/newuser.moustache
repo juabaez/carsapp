@@ -1,7 +1,7 @@
 <form id='formulario'>
     <table class="reg_table">
-        <tr>
-            <td colspan="2"><b>Formulario de registro de usuario:</b></td>
+        <tr class="tr_header">
+            <td colspan="2">Formulario de registro de usuario</td>
         </tr><tr>
             <td>Nombre:</td>
             <td><input type=text name='first_name'></td>
@@ -26,7 +26,7 @@
                     {{/cities}}  
                 </select>        
             </td>
-        </tr><tr>
+        </tr><tr class="tr_header">
             <td colspan="2" align="center">
                 <input type=button onclick="postear('users/new', 'columnacen', 'formulario')" value="Registrarme" class="s_button">
             </td>

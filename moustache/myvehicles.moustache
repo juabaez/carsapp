@@ -1,26 +1,24 @@
 <table class="info_table">
     <tr class="tr_header">
+        <td colspan="3">Mis vehiculos</td>
+    </tr><tr class="tr_header">
       <td>
         Nombre
       </td><td>
-        Provincia
+        Marca
       </td><td>
-        Pais
-      </td><td>
-        Codigo Postal
+        Año
       </td>
     </tr>
-    {{#cities}}
+    {{#vehicles}}
       <tr>
           <td>
             {{name}}
           </td><td>
-            {{state}}
+            {{brand}}
           </td><td>
-            {{country}}
-          </td><td>
-            {{postcode}}
+            {{year}}
           </td>
       </tr>
-    {{/cities}} 
+    {{/vehicles}} 
 </table>

@@ -1,0 +1,22 @@
+<table class="info_table">
+    <tr class="tr_header" rowspan="3">
+      <td>
+        Vehiculo
+      </td><td>
+        Texto
+      </td><td>
+        Precio
+      </td>
+    </tr>
+    {{#posts}}
+      <tr>
+          <td>
+            {{vehicle}}
+          </td><td>
+            {{text}}
+          </td><td>
+            {{price}}
+          </td>
+      </tr>
+    {{/posts}} 
+</table>

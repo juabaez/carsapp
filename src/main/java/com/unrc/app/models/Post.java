@@ -35,6 +35,10 @@ public class Post extends Model {
     public int price(){
         return this.getInteger("price");
     }
+    
+    public String vehicle(){
+        return Vehicle.findById(this.get("vehicle_id")).toString();
+    }
 
     public boolean addQuestion(String text, User user) {
         Question question = new Question();

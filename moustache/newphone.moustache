@@ -1,0 +1,23 @@
+<form id="formulario">
+	<table border="0" class="reg_table">
+        <tr class="tr_header">
+            <td colspan="2">Agregar un telefono</td>
+        </tr><tr>
+            <td>Tipo:</td>
+            <td>
+                <select name="type">
+                    <option value="home">Casa</option>
+                    <option value="personal">Movil</option>
+                    <option value="work">Trabajo</option>
+                </select>        
+            </td>
+        </tr><tr>
+            <td>Numero:</td>
+            <td><input type=text name="number" /></td>
+        </tr><tr class="tr_header">
+            <td colspan="2" align="center">
+                <input type=button onclick="postear('phones', 'columnacen', 'formulario')" value="Agregar" class="s_button" />
+            </td>
+        </tr>
+    </table>
+</form>

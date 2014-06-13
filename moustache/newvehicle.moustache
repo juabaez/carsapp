@@ -1,6 +1,8 @@
-<form id='formulario'>
+<form id="formulario">
     <table class="reg_table">
-        <tr>
+        <tr class="tr_header">
+            <td colspan="2">Formulario de registro de vehiculo</td>
+        </tr><tr>
             <td>Nombre:</td>
             <td><input type=text name=name></td>
         </tr><tr>
@@ -15,7 +17,7 @@
         </tr><tr>
             <td>Tipo:</td>
             <td>    
-                <select name="type">
+                <select name="type" id="vehicle_type">
                     <option value="car">auto</option>
                     <option value="truck">camion</option>
                     <option value="bike">moto</option>
@@ -25,7 +27,7 @@
         </tr><tr>
             <td>Cantidad de puertas:</td>
                 <td>
-                    <select name="doors">
+                    <select name="doors" id="doors">
                         <option value="0">-</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -56,9 +58,8 @@
                     <option value="0">otro</option>
                 </select>
             </td>
-        </tr><tr>
+        </tr><tr class="tr_header">
             <td colspan="2"><input type=button onclick="postear('vehicles','columnacen','formulario')" value=Enviar></td>
         </tr>
     </table>
-    <input type="hidden" name="user_id" value="{{user_id}}">
 </form>

@@ -1,7 +1,9 @@
 <form id="formulario">
 	<table border="0" class="reg_table">
-        <tr>
-            <td>Ciudades disponibles:</td>
+        <tr class="tr_header">
+            <td colspan="2"><b>Formulario de registro de ciudad</b></td>
+        </tr><tr class="tr_header">
+            <td>Ciudades disponibles</td>
             <td>
                 <select>
                   {{#cities}}
@@ -9,8 +11,6 @@
                   {{/cities}}  
                 </select>        
             </td>
-        </tr><tr>
-            <td colspan="2"><b>Formulario de registro de ciudad:</b></td>
         </tr><tr>
             <td>Nombre:</td>
             <td><input type=text name=name></td>
@@ -23,6 +23,7 @@
         </tr><tr>
             <td>Pais:</td>
             <td><input type=text name=country></td>
+        </tr><tr class="tr_header">
             <td colspan="2" align="center">
                 <input type=button onclick="postear('cities/new', 'columnacen', 'formulario')" value="Registrar" class="s_button">
             </td>

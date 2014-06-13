@@ -40,7 +40,7 @@ DROP TABLE IF EXISTS phones;
 CREATE TABLE phones (
   id INT NOT NULL auto_increment PRIMARY KEY,
   type VARCHAR(20) NOT NULL,
-  num INT NOT NULL,
+  num VARCHAR(30) NOT NULL,
   user_id int NOT NULL
 );
 

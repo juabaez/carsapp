@@ -7,35 +7,28 @@
   <script type='text/javascript' src='jquery.getParams.js'></script>
   <script type='text/javascript' src='ajax.js'></script>
   <script type='text/javascript'>
-      function verusuarios(direccion){
-        if (direccion === "adelante") {  
-          document.usuarios.page.value++; 
-          $('#boton').click(); 
-        }
-        if (direccion === "atras") { 
-            document.usuarios.page.value--;
-          $('#boton').click(); 
-        }  
-        if (!direccion) {
-            traer('users', 'columnacen');
-        }
+      function reactivarFields() {
+              document.getElementById("doors").disabled=true;
       }
   </script>
 </head>
 
 <body>
-<div id="header"></div>
+<div id="header">CarsAPP</div>
+<div id="cuerpo">
 <div id="menuprincipal">
 
   <div class="popmenu">UserCP
     <div>
       <ul>
+        <li><a href="#" onclick="traer('login', 'columnacen')">Iniciar sesion</a></li>    
+        <li><a href="#" onclick="traer('logout', 'columnacen')">Cerrar sesion</a></li>
+        <li><a href="#" onclick="traer('myphones', 'columnacen')">Mis telefonos</a></li>    
+        <li><a href="#" onclick="traer('phones/new', 'columnacen')">Agregar telefono</a></li>   
         <li><a href="#" onclick="traer('myvehicles', 'columnacen')">Mis vehiculos</a></li>    
         <li><a href="#" onclick="traer('vehicles/new', 'columnacen')">Nuevo vehiculo</a></li>   
         <li><a href="#" onclick="traer('myposts', 'columnacen')">Mis anuncios</a></li>   
         <li><a href="#" onclick="traer('posts/new', 'columnacen')">Nuevo anuncio</a></li>   
-        <li><a href="#" onclick="traer('login', 'columnacen')">Iniciar sesion</a></li>    
-        <li><a href="#" onclick="traer('logout', 'columnacen')">Cerrar sesion</a></li>
       </ul>
     </div>
   </div>
@@ -52,17 +45,16 @@
   <div class="popmenu">Ver
     <div>
       <ul>
-        <li><a href="#" onclick="verusuarios('atras')">Usuarios(Pag prev.)</a></li>
-        <li><a href="#" onclick="verusuarios('adelante')">Usuarios(Pag sig.)</a></li>
-        <li><a href="#" onclick="verusuarios()">Usuarios(Todos)</a></li>
+        <li><a href="#" onclick="traer('users', 'columnacen')">Usuarios</a></li>
         <li><a href="#" onclick="traer('cities', 'columnacen')">Ciudades</a></li>
         <li><a href="#" onclick="traer('vehicles', 'columnacen')">Vehiculos</a></li>
+        <li><a href="#" onclick="traer('posts', 'columnacen')">Anuncios</a></li>
+        <li><a href="#" onclick="traer('phones', 'columnacen')">Telefonos</a></li>
       </ul>
     </div>
   </div>
-    
-</div><hr width="80%" align="center" style="margin: 0 auto" />
-<div id="cuerpo">
+    <br>
+</div>
     
   <div id="columnaizq"></div>
   <div id="columnader"></div>

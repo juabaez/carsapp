@@ -1,18 +1,18 @@
 <table class="info_table">
     <tr class="tr_header">
       <td>
-        Nombre
+        Tipo
       </td><td>
-        Dueño
+        Numero
       </td>
     </tr>
-    {{#vehicles}}
+    {{#phones}}
       <tr>
           <td>
-          {{toString}}
+            {{type}}
           </td><td>
-          {{owner}}
+            {{num}}
           </td>
       </tr>
-    {{/vehicles}} 
+    {{/phones}} 
 </table>

@@ -1,5 +1,5 @@
-<table class="reg_table"> 
-  <tr>
+<table class="info_table"> 
+  <tr class="tr_header">
     <td><b>Nombre</b></td>
     <td><b>E-Mail</b></td>
 </tr>
