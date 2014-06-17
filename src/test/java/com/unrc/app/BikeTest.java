@@ -57,7 +57,7 @@ public class BikeTest {
             .displacement(250)
             .name("XTZ")
             .brand("Yamaha")
-            .year(2007)
+            .year("2007")
             .plate("ABC321")
             .setParent(user);
         bike.saveIt();

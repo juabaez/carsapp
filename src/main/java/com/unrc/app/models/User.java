@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.node.Node;
 import org.javalite.activejdbc.Model;
 
 public class User extends Model {
@@ -35,7 +33,7 @@ public class User extends Model {
       json.put("name", this.toString());
       json.put("email", this.get("email"));
 
-      App.client.prepareIndex("users", "user")
+      App.client().prepareIndex("users", "user")
                   .setSource(json)
                   .execute()
                   .actionGet();
@@ -64,7 +62,7 @@ public class User extends Model {
 
     @Override
     public String toString() {
-        return (this.getString("first_name") + " " + this.getString("last_name"));
+        return (this.firstName() + " " + this.lastName());
     }
 
     public String firstName(){

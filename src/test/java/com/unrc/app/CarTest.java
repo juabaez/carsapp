@@ -58,7 +58,7 @@ public class CarTest {
             .passengers(4)
             .name("Ka")
             .brand("Ford")
-            .year(2007)
+            .year("2007")
             .plate("GDQ202")
             .setParent(user);
         car.saveIt();

@@ -55,7 +55,7 @@ public class OtherTest {
         other
             .name("Raptor")
             .brand("Yamaha")
-            .year(2007)
+            .year("2007")
             .plate("ABC123")
             .setParent(user);
         other.saveIt();

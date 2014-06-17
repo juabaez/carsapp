@@ -34,10 +34,9 @@ a:hover {
     }
 
 #cuerpo {
-    background-color: #0F0F0F;
-    background-color: rgba(25,25,25, 0.5);
-    width: 600px;
     margin: 0 auto;
+    width: 840px;
+    background-color: rgba(0,0,0,0.4);
     }
 
 #columnacen {
@@ -55,13 +54,13 @@ a:hover {
     margin: 0 auto;
     text-align: left;
     border: 2px solid;
-    border-color: #203040;
+    border-color: #403020;
     border-collapse:collapse;
     }
 
 .info_table td,tr{
     border: 2px solid;
-    border-color: #203040;
+    border-color: #503010;
     padding: 5px 10px;   
     }
 
@@ -69,13 +68,13 @@ a:hover {
     text-align: center;
     font-weight: bold;
     padding-bottom: 50px;
-    background-color: rgba(50,100,125, 0.1);
+    background-color: rgba(125,75,25, 0.1);
 }
 
 .reg_table {
     margin: 0 auto;
     border: 2px solid;
-    border-color: #203040;
+    border-color: #503010;
     border-collapse:collapse;
     }
 
@@ -83,34 +82,26 @@ a:hover {
     text-align: center;
     font-weight: bold;
     padding-bottom: 50px;
-    background-color: rgba(50,50,150, 0.1);
+    background-color: rgba(150,50,50, 0.1);
 }
 .reg_table td,tr{
     border: 2px solid;
-    border-color: #203040;
+    border-color: #503020;
     padding: 5px 10px;   
     }
 
 
 #columnaizq {
-    width: 15%;
-    position: absolute;
-    left: 50px;
-    text-align: justify;
-    overflow: hidden;
+    float: right;
     }
 
 #columnader {
-    width: 15%;
-    position: absolute;
-    right: 50px;
-    text-align: justify;
-    overflow: hidden;
+    float: right;
     }
 
 .s_button {
     color: #FFFFFF;
-    background-color: rgba(0,0,0, 0);
+    background-color: rgba(0,0,0, 0.3);
     border: 2px;
     border-style: solid;
     border-color: #FFFFFF;
@@ -123,7 +114,7 @@ a:hover {
     height: 20px;
     padding: 0;
     background-color: #0F0F0F;
-    background-color: rgba(0,0,0, 0.2);
+    background-color: rgba(255,255,255, 0.1);
     width: 200px;
     }
 
@@ -147,7 +138,7 @@ a:hover {
 	margin: 0;
 	padding: 0;
     background-color: #224477;
-    background-color: rgba(0,30,40, 0.8);
+    background-color: rgba(40,30,0, 0.8);
     }
 
 .popmenu ul li {

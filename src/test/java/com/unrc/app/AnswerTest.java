@@ -53,7 +53,7 @@ public class AnswerTest {
         vehicle
             .brand("Ford")
             .name("Ka")
-            .year(2007)
+            .year("2007")
             .plate("GDQ202")
             .setParent(user);
         vehicle.saveIt();

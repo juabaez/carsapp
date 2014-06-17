@@ -4,16 +4,16 @@
             <td colspan="2">Formulario de registro de vehiculo</td>
         </tr><tr>
             <td>Nombre:</td>
-            <td><input type=text name=name></td>
+            <td><input type=text name="name" /></td>
         </tr><tr>
             <td>Marca:</td>
-            <td><input type=text name=brand></td>
+            <td><input type=text name="brand" /> </td>
         </tr><tr>
             <td>Año</td>
-            <td><input type=text name=year></td>
+            <td><input type=text name="year" /></td>
         </tr><tr>
             <td>Patente</td>
-            <td><input type=text name=plate></td>
+            <td><input type=text name="plate" /></td>
         </tr><tr>
             <td>Tipo:</td>
             <td>    
@@ -59,7 +59,7 @@
                 </select>
             </td>
         </tr><tr class="tr_header">
-            <td colspan="2"><input type=button onclick="postear('vehicles','columnacen','formulario')" value=Enviar></td>
+            <td colspan="2"><input type=button onclick="postear('vehicles','columnacen','formulario')" value=Enviar /></td>
         </tr>
     </table>
 </form>

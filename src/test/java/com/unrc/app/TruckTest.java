@@ -64,7 +64,7 @@ public class TruckTest {
             .maxLoad(2000)
             .brand("Volvo")
             .name("Actros")
-            .year(2007)
+            .year("2007")
             .plate("JHI702")
             .setParent(user);
         truck.saveIt();

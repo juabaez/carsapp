@@ -94,7 +94,7 @@ public class Post extends Model {
       json.put("text", this.text());
       json.put("author", this.author());
 
-      App.client.prepareIndex("posts", "post")
+      App.client().prepareIndex("posts", "post")
                   .setSource(json)
                   .execute()
                   .actionGet();

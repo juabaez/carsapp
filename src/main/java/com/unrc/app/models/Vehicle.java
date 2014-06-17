@@ -29,7 +29,7 @@ public class Vehicle extends Model {
       json.put("name", this.toString());
       json.put("owner", this.owner());
 
-      App.client.prepareIndex("vehicles", "vehicle")
+      App.client().prepareIndex("vehicles", "vehicle")
                   .setSource(json)
                   .execute()
                   .actionGet();
@@ -58,7 +58,7 @@ public class Vehicle extends Model {
       return this;
   }
   
-  public Vehicle year(int i){
+  public Vehicle year(String i){
       this.set("year", i);
       return this;
   }

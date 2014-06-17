@@ -1,6 +1,5 @@
 package com.unrc.app;
 
-import com.unrc.app.models.Administrator;
 import com.unrc.app.models.Bike;
 import com.unrc.app.models.Car;
 import com.unrc.app.models.City;
@@ -27,8 +26,16 @@ import static spark.Spark.*;
 public class App 
 {
     
-    public static Node node;
-    public static Client client;
+    public static final Node node = org.elasticsearch.node
+                                        .NodeBuilder
+                                        .nodeBuilder()
+                                        .clusterName("carsapp")
+                                        .local(true)
+                                        .node();
+    public static Client client(){
+        return node.client();
+    }
+    
     public static void main(String[] args) { 
         
         externalStaticFileLocation("./public"); // Static files 
@@ -69,7 +76,7 @@ public class App
             },
             new MustacheTemplateEngine()
         );
-        
+         
         get("/phones",
             (request, response) -> {
                 Map<String, Object> attributes = new HashMap<>();
@@ -267,14 +274,16 @@ public class App
         post("/vehicles", (request, response) -> {
             String name = request.queryParams("name");
             String brand = request.queryParams("brand");
-            int year = Integer.getInteger(request.queryParams("year"), 9999);
+            String year = request.queryParams("year");
             String plate = request.queryParams("plate");
             String type = request.queryParams("type");
             Integer user_id = request.session(false).attribute("user_id");
             String body = "";
+            System.out.println(request.queryParams("year"));
+            System.out.println(name + brand + year + plate + type);
             boolean exit = false;
             
-            if (!(name.equals("") || brand.equals("") || (year == 9999) || plate.equals(""))){
+            if (!(name.equals("") || brand.equals("") || (year.equals("")) || plate.equals(""))){
                 switch(type) {
                     case "car":
                         int passengers = Integer.getInteger(request.queryParams("passengers"), 4);
@@ -323,7 +332,7 @@ public class App
                         exit = o.saveIt();
                         break;
                 }
-                if (!exit) body = "Vehiculo correctamente registrado!";
+                if (exit == true) body = "Vehiculo correctamente registrado!";
                 else body = "El vehiculo no pudo ser cargado en la base de datos.";
             } else {
                 body += "El registro no pudo completarse porque algun campo estaba vacio!";
@@ -475,28 +484,13 @@ public class App
         //</editor-fold>
         
         //<editor-fold desc="Sparks for elastic search">
-        get("/abrir", (request, response) -> {
-            node = org.elasticsearch.node
-                                .NodeBuilder
-                                .nodeBuilder()
-                                .clusterName("carsapp")
-                                .local(true)
-                                .node();
-
-            client = node.client();  
-            return "servidor abierto!!!!!!!!!!!!!!!!!!!!";
-        });
-        
+        //Deberia realizarse automaticamente al cerrarse la aplicacion?
         get("/cerrar", (request, response) -> {
-            client.close();
             node.close();
-            return "servidor cerrado!!!!!!!!!!!!!!!!!!!!";
+            return "servidor cerrado!";
         });
         //</editor-fold>
     }
-    
-    
-    
     
     //<editor-fold desc="existsSession(Request)">
     /**
@@ -518,14 +512,4 @@ public class App
     }
     //</editor-fold>
     
-    
 }
-
-//
-//
-//TODO: 
-//add moustache newpost
-//add vehicle form controls 
-//add elastric search
-//
-//
