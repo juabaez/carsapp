@@ -16,6 +16,14 @@ function postear(url, contenedor, formulario) {
     });
 };
 
+function eliminar(url, contenedor, id) {
+    $.ajax({
+        method: 'DELETE',
+        url: url + "/" + document.getElementById(id).value,
+        success: function(returnData){escribir(returnData, contenedor);}
+    });
+};
+
 function escribir(dato, contenedor) {
     $("#" + contenedor).html(dato);
 };

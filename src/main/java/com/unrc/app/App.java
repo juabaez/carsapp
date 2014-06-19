@@ -26,6 +26,7 @@ import static spark.Spark.*;
 public class App 
 {
     
+    //<editor-fold desc="Elastic search init">
     public static final Node node = org.elasticsearch.node
                                         .NodeBuilder
                                         .nodeBuilder()
@@ -35,7 +36,29 @@ public class App
     public static Client client(){
         return node.client();
     }
+    //</editor-fold>
     
+    //<editor-fold desc="existsSession(Request)">
+    /**
+     * Metodo auxiliar para controlar si un 
+     * usuario ya inicio sesion en el sitio.
+     * @param request the user request
+     * @return iff session exists, returns the session
+     * else, returns null.
+     */
+    public static Session existsSession(Request request) {
+        Session session = request.session(false);
+        if (null != session) {
+            Set<String> attrb = request.session(false).attributes();
+            if (attrb.contains("user_email") && attrb.contains("user_id"))
+                return session;
+            else return null;
+        }
+        else return null;
+    }
+    //</editor-fold>
+    
+    //<editor-fold desc="Main">
     public static void main(String[] args) { 
         
         externalStaticFileLocation("./public"); // Static files 
@@ -183,7 +206,7 @@ public class App
             },
             new MustacheTemplateEngine()
         ); 
-        // </editor-fold>
+        //</editor-fold>
         
         // <editor-fold desc="Sparks for user register">
         post("/users", (request, response) -> {
@@ -218,6 +241,44 @@ public class App
             return body;
         });
         //</editor-fold>
+        
+        // <editor-fold desc="Sparks for vehicle deletion">
+        get("/vehicles/del", 
+            (request, response) -> {
+                if(null != existsSession(request)) {
+                    Map<String, Object> attributes = new HashMap<>();
+                    
+                    String user_email = request.session(false).attribute("user_email");
+                    
+                    List<Vehicle> vehicles = User.findByEmail(user_email).getAll(Vehicle.class);
+
+                    attributes.put("vehicles", vehicles);
+
+                    return new ModelAndView(attributes, "./moustache/vehicledel.moustache");
+                } else {
+                    return new ModelAndView(null, "./moustache/notlogged.moustache");
+                }
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        delete("/vehicles/:id", (request, response) -> {
+            String body = "";
+            
+            Vehicle v = Vehicle.findById(request.params(":id"));
+            
+            if (null != v) {
+                if(v.delete()) {
+                    body += "El vehiculo fue correctamente eliminado";
+                } else {
+                    body += "El vehiclo no pudo ser eliminado";
+                }
+            } else {
+                body += "El vehiculo no fue encontrado en la base de datos!";
+            }
+            return body;
+        });
+        // </editor-fold>
         
         // <editor-fold desc="Sparks for city register">
         get("/cities/new", 
@@ -279,8 +340,6 @@ public class App
             String type = request.queryParams("type");
             Integer user_id = request.session(false).attribute("user_id");
             String body = "";
-            System.out.println(request.queryParams("year"));
-            System.out.println(name + brand + year + plate + type);
             boolean exit = false;
             
             if (!(name.equals("") || brand.equals("") || (year.equals("")) || plate.equals(""))){
@@ -389,7 +448,7 @@ public class App
         });
         //</editor-fold>
         
-        // <editor-fold desc="Sparks for posts register">
+        // <editor-fold desc="Sparks for post posts">
         get("/posts/new", 
             (request, response) -> {
                 if(null != existsSession(request)) {
@@ -490,25 +549,6 @@ public class App
             return "servidor cerrado!";
         });
         //</editor-fold>
-    }
-    
-    //<editor-fold desc="existsSession(Request)">
-    /**
-     * Metodo auxiliar para controlar si un 
-     * usuario ya inicio sesion en el sitio.
-     * @param request the user request
-     * @return iff session exists, returns the session
-     * else, returns null.
-     */
-    public static Session existsSession(Request request) {
-        Session session = request.session(false);
-        if (null != session) {
-            Set<String> attrb = request.session(false).attributes();
-            if (attrb.contains("user_email") && attrb.contains("user_id"))
-                return session;
-            else return null;
-        }
-        else return null;
     }
     //</editor-fold>
     
