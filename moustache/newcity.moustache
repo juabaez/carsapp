@@ -25,7 +25,7 @@
             <td><input type=text name=country></td>
         </tr><tr class="tr_header">
             <td colspan="2" align="center">
-                <input type=button onclick="postear('cities/new', 'columnacen', 'formulario')" value="Registrar" class="s_button">
+                <input type=button onclick="postear('cities', 'columnacen', 'formulario')" value="Registrar" class="s_button">
             </td>
           </tr>
     </table>

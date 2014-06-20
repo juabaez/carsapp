@@ -1,6 +1,6 @@
 package com.unrc.app.models;
 
-import com.unrc.app.App;
+import com.unrc.app.ElasticSearch;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,12 +32,12 @@ public class User extends Model {
       Map<String, Object> json = new HashMap<>();
       json.put("name", this.toString());
       json.put("email", this.get("email"));
+      json.put("id", this.getId());
 
-      App.client().prepareIndex("users", "user")
+      ElasticSearch.client().prepareIndex("users", "user")
                   .setSource(json)
                   .execute()
                   .actionGet();
-
     }
 
     public User lastName(String s) {

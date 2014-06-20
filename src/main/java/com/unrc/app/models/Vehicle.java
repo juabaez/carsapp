@@ -1,12 +1,10 @@
 package com.unrc.app.models;
 
-import com.unrc.app.App;
+import com.unrc.app.ElasticSearch;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.node.Node;
 import org.javalite.activejdbc.Model;
 
 public class Vehicle extends Model {
@@ -24,25 +22,25 @@ public class Vehicle extends Model {
     }
   
     @Override
-      public void afterCreate(){
-      Map<String, Object> json = new HashMap<>();
-      json.put("name", this.toString());
-      json.put("owner", this.owner());
+    public void afterCreate(){
+        Map<String, Object> json = new HashMap<>();
+        json.put("name", this.toString());
+        json.put("owner", this.owner());
+        json.put("id", this.getId());
 
-      App.client().prepareIndex("vehicles", "vehicle")
-                  .setSource(json)
-                  .execute()
-                  .actionGet();
-
+        ElasticSearch.client().prepareIndex("vehicles", "vehicle")
+                    .setSource(json)
+                    .execute()
+                    .actionGet();
     }
   
-  @Override
-  public boolean saveIt(){
-      if (this.get("type") == null) {
-          this.set("type", "other");
-      }
-      return super.saveIt();
-  }
+    @Override
+    public boolean saveIt(){
+        if (this.get("type") == null) {
+            this.set("type", "other");
+        }
+        return super.saveIt();
+    }
   
   public static List<?> all(){
       return Vehicle.findAll();

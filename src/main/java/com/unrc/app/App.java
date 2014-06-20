@@ -14,8 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.node.Node;
 import org.javalite.activejdbc.Base;
 import spark.ModelAndView;
 import spark.Request;
@@ -23,22 +21,7 @@ import spark.Session;
 import spark.Spark;
 import static spark.Spark.*;
 
-public class App 
-{
-    
-    //<editor-fold desc="Elastic search init">
-    public static final Node node = org.elasticsearch.node
-                                        .NodeBuilder
-                                        .nodeBuilder()
-                                        .clusterName("carsapp")
-                                        .local(true)
-                                        .node();
-    public static Client client(){
-        return node.client();
-    }
-    //</editor-fold>
-    
-    //<editor-fold desc="existsSession(Request)">
+public class App {
     /**
      * Metodo auxiliar para controlar si un 
      * usuario ya inicio sesion en el sitio.
@@ -56,11 +39,30 @@ public class App
         }
         else return null;
     }
-    //</editor-fold>
     
-    //<editor-fold desc="Main">
+    /** Metodo para convertir una cadena a un entero con un radix 10
+     * @param s una cadena que debera ser un valor numero en sistema decimal
+     * @return una representacion entera de s si es posible, null en caso contrario
+     */
+    public static Integer strToInt(String s) {
+        Integer num = null;
+        if (s.isEmpty()) return num;
+        else {
+            int i;
+            num = 0;
+            for(i = 0; i < s.length(); i++) {
+                if (((int)s.charAt(i) >= 48) && ((int)s.charAt(i) <= 57)) {
+                    num = (num*10) + ((int)s.charAt(i) - 48);
+                } else {
+                    num = null;
+                    break;
+                }
+            }
+            return num; 
+        }
+    }
+    
     public static void main(String[] args) { 
-        
         externalStaticFileLocation("./public"); // Static files 
         
         // <editor-fold desc="Spark filters (for db connection)">
@@ -301,10 +303,10 @@ public class App
             String country = request.queryParams("country");
             String postcode = request.queryParams("postcode");
             
-            if ((name.equals(""))
+            if (!((name.equals(""))
                 || (state.equals(""))
                 || (country.equals(""))
-                || (postcode.equals(""))) {
+                || (null == strToInt(postcode)))) {
                     City c = new City();
                     c
                         .name(name)
@@ -339,10 +341,11 @@ public class App
             String plate = request.queryParams("plate");
             String type = request.queryParams("type");
             Integer user_id = request.session(false).attribute("user_id");
-            String body = "";
-            boolean exit = false;
             
-            if (!(name.equals("") || brand.equals("") || (year.equals("")) || plate.equals(""))){
+            String body = "";
+            boolean exit = (name.equals("") || brand.equals("") || (null == strToInt(year)) || plate.equals(""));
+            
+            if (!exit){
                 switch(type) {
                     case "car":
                         int passengers = Integer.getInteger(request.queryParams("passengers"), 4);
@@ -417,6 +420,7 @@ public class App
             PhoneType phonetype = PhoneType.personal;
             String num = request.queryParams("number");
             Integer user_id = request.session(false).attribute("user_id");
+            
             String body = "";
             
             switch(type) {
@@ -431,7 +435,7 @@ public class App
                     break;
             }
             
-            if (!num.equals("")) {
+            if (null != (strToInt(num))) {
                 User u = User.findById(user_id);
                 Phone p = new Phone();
                 p
@@ -469,21 +473,27 @@ public class App
         );
         
         post("/posts", (request, response) -> {
-            Integer price = Integer.getInteger(request.queryParams("price"), 9999);
+            String price = request.queryParams("price");
             String text = request.queryParams("text");
             String vehicle_id = request.queryParams("vehicle_id");
-            String user_email = request.session(false).attribute("user_email");
-            String body = "";
-            boolean exit;
+            Integer user_id = request.session(false).attribute("user_id");
             
-            if ((text.equals("")) || (price.equals(9999))) {
+            User u = User.findById(user_id);
+            Vehicle v = Vehicle.findById(vehicle_id);
+            
+            String body = "";
+            boolean exit = text.equals("") || null == strToInt(price) || null == u || null == v;
+            
+            if (!exit) {
                 Post p = new Post();
                 p
                     .price(price)
                     .text(text)
-                    .setParents(User.findByEmail(user_email), Vehicle.findById(vehicle_id));
-                if (p.saveIt()) body = "Anuncio correctamente publicado!";
-                else body = "El anuncio no pudo ser publicado.";
+                    .setParents(u, v);
+                if (p.saveIt()) body += "Anuncio correctamente publicado!";
+                else body += "El anuncio no pudo ser publicado.";
+            } else {
+                body += "Algunos de los campos esta vacio...";
             }
             return body;
         });
@@ -542,14 +552,9 @@ public class App
         });
         //</editor-fold>
         
-        //<editor-fold desc="Sparks for elastic search">
-        //Deberia realizarse automaticamente al cerrarse la aplicacion?
-        get("/cerrar", (request, response) -> {
-            node.close();
-            return "servidor cerrado!";
+        get("/abrir", (r, q) -> {
+            ElasticSearch.client();
+            return "Servidor abierto";
         });
-        //</editor-fold>
     }
-    //</editor-fold>
-    
 }

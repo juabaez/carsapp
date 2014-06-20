@@ -59,7 +59,7 @@ public class QuestionTest {
         Post post = new Post();
         post
             .text("Vendo Peugeot Partner 2011")
-            .price(28000)
+            .price("28000")
             .setParents(user, vehicle);
         post.saveIt();
         

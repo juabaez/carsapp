@@ -1,11 +1,9 @@
 package com.unrc.app.models;
 
-import com.unrc.app.App;
+import com.unrc.app.ElasticSearch;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.node.Node;
 import org.javalite.activejdbc.Model;
 
 public class Post extends Model {
@@ -32,7 +30,7 @@ public class Post extends Model {
         return this.parent(User.class).toString();
     }
 
-    public Post price(int i) {
+    public Post price(String i) {
         this.set("price", i);
         return this;
     }
@@ -88,15 +86,17 @@ public class Post extends Model {
     }
           
     @Override
-      public void afterCreate(){
+    public void afterCreate(){
 
-      Map<String, Object> json = new HashMap<>();
-      json.put("text", this.text());
-      json.put("author", this.author());
+    Map<String, Object> json = new HashMap<>();
+    json.put("text", this.text());
+    json.put("author", this.author());
+    json.put("vehicle", this.vehicle());
+    json.put("id", this.getId());
 
-      App.client().prepareIndex("posts", "post")
-                  .setSource(json)
-                  .execute()
-                  .actionGet();
+    ElasticSearch.client().prepareIndex("posts", "post")
+                .setSource(json)
+                .execute()
+                .actionGet();
     }
 }
