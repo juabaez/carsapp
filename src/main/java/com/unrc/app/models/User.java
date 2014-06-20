@@ -107,50 +107,6 @@ public class User extends Model {
         } else return null;
     }
 
-    public boolean addVehicle(String type, String... args){
-    if ((args.length>0) && (args.length % 2 == 0)) {
-        switch(type){
-            case "car": 
-                Car car = new Car();
-                car.set(args);
-                car.setParent(this);
-                return car.saveIt();  
-            case "truck":
-                Truck truck = new Truck();
-                truck.set(args);
-                truck.setParent(this);
-                return truck.saveIt();  
-            case "bike":
-                Bike bike = new Bike();
-                bike.set(args);
-                bike.setParent(this);
-                return bike.saveIt();  
-            case "other":
-                Other other = new Other();
-                other.set(args);
-                other.setParent(this);
-                return other.saveIt();  
-            default:
-                Vehicle vehicle = new Vehicle();
-                vehicle.set(args);
-                vehicle.setParent(this);
-                return vehicle.saveIt();
-        }
-    } else return false;
-    }
-    
-    public static List<User> fromXtoY(int x, int y) {
-        List<User> l = new LinkedList();
-        if ((x>0) && (y>=x)) {
-            int q = y-x;
-            x--;
-            q++;
-            String query = "SELECT * FROM users LIMIT " + x + ", " + q;
-            l = User.findBySQL(query);
-        }
-        return l;
-    }
-
     public String pass() {
         return this.getString("pass");
     }
