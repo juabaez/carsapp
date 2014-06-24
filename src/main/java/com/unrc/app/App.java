@@ -270,11 +270,12 @@ public class App {
             Vehicle v = Vehicle.findById(request.params(":id"));
             
             if (null != v) {
-                if(v.delete()) {
-                    body += "El vehiculo fue correctamente eliminado";
-                } else {
-                    body += "El vehiclo no pudo ser eliminado";
-                }
+                List<Post> posts = v.getAll(Post.class);
+                posts.stream().forEach((p) -> {
+                    p.deleteCascade();
+                });
+                v.deleteCascade();
+                body += "El vehiculo fue correctamente eliminado";
             } else {
                 body += "El vehiculo no fue encontrado en la base de datos!";
             }
