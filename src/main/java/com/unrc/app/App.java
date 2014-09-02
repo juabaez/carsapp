@@ -48,7 +48,7 @@ public class App {
         Integer num = null;
         if (s.isEmpty()) return num;
         else {
-            int i;
+            Integer i;
             num = 0;
             for(i = 0; i < s.length(); i++) {
                 if (((int)s.charAt(i) >= 48) && ((int)s.charAt(i) <= 57)) {
@@ -349,7 +349,7 @@ public class App {
             if (!exit){
                 switch(type) {
                     case "car":
-                        int passengers = Integer.getInteger(request.queryParams("passengers"), 4);
+                        Integer passengers = strToInt(request.queryParams("passengers"));
                         Car c = new Car();
                         c
                             .passengers(passengers)
@@ -361,7 +361,7 @@ public class App {
                         exit = c.saveIt();
                         break;
                     case "bike":
-                        int displacement = Integer.getInteger(request.queryParams("displacement"), 0);
+                        Integer displacement = strToInt(request.queryParams("displacement"));
                         Bike b = new Bike();
                         b
                             .displacement(displacement)
@@ -373,7 +373,7 @@ public class App {
                         exit = b.saveIt();
                         break;
                     case "truck":
-                        int max_load = Integer.getInteger(request.queryParams("max_load"), 0);
+                        Integer max_load = strToInt(request.queryParams("max_load"));
                         Truck t = new Truck();
                         t
                             .maxLoad(max_load)
@@ -553,9 +553,11 @@ public class App {
         });
         //</editor-fold>
         
+        //<editor-fold desc="Spark for manual open Elastic Search">
         get("/abrir", (r, q) -> {
             ElasticSearch.client();
             return "Servidor abierto";
         });
+        //</editor-fold>
     }
 }

@@ -32,9 +32,8 @@ public class User extends Model {
       Map<String, Object> json = new HashMap<>();
       json.put("name", this.toString());
       json.put("email", this.get("email"));
-      json.put("id", this.getId());
 
-      ElasticSearch.client().prepareIndex("users", "user")
+      ElasticSearch.client().prepareIndex("users", "user", this.getId().toString())
                   .setSource(json)
                   .execute()
                   .actionGet();
