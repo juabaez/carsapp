@@ -22,6 +22,7 @@ CREATE TABLE administrators(
 );
 
 
+/* This admin must be created automatically */
 /******************************/
 /* Creator the 'Webmaster'   */
 INSERT INTO administrators (pass,email) VALUES ('admin','admin');
