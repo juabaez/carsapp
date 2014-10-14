@@ -22,6 +22,11 @@ CREATE TABLE administrators(
 );
 
 
+/******************************/
+/* Creator the 'Webmaster'   */
+INSERT INTO administrators (pass,email) VALUES ('admin','admin');
+
+
 /**********************/
 /* Table for 'City'   */
 DROP TABLE IF EXISTS cities;
