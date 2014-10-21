@@ -1,5 +1,6 @@
 package com.unrc.app;
 
+import com.unrc.app.models.Administrator;
 import com.unrc.app.models.Bike;
 import com.unrc.app.models.Car;
 import com.unrc.app.models.City;
@@ -32,10 +33,7 @@ public class App {
     public static Session existsSession(Request request) {
         Session session = request.session(false);
         if (null != session) {
-            Set<String> attrb = request.session(false).attributes();
-            if (attrb.contains("user_email") && attrb.contains("user_id"))
-                return session;
-            else return null;
+            return session;
         }
         else return null;
     }
@@ -244,45 +242,6 @@ public class App {
         });
         //</editor-fold>
         
-        // <editor-fold desc="Sparks for vehicle deletion">
-        get("/vehicles/del", 
-            (request, response) -> {
-                if(null != existsSession(request)) {
-                    Map<String, Object> attributes = new HashMap<>();
-                    
-                    String user_email = request.session(false).attribute("user_email");
-                    
-                    List<Vehicle> vehicles = User.findByEmail(user_email).getAll(Vehicle.class);
-
-                    attributes.put("vehicles", vehicles);
-
-                    return new ModelAndView(attributes, "./moustache/vehicledel.moustache");
-                } else {
-                    return new ModelAndView(null, "./moustache/notlogged.moustache");
-                }
-            },
-            new MustacheTemplateEngine()
-        );
-        
-        delete("/vehicles/:id", (request, response) -> {
-            String body = "";
-            
-            Vehicle v = Vehicle.findById(request.params(":id"));
-            
-            if (null != v) {
-                List<Post> posts = v.getAll(Post.class);
-                posts.stream().forEach((p) -> {
-                    p.deleteCascade();
-                });
-                v.deleteCascade();
-                body += "El vehiculo fue correctamente eliminado";
-            } else {
-                body += "El vehiculo no fue encontrado en la base de datos!";
-            }
-            return body;
-        });
-        // </editor-fold>
-        
         // <editor-fold desc="Sparks for city register">
         get("/cities/new", 
             (request, response) -> {
@@ -453,6 +412,47 @@ public class App {
         });
         //</editor-fold>
         
+        // <editor-fold desc="Sparks for administrators register">
+        get("/administrators/new", 
+            (request, response) -> {
+                Session s;
+                if(null != (s = existsSession(request)) ? request.session().attribute("email").equals("admin") : false) {
+                    return new ModelAndView(null, "./moustache/newadmin.moustache");
+                } else {
+                    if (null == s) {
+                        return new ModelAndView(null, "./moustache/notlogged.moustache");
+                    }
+                    else {
+                        return new ModelAndView(null, "./moustache/notadmin.moustache");
+                    }
+                }
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        post("/administrator",
+                (request, response) -> {
+                    String body = "";
+                    String email = request.queryParams("email");
+                    String pass = request.queryParams("pass");
+                    if (null == email || null == pass) {
+                        body += "<body><script type='text/javascript'>";
+                        body += "alert('No puede haber ningun campo vacio.'); document.location = '/';";
+                        body += "</script></body>";
+                    }else{
+                        Administrator admin = new Administrator();
+                        admin
+                                .email(email)
+                                .pass(pass)
+                                .saveIt();
+                            body += "<body><script type='text/javascript'>";
+                            body += "alert('Administrador correctamente registrado!.'); document.location = '/';";
+                            body += "</script></body>";
+                    }
+                    return body;
+        });
+        //</editor-fold>
+        
         // <editor-fold desc="Sparks for post posts">
         get("/posts/new", 
             (request, response) -> {
@@ -500,6 +500,45 @@ public class App {
         });
         //</editor-fold>
         
+        // <editor-fold desc="Sparks for vehicle deletion">
+        get("/vehicles/del", 
+            (request, response) -> {
+                if(null != existsSession(request)) {
+                    Map<String, Object> attributes = new HashMap<>();
+                    
+                    String user_email = request.session(false).attribute("user_email");
+                    
+                    List<Vehicle> vehicles = User.findByEmail(user_email).getAll(Vehicle.class);
+
+                    attributes.put("vehicles", vehicles);
+
+                    return new ModelAndView(attributes, "./moustache/vehicledel.moustache");
+                } else {
+                    return new ModelAndView(null, "./moustache/notlogged.moustache");
+                }
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        delete("/vehicles/:id", (request, response) -> {
+            String body = "";
+            
+            Vehicle v = Vehicle.findById(request.params(":id"));
+            
+            if (null != v) {
+                List<Post> posts = v.getAll(Post.class);
+                posts.stream().forEach((p) -> {
+                    p.deleteCascade();
+                });
+                v.deleteCascade();
+                body += "El vehiculo fue correctamente eliminado";
+            } else {
+                body += "El vehiculo no fue encontrado en la base de datos!";
+            }
+            return body;
+        });
+        // </editor-fold>
+        
         // <editor-fold desc="Sparks for user session management">
         post("/login", (request, response) -> {
             String body = "";
@@ -510,14 +549,25 @@ public class App {
                 Session session = request.session(true);
                 session.attribute("user_email", email);
                 session.attribute("user_id", u.getId());
-                session.maxInactiveInterval(30*60);
+                session.maxInactiveInterval(60);
                 body += "<body><script type='text/javascript'>";
                 body += "alert('Bienvenido " + u + "!'); document.location = '/';";
                 body += "</script></body>";
                 return body;
             } else {
-                body += "El email indicado no existe o la contraseña no coincide.";
-                return body;
+                Administrator a = Administrator.findByEmail(email);
+                if (a != null ? a.pass().equals(pwd) : false) {
+                    Session session = request.session(true);
+                    session.attribute("admin_email", email);
+                    session.maxInactiveInterval(60);
+                    body += "<body><script type='text/javascript'>";
+                    body += "alert('Bienvenido administrador " + u + "!'); document.location = '/';";
+                    body += "</script></body>";
+                    return body;
+                }else{
+                    body += "El email indicado no existe o la contraseña no coincide.";
+                    return body;
+                }
             }
         });
         

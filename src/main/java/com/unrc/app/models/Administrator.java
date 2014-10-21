@@ -53,4 +53,9 @@ public class Administrator extends Model {
         }
         return post;
     }
+    
+    public static Administrator findByEmail(String email) {
+        return Administrator.findFirst("email = ?", email);
+    }
+    
 }
