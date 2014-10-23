@@ -30,7 +30,6 @@ a:hover {
 #menuprincipal {
     margin: 0 auto;
     display:table;
-    width: 600px;
     }
 
 #cuerpo {
@@ -49,6 +48,11 @@ a:hover {
     margin: 0 auto;
     text-align: left;
     }
+    
+.hidden_button{
+        position: absolute;
+        visibility: hidden;
+}
     
 .info_table {
     margin: 0 auto;
