@@ -1,6 +1,9 @@
 package com.unrc.app.models;
 
+import com.unrc.app.ElasticSearch;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.javalite.activejdbc.Model;
 
 public class Administrator extends Model {
@@ -14,6 +17,18 @@ public class Administrator extends Model {
                 .email("email")
                 .pass("pass");
         return admin.saveIt();
+    }    
+    
+    @Override
+    public void afterCreate(){
+        super.afterCreate();
+        Map<String, Object> json = new HashMap<>();
+        json.put("email", this.get("email"));
+
+        ElasticSearch.client().prepareIndex("admins", "admin", this.getId().toString())
+                    .setSource(json)
+                    .execute()
+                    .actionGet();
     }
     
     public static List<Administrator> all(){

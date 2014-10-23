@@ -1,6 +1,5 @@
 body {
-    background: #000000;
-    font-family: sans-serif;
+    font-family: sans;
     font-size: 14px;
     background-image: url("./bg.png");
     color: #FFFFFF;
@@ -27,21 +26,16 @@ a:hover {
     text-align: center;
 }
 
-#menuprincipal {
-    margin: 0 auto;
-    display:table;
-    }
-
 #cuerpo {
     margin: 0 auto;
-    width: 840px;
-    background-color: rgba(0,0,0,0.4);
+    width: 80%;
     }
 
 #columnacen {
     margin: 0 auto;
-    width: 600px;
+    width: 70%;
     text-align: center;
+    background-color: rgba(0,0,0,0.4);
     }
 
 #columnacen table {
@@ -96,11 +90,13 @@ a:hover {
 
 
 #columnaizq {
-    float: right;
+    float: left;
+    width: 15%;
     }
 
 #columnader {
     float: right;
+    width: 15%;
     }
 
 .s_button {
@@ -112,40 +108,38 @@ a:hover {
   }
 
 .popmenu {
+    text-align: center;
+    line-height: 20px;
     float: left;
-	text-align: center;
-	line-height: 20px;
     height: 20px;
     padding: 0;
     background-color: #0F0F0F;
     background-color: rgba(255,255,255, 0.1);
-    width: 200px;
+    width: 100%;
     }
 
 .popmenu:hover {
     font-weight: bold;
     text-decoration: none;
-    }
+}
 
 .popmenu div{
-	position: relative;
-	visibility: hidden;
-    }
+    position: relative;
+    visibility: hidden;
+}
  
 .popmenu:hover div {
     visibility: visible; 
-    text-align: center;
-    }
+    background-color: #000000;
+}
  
 .popmenu ul {
     font-weight: normal;
-	margin: 0;
-	padding: 0;
-    background-color: #224477;
-    background-color: rgba(40,30,0, 0.8);
-    }
+    margin: 0;
+    padding: 0;
+}
 
 .popmenu ul li {
     padding: 5px 15px 5px 15px; 
     display: block;
-    }
+}
