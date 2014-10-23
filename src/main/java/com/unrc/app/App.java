@@ -14,7 +14,6 @@ import com.unrc.app.models.Vehicle;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.javalite.activejdbc.Base;
 import spark.ModelAndView;
 import spark.Request;
@@ -32,6 +31,29 @@ public class App {
      */
     public static Session existsSession(Request request) {
         return request.session(false);
+    }
+    
+    /**
+     * Metodo auxiliar utilizado para comprobar
+     * si una sesion es de un usuario administrator
+     * Es necesitada para poder ocultar y mostrar ciertas
+     * opciones en las templates moustache
+     * @param session the possible administrator session
+     * @return true if exists an admin with the email of 
+     * the current user, else return false.
+     */
+    public static int sessionLevel(Session session){
+        if (null!=session) {
+            Boolean isWebmaster = session.attribute("email").toString().equals("admin");
+            Boolean isAdmin = Administrator.findByEmail(session.attribute("email")) != null;
+            Boolean isUser = User.findByEmail(session.attribute("email")) != null;
+            if (isWebmaster) return 3;
+            if (isAdmin) return 2;
+            if (isUser) return 1;
+            return 0;
+        } else {
+            return 0;
+        }
     }
     
     /** Metodo para convertir una cadena a un entero con un radix 10
@@ -72,6 +94,20 @@ public class App {
         //</editor-fold>
         
         // <editor-fold desc="Sparks GET for all models">
+        get("/index", 
+            (request, response) -> {
+                Map<String, Object> attributes = new HashMap<>();
+                Session session = existsSession(request);
+                int sessionLevel = sessionLevel(session);
+                attributes.put("perms", sessionLevel);
+                if (sessionLevel > 0) {
+                    attributes.put("email", session.attribute("email"));
+                }
+                return new ModelAndView(attributes, "./moustache/index.moustache");
+            },
+            new MustacheTemplateEngine()
+        );
+        
         get("/users", 
             (request, response) -> {
                 Map<String, Object> attributes = new HashMap<>();
@@ -546,7 +582,7 @@ public class App {
                 session.attribute("user_id", u.getId());
                 session.maxInactiveInterval(60);
                 body += "<body><script type='text/javascript'>";
-                body += "alert('Bienvenido " + u + "!'); document.location = '/';";
+                body += "alert('Bienvenido " + u + "!'); document.location = '/index';";
                 body += "</script></body>";
                 return body;
             } else {
@@ -556,31 +592,44 @@ public class App {
                     session.attribute("email", email);
                     session.maxInactiveInterval(60);
                     body += "<body><script type='text/javascript'>";
-                    body += "alert('Bienvenido administrador " + u + "!'); document.location = '/';";
+                    body += "alert('Bienvenido administrador'); document.location = '/index';";
                     body += "</script></body>";
                     return body;
                 }else{
-                    body += "El email indicado no existe o la contraseña no coincide.";
+                    body += "<body><script type='text/javascript'>";
+                    body += "alert('El email indicado no existe o la contraseña no coincide.'); document.location = '/index';";
+                    body += "</script></body>";
                     return body;
                 }
             }
         });
-        
-        get("/login", (request, response) -> {
-            if(null == existsSession(request)) 
-                response.redirect("/login.html");
-            else return "Usted ya ha iniciado sesion con el email: " + request.session(false).attribute("email");
-            return null;
-        });
+         
+        get("/login",
+            (request, response) -> {
+                if(null == existsSession(request)) { 
+                    return new ModelAndView(null, "./moustache/login.moustache");
+                } else {
+                    Map<String, Object> attributes = new HashMap<>();
+                    String email = existsSession(request).attribute("email");
+                    attributes.put("email", email);
+                    return new ModelAndView(null, "./moustache/alreadylogged.moustache");
+                }
+            },
+            new MustacheTemplateEngine()
+        );
         
         get("/logout", (request, response) -> {
             String body = "";
             Session session = existsSession(request);
             if (null == session) {
-                body += "No hay ninguna sesion activa.";
+                    body += "<body><script type='text/javascript'>";
+                    body += "alert('No hay ninguna sesion abierta.'); document.location = '/index';";
+                    body += "</script></body>";
             } else {
                 session.invalidate();
-                body += "Sesion cerrada correctamente.";
+                    body += "<body><script type='text/javascript'>";
+                    body += "alert('Adios! Regresa pronto.'); document.location = '/index';";
+                    body += "</script></body>";
             }
             return body;
         });
@@ -590,6 +639,7 @@ public class App {
             Session s;
             if (null != (s = existsSession(request))) {
                 body += "Usted ya ha iniciado sesion!";
+                body += " -- " + s.attribute("email");
             }
             else {
                 body += "No hay ninguna sesion activa!";

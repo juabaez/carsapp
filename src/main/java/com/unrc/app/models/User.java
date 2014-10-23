@@ -27,15 +27,15 @@ public class User extends Model {
   
     @Override
     public void afterCreate(){
+        super.afterCreate();
+        Map<String, Object> json = new HashMap<>();
+        json.put("name", this.toString());
+        json.put("email", this.get("email"));
 
-      Map<String, Object> json = new HashMap<>();
-      json.put("name", this.toString());
-      json.put("email", this.get("email"));
-
-      ElasticSearch.client().prepareIndex("users", "user", this.getId().toString())
-                  .setSource(json)
-                  .execute()
-                  .actionGet();
+        ElasticSearch.client().prepareIndex("users", "user", this.getId().toString())
+                    .setSource(json)
+                    .execute()
+                    .actionGet();
     }
 
     public User lastName(String s) {

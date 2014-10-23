@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>CARSAPP - Index</title>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="jquery.getParams.js"></script>
+    <script type="text/javascript" src="ajax.js"></script>
+    <script type="text/javascript">
+        function reactivarFields() {
+            document.getElementById("doors").disabled = true;
+        }        
+        function mostrarCuerpo(){
+            var perms = {{perms}};
+            var login = document.getElementById("login");
+            var usercp = document.getElementById("usercp");
+            var admincp = document.getElementById("admincp");
+            var newadmin = document.getElementById("newadmin");
+            switch(perms){
+                case 0: 
+                        usercp.parentNode.removeChild(usercp);
+                        admincp.parentNode.removeChild(admincp);
+                        newadmin.parentNode.removeChild(newadmin);
+                        break;
+                case 1:
+                        login.parentNode.removeChild(login);
+                        admincp.parentNode.removeChild(admincp);
+                        newadmin.parentNode.removeChild(newadmin);
+                        break;
+                case 2:
+                        usercp.parentNode.removeChild(usercp);
+                        login.parentNode.removeChild(login);
+                        newadmin.parentNode.removeChild(newadmin);
+                        break;
+                case 3:
+                        usercp.parentNode.removeChild(usercp);
+                        login.parentNode.removeChild(login);
+                        break;
+            }
+            document.getElementById("cuerpo").style.visibility="visible";
+        }
+    </script>
+</head>
+<body onload="mostrarCuerpo()">
+    <div id="header">CarsAPP</div>
+    <div id="cuerpo" style="visibility: hidden">
+        <div id="columnaizq">
+            <div class="popmenu" id="login">Inicio
+                <div>
+                    <ul>
+                        <li>
+                            <a href="#" onclick="traer('login','columnacen');">Iniciar sesion</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="popmenu" id="admincp">AdminCP
+                <div>
+                    <ul>
+                        <li id="newadmin">
+                                <a href="#" onclick="traer('administrators/new', 'columnacen')">Nuevo administrador</a>
+                        </li>
+                        <li>
+                                <a href="#" onclick="traer('logout', 'columnacen')">Cerrar sesion</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="popmenu" id="usercp"> UserCP 
+                <div>
+                    <ul>  
+                        <li>
+                                <a href="#" onclick="traer('logout', 'columnacen')">Cerrar sesion</a>
+                        </li>
+                        <li>
+                                <a href="#" onclick="traer('myphones', 'columnacen')">Mis telefonos</a>
+                        </li>    
+                        <li>
+                                <a href="#" onclick="traer('phones/new', 'columnacen')">Agregar telefono</a>
+                        </li>   
+                        <li>
+                                <a href="#" onclick="traer('myvehicles', 'columnacen')">Mis vehiculos</a>
+                        </li>    
+                        <li>
+                                <a href="#" onclick="traer('vehicles/del', 'columnacen')">Eliminar vehiculos</a>
+                        </li>    
+                        <li>
+                                <a href="#" onclick="traer('vehicles/new', 'columnacen')">Nuevo vehiculo</a>
+                        </li>   
+                        <li>
+                                <a href="#" onclick="traer('myposts', 'columnacen')">Mis anuncios</a>
+                        </li>   
+                        <li>
+                                <a href="#" onclick="traer('posts/new', 'columnacen')">Nuevo anuncio</a>
+                        </li>   
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="columnader">
+                    <div class="popmenu">Registrar
+                <div>
+                    <ul>
+                        <li><a href="#" onclick="traer('users/new', 'columnacen')">Usuario</a></li>
+                        <li><a href="#" onclick="traer('cities/new', 'columnacen')">Ciudad</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="popmenu">Ver
+                <div>
+                    <ul>
+                        <li><a href="#" onclick="traer('users', 'columnacen')">Usuarios</a></li>
+                        <li><a href="#" onclick="traer('cities', 'columnacen')">Ciudades</a></li>
+                        <li><a href="#" onclick="traer('vehicles', 'columnacen')">Vehiculos</a></li>
+                        <li><a href="#" onclick="traer('posts', 'columnacen')">Anuncios</a></li>
+                        <li><a href="#" onclick="traer('phones', 'columnacen')">Telefonos</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="columnacen"></div>  
+    </div>
+</body>
