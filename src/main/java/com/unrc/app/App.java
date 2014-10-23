@@ -31,11 +31,7 @@ public class App {
      * else, returns null.
      */
     public static Session existsSession(Request request) {
-        Session session = request.session(false);
-        if (null != session) {
-            return session;
-        }
-        else return null;
+        return request.session(false);
     }
     
     /** Metodo para convertir una cadena a un entero con un radix 10
@@ -116,8 +112,8 @@ public class App {
             (request, response) -> {
                 if (null != existsSession(request)) {
                     Map<String, Object> attributes = new HashMap<>();
-                    String user_email = request.session(false).attribute("user_email");
-                    List<Phone> phones = User.findByEmail(user_email).getAll(Phone.class);
+                    String email = request.session(false).attribute("email");
+                    List<Phone> phones = User.findByEmail(email).getAll(Phone.class);
 
                     attributes.put("phones", phones);
 
@@ -145,8 +141,8 @@ public class App {
             (request, response) -> {
                 if (null != existsSession(request)) {
                     Map<String, Object> attributes = new HashMap<>();
-                    String user_email = request.session(false).attribute("user_email");
-                    List<Vehicle> vehicles = User.findByEmail(user_email).getAll(Vehicle.class);
+                    String email = request.session(false).attribute("email");
+                    List<Vehicle> vehicles = User.findByEmail(email).getAll(Vehicle.class);
 
                     attributes.put("vehicles", vehicles);
 
@@ -175,8 +171,8 @@ public class App {
             (request, response) -> {
                 if (null != existsSession(request)) {
                     Map<String, Object> attributes = new HashMap<>();
-                    String user_email = request.session(false).attribute("user_email");
-                    List<Post> posts =  User.findByEmail(user_email).getAll(Post.class);
+                    String email = request.session(false).attribute("email");
+                    List<Post> posts =  User.findByEmail(email).getAll(Post.class);
 
                     attributes.put("posts", posts);
 
@@ -200,7 +196,7 @@ public class App {
                     return new ModelAndView(attributes, "./moustache/newuser.moustache");
                 } else {
                     Map<String, Object> attributes = new HashMap<>();
-                    attributes.put("user_email", request.session(false).attribute("user_email").toString());
+                    attributes.put("email", request.session(false).attribute("email").toString());
                     return new ModelAndView(attributes, "./moustache/alreadylogged.moustache");
                 }
             },
@@ -415,14 +411,13 @@ public class App {
         // <editor-fold desc="Sparks for administrators register">
         get("/administrators/new", 
             (request, response) -> {
-                Session s;
-                if(null != (s = existsSession(request)) ? request.session().attribute("email").equals("admin") : false) {
+                Session s = existsSession(request);
+                if(null != s ? s.attribute("email").equals("admin") : false) {
                     return new ModelAndView(null, "./moustache/newadmin.moustache");
                 } else {
                     if (null == s) {
                         return new ModelAndView(null, "./moustache/notlogged.moustache");
-                    }
-                    else {
+                    } else {
                         return new ModelAndView(null, "./moustache/notadmin.moustache");
                     }
                 }
@@ -430,7 +425,7 @@ public class App {
             new MustacheTemplateEngine()
         );
         
-        post("/administrator",
+        post("/administrators",
                 (request, response) -> {
                     String body = "";
                     String email = request.queryParams("email");
@@ -459,9 +454,9 @@ public class App {
                 if(null != existsSession(request)) {
                     Map<String, Object> attributes = new HashMap<>();
                     
-                    String user_email = request.session(false).attribute("user_email");
+                    String email = request.session(false).attribute("email");
                     
-                    List<Vehicle> vehicles = User.findByEmail(user_email).getAll(Vehicle.class);
+                    List<Vehicle> vehicles = User.findByEmail(email).getAll(Vehicle.class);
 
                     attributes.put("vehicles", vehicles);
 
@@ -506,9 +501,9 @@ public class App {
                 if(null != existsSession(request)) {
                     Map<String, Object> attributes = new HashMap<>();
                     
-                    String user_email = request.session(false).attribute("user_email");
+                    String email = request.session(false).attribute("email");
                     
-                    List<Vehicle> vehicles = User.findByEmail(user_email).getAll(Vehicle.class);
+                    List<Vehicle> vehicles = User.findByEmail(email).getAll(Vehicle.class);
 
                     attributes.put("vehicles", vehicles);
 
@@ -547,7 +542,7 @@ public class App {
             User u = User.findByEmail(email);
             if (u != null ? u.pass().equals(pwd) : false) {
                 Session session = request.session(true);
-                session.attribute("user_email", email);
+                session.attribute("email", email);
                 session.attribute("user_id", u.getId());
                 session.maxInactiveInterval(60);
                 body += "<body><script type='text/javascript'>";
@@ -558,7 +553,7 @@ public class App {
                 Administrator a = Administrator.findByEmail(email);
                 if (a != null ? a.pass().equals(pwd) : false) {
                     Session session = request.session(true);
-                    session.attribute("admin_email", email);
+                    session.attribute("email", email);
                     session.maxInactiveInterval(60);
                     body += "<body><script type='text/javascript'>";
                     body += "alert('Bienvenido administrador " + u + "!'); document.location = '/';";
@@ -572,9 +567,9 @@ public class App {
         });
         
         get("/login", (request, response) -> {
-            response.status(200);
-            if(null == existsSession(request)) response.redirect("/login.html");
-            else return "Usted ya ha iniciado sesion con el email: " + request.session(false).attribute("user_email");
+            if(null == existsSession(request)) 
+                response.redirect("/login.html");
+            else return "Usted ya ha iniciado sesion con el email: " + request.session(false).attribute("email");
             return null;
         });
         

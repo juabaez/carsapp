@@ -1,4 +1,4 @@
-<form id='formulario'>
+<form id='formulario' onsubmit="postear('login', 'columnacen', 'formulario')">
     <table class="reg_table">
         <tr class="tr_header">
             <td colspan="2"><b>Formulario de inicio de sesion:</b></td>
@@ -9,7 +9,7 @@
             <td>Password:</td>
             <td><input type=password name='pwd'></td>
         </tr><tr class="tr_header">
-            <td colspan="2" align="center"><input type=button onclick="postear('login', 'columnacen', 'formulario')" value="Iniciar sesion" class="s_button"></td>
+            <td colspan="2" align="center"><input type=submit value="Iniciar sesion" class="s_button"></td>
         </tr>
     </table>
 </form>
