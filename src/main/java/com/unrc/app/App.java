@@ -654,5 +654,20 @@ public class App {
             return "Servidor abierto";
         });
         //</editor-fold>
+        
+        // <editor-fold desc="Sparks for administrator deletion">
+        delete("/administrator/:email", (request, response) -> {
+            String body = "";
+            Administrator admin = Administrator.findByEmail(request.params(":email"));
+            if(null != admin){
+                admin.delete();                
+                body += "El administrador fue correctamente eliminado";
+            } else {
+                body += "El administrador no fue encontrado en la base de datos!";
+            }
+            return body;
+        });
+        //</editor-fold>
+        
     }
 }
