@@ -219,7 +219,9 @@ public class App {
             },
             new MustacheTemplateEngine()
         );
+        //</editor-fold>
         
+        // <editor-fold desc="Sparks for user register">
         get("/users/new", 
             (request, response) -> {
                 if (null == existsSession(request)) {
@@ -238,9 +240,7 @@ public class App {
             },
             new MustacheTemplateEngine()
         ); 
-        //</editor-fold>
         
-        // <editor-fold desc="Sparks for user register">
         post("/users", (request, response) -> {
             String first_name = request.queryParams("first_name");
             String last_name = request.queryParams("last_name");
@@ -314,7 +314,7 @@ public class App {
         });
         // </editor-fold>
         
-        // <editor-fold desc="Sparks for vehicle register">
+        // <editor-fold desc="Sparks for vehicles">
         get("/vehicles/new", 
             (request, response) -> {
                 if(null != existsSession(request)) {
@@ -392,6 +392,43 @@ public class App {
                 body += "El registro no pudo completarse porque algun campo estaba vacio!";
             }
             return body;
+        });     
+        
+        get("/vehicles/del", 
+            (request, response) -> {
+                if(null != existsSession(request)) {
+                    Map<String, Object> attributes = new HashMap<>();
+                    
+                    String email = request.session(false).attribute("email");
+                    
+                    List<Vehicle> vehicles = User.findByEmail(email).getAll(Vehicle.class);
+
+                    attributes.put("vehicles", vehicles);
+
+                    return new ModelAndView(attributes, "./moustache/vehicledel.moustache");
+                } else {
+                    return new ModelAndView(null, "./moustache/notlogged.moustache");
+                }
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        delete("/vehicles/:id", (request, response) -> {
+            String body = "";
+            
+            Vehicle v = Vehicle.findById(request.params(":id"));
+            
+            if (null != v) {
+                List<Post> posts = v.getAll(Post.class);
+                posts.stream().forEach((p) -> {
+                    p.deleteCascade();
+                });
+                v.deleteCascade();
+                body += "El vehiculo fue correctamente eliminado";
+            } else {
+                body += "El vehiculo no fue encontrado en la base de datos!";
+            }
+            return body;
         });
         // </editor-fold>
         
@@ -444,7 +481,7 @@ public class App {
         });
         //</editor-fold>
         
-        // <editor-fold desc="Sparks for administrators register">
+        // <editor-fold desc="Sparks for administrators">
         get("/administrators/new", 
             (request, response) -> {
                 Session s = existsSession(request);
@@ -481,6 +518,35 @@ public class App {
                             body += "</script></body>";
                     }
                     return body;
+        });
+        
+        get("/administrators/del", 
+            (request, response) -> {
+                if(sessionLevel(existsSession(request)) == 3) {
+                    Map<String, Object> attributes = new HashMap<>();
+                    
+                    List<Administrator> admins = Administrator.all();
+
+                    attributes.put("administrators", admins);
+
+                    return new ModelAndView(attributes, "./moustache/admindel.moustache");
+                } else {
+                    return new ModelAndView(null, "./moustache/notadmin.moustache");
+                }
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        delete("/administrators/:id", (request, response) -> {
+            String body = "";
+            Administrator admin = Administrator.findById(request.params(":id"));
+            if(null != admin){
+                admin.delete();                
+                body += "El administrador fue correctamente eliminado";
+            } else {
+                body += "El administrador no fue encontrado en la base de datos!";
+            }
+            return body;
         });
         //</editor-fold>
         
@@ -531,44 +597,7 @@ public class App {
         });
         //</editor-fold>
         
-        // <editor-fold desc="Sparks for vehicle deletion">
-        get("/vehicles/del", 
-            (request, response) -> {
-                if(null != existsSession(request)) {
-                    Map<String, Object> attributes = new HashMap<>();
-                    
-                    String email = request.session(false).attribute("email");
-                    
-                    List<Vehicle> vehicles = User.findByEmail(email).getAll(Vehicle.class);
 
-                    attributes.put("vehicles", vehicles);
-
-                    return new ModelAndView(attributes, "./moustache/vehicledel.moustache");
-                } else {
-                    return new ModelAndView(null, "./moustache/notlogged.moustache");
-                }
-            },
-            new MustacheTemplateEngine()
-        );
-        
-        delete("/vehicles/:id", (request, response) -> {
-            String body = "";
-            
-            Vehicle v = Vehicle.findById(request.params(":id"));
-            
-            if (null != v) {
-                List<Post> posts = v.getAll(Post.class);
-                posts.stream().forEach((p) -> {
-                    p.deleteCascade();
-                });
-                v.deleteCascade();
-                body += "El vehiculo fue correctamente eliminado";
-            } else {
-                body += "El vehiculo no fue encontrado en la base de datos!";
-            }
-            return body;
-        });
-        // </editor-fold>
         
         // <editor-fold desc="Sparks for user session management">
         post("/login", (request, response) -> {
@@ -647,27 +676,7 @@ public class App {
             return body;
         });
         //</editor-fold>
-        
-        //<editor-fold desc="Spark for manual open Elastic Search">
-        get("/abrir", (r, q) -> {
-            ElasticSearch.client();
-            return "Servidor abierto";
-        });
-        //</editor-fold>
-        
-        // <editor-fold desc="Sparks for administrator deletion">
-        delete("/administrator/:email", (request, response) -> {
-            String body = "";
-            Administrator admin = Administrator.findByEmail(request.params(":email"));
-            if(null != admin){
-                admin.delete();                
-                body += "El administrador fue correctamente eliminado";
-            } else {
-                body += "El administrador no fue encontrado en la base de datos!";
-            }
-            return body;
-        });
-        //</editor-fold>
+               
         
     }
 }
