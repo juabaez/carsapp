@@ -37,7 +37,7 @@ public class Administrator extends Model {
     
     @Override
     public String toString(){
-        return this.getString("email");
+        return this.email();
     }
     
     public Administrator email(String s){
