@@ -5,67 +5,12 @@
     <title>CARSAPP - Index</title>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="jquery.getParams.js"></script>
-    <script type="text/javascript" src="ajax.js"></script>
-    <script type="text/javascript">
-        function reactivarFields() {
-            document.getElementById("doors").disabled = true;
-        }        
-        function mostrarCuerpo(){
-            var perms = {{perms}};
-            var login = document.getElementById("login");
-            var usercp = document.getElementById("usercp");
-            var admincp = document.getElementById("admincp");
-            var newadmin = document.getElementById("newadmin");
-            switch(perms){
-                case 0: 
-                        usercp.parentNode.removeChild(usercp);
-                        admincp.parentNode.removeChild(admincp);
-                        newadmin.parentNode.removeChild(newadmin);
-                        break;
-                case 1:
-                        login.parentNode.removeChild(login);
-                        admincp.parentNode.removeChild(admincp);
-                        newadmin.parentNode.removeChild(newadmin);
-                        break;
-                case 2:
-                        usercp.parentNode.removeChild(usercp);
-                        login.parentNode.removeChild(login);
-                        newadmin.parentNode.removeChild(newadmin);
-                        break;
-                case 3:
-                        usercp.parentNode.removeChild(usercp);
-                        login.parentNode.removeChild(login);
-                        break;
-            }
-            document.getElementById("cuerpo").style.visibility="visible";
-        }
-    </script>
+    <script type="text/javascript" src="extras.js"></script>
 </head>
-<body onload="mostrarCuerpo()">
+<body onload="document.getElementById('cuerpo').style.visibility='visible'">
     <div id="header">CarsAPP</div>
     <div id="cuerpo" style="visibility: hidden">
         <div id="columnaizq">
-            <div class="popmenu" id="login">Inicio
-                <div>
-                    <ul>
-                        <li>
-                            <a href="#" onclick="traer('login','columnacen');">Iniciar sesion</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="popmenu" id="admincp">AdminCP
-                <div>
-                    <ul>
-                        <li id="newadmin">
-                                <a href="#" onclick="traer('administrators/new', 'columnacen')">Nuevo administrador</a>
-                        </li>
-                        <li>
-                                <a href="#" onclick="traer('logout', 'columnacen')">Cerrar sesion</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
             <div class="popmenu" id="usercp"> UserCP 
                 <div>
                     <ul>  
@@ -98,7 +43,7 @@
             </div>
         </div>
         <div id="columnader">
-                    <div class="popmenu">Registrar
+            <div class="popmenu">Registrar
                 <div>
                     <ul>
                         <li><a href="#" onclick="traer('users/new', 'columnacen')">Usuario</a></li>

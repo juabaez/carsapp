@@ -27,3 +27,7 @@ function eliminar(url, contenedor, id) {
 function escribir(dato, contenedor) {
     $("#" + contenedor).html(dato);
 };
+
+    function reactivarFields() {
+        document.getElementById("doors").disabled = true;
+    }

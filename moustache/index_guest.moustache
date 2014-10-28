@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>CARSAPP - Index</title>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="jquery.getParams.js"></script>
+    <script type="text/javascript" src="extras.js"></script>
+</head>
+<body onload="document.getElementById('cuerpo').style.visibility='visible'">
+    <div id="header">CarsAPP</div>
+    <div id="cuerpo" style="visibility: hidden">
+        <div id="columnaizq">
+            <div class="popmenu" id="login">Inicio
+                <div>
+                    <ul>
+                        <li>
+                            <a href="#" onclick="traer('login','columnacen');">Iniciar sesion</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="columnader">
+            <div class="popmenu">Registrar
+                <div>
+                    <ul>
+                        <li><a href="#" onclick="traer('users/new', 'columnacen')">Usuario</a></li>
+                        <li><a href="#" onclick="traer('cities/new', 'columnacen')">Ciudad</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="popmenu">Ver
+                <div>
+                    <ul>
+                        <li><a href="#" onclick="traer('users', 'columnacen')">Usuarios</a></li>
+                        <li><a href="#" onclick="traer('cities', 'columnacen')">Ciudades</a></li>
+                        <li><a href="#" onclick="traer('vehicles', 'columnacen')">Vehiculos</a></li>
+                        <li><a href="#" onclick="traer('posts', 'columnacen')">Anuncios</a></li>
+                        <li><a href="#" onclick="traer('phones', 'columnacen')">Telefonos</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="columnacen"></div>  
+    </div>
+</body>
