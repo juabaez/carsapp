@@ -1,19 +1,19 @@
 <form>
     <table border="0" class="reg_table">
         <tr class="tr_header">
-            <td colspan="2">Eliminar un administrador</td>
+            <td colspan="2">Eliminar un usuario</td>
         </tr><tr>
-            <td>Administrador: </td>
+            <td>Usuario</td>
             <td>
-                <select id="admin_id">
-                    {{#administrators}}
+                <select id="user_id">
+                    {{#users}}
                         <option value="{{getId}}">{{toString}}</option>
-                    {{/administrators}}  
+                    {{/users}}  
                 </select>        
             </td>
         </tr><tr class="tr_header">
             <td colspan="2" align="center">
-                <input type=button onclick="eliminar('administrators', 'columnacen', 'admin_id')" value="Eliminar" class="s_button" />
+                <input type=button onclick="eliminar('users', 'columnacen', 'user_id')" value="Eliminar" class="s_button" />
             </td>
         </tr>
     </table>
