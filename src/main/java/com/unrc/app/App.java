@@ -698,6 +698,34 @@ public class App {
         });
         //</editor-fold>
                
-        
+       get("/users/del", 
+            (request, response) -> {
+                if(sessionLevel(existsSession(request)) == 2) {
+                    Map<String, Object> attributes = new HashMap<>();
+                    
+                    List<User> user = User.all();
+
+                    attributes.put("users", user);
+
+                    return new ModelAndView(attributes, "./moustache/userdel.moustache");
+                } else {
+                    return new ModelAndView(null, "./moustache/notuser.moustache");
+                }
+            },
+            new MustacheTemplateEngine()
+        );  
+       
+        delete("/users/:id", (request, response) -> {
+            String body = "";
+            User user = User.findById(request.params(":id"));
+            if(null != user){
+                user.delete();                
+                body += "El usuario fue correctamente eliminado";
+            } else {
+                body += "El usuario no fue encontrado en la base de datos!";
+            }
+            return body;
+        });
     }
+   
 }
