@@ -546,6 +546,7 @@ public class App {
                     Map<String, Object> attributes = new HashMap<>();
                     
                     List<Administrator> admins = Administrator.all();
+                    admins = admins.subList(1, admins.size());
 
                     attributes.put("administrators", admins);
 

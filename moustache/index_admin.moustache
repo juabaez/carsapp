@@ -15,6 +15,12 @@
                 <div>
                     <ul>
                         <li>
+                                <a href="#" onclick="traer('users/del', 'columnacen')">Eliminar usuario</a>
+                        </li>
+                        <li>
+                                <a href="#" onclick="traer('posts/del', 'columnacen')">Eliminar post</a>
+                        </li>
+                        <li>
                                 <a href="#" onclick="traer('logout', 'columnacen')">Cerrar sesion</a>
                         </li>
                     </ul>

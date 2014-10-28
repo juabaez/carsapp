@@ -3,7 +3,7 @@
         <tr class="tr_header">
             <td colspan="2">Eliminar un administrador</td>
         </tr><tr>
-            <td>Vehiculo</td>
+            <td>Administrador: </td>
             <td>
                 <select id="admin_id">
                     {{#administrators}}

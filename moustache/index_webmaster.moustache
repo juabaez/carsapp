@@ -18,8 +18,15 @@
                                 <a href="#" onclick="traer('administrators/new', 'columnacen')">Nuevo administrador</a>
                         </li>
                         <li>
+                                <a href="#" onclick="traer('administrators/del', 'columnacen')">Eliminar administrador</a>
+                        </li>
+                        <li>
+                                <a href="#" onclick="traer('administrators/search', 'columnacen')">Buscar administrador</a>
+                        </li>
+                        <li>
                                 <a href="#" onclick="traer('logout', 'columnacen')">Cerrar sesion</a>
                         </li>
+                        
                     </ul>
                 </div>
             </div>
