@@ -94,16 +94,36 @@ public class App {
         //</editor-fold>
         
         // <editor-fold desc="Sparks GET for all models">
-        get("/index", 
+        get("/", 
             (request, response) -> {
                 Map<String, Object> attributes = new HashMap<>();
                 Session session = existsSession(request);
+                String email;
                 int sessionLevel = sessionLevel(session);
-                attributes.put("perms", sessionLevel);
                 if (sessionLevel > 0) {
-                    attributes.put("email", session.attribute("email"));
+                    if (sessionLevel == 1) {
+                    }
                 }
-                return new ModelAndView(attributes, "./moustache/index.moustache");
+                switch(sessionLevel) {
+                    case 0:
+                        return new ModelAndView(attributes, "./moustache/index_guest.moustache");
+                    case 1:
+                        email = session.attribute("email");
+                        attributes.put("email", email);
+                        attributes.put("username", User.findByEmail(email).toString());
+                        return new ModelAndView(attributes, "./moustache/index_user.moustache");
+                    case 2:
+                        email = session.attribute("email");
+                        attributes.put("email", email);
+                        attributes.put("username", Administrator.findByEmail(email).toString());
+                        return new ModelAndView(attributes, "./moustache/index_admin.moustache");
+                    case 3:
+                        email = session.attribute("email");
+                        attributes.put("email", email);
+                        attributes.put("username", Administrator.findByEmail(email).toString());
+                        return new ModelAndView(attributes, "./moustache/index_webmaster.moustache");
+                }
+                return new ModelAndView(attributes, "./moustache/index_guest.moustache");
             },
             new MustacheTemplateEngine()
         );
@@ -582,7 +602,7 @@ public class App {
                 session.attribute("user_id", u.getId());
                 session.maxInactiveInterval(60);
                 body += "<body><script type='text/javascript'>";
-                body += "alert('Bienvenido " + u + "!'); document.location = '/index';";
+                body += "alert('Bienvenido " + u + "!'); document.location = '/';";
                 body += "</script></body>";
                 return body;
             } else {
@@ -592,12 +612,12 @@ public class App {
                     session.attribute("email", email);
                     session.maxInactiveInterval(60);
                     body += "<body><script type='text/javascript'>";
-                    body += "alert('Bienvenido administrador'); document.location = '/index';";
+                    body += "alert('Bienvenido administrador'); document.location = '/';";
                     body += "</script></body>";
                     return body;
                 }else{
                     body += "<body><script type='text/javascript'>";
-                    body += "alert('El email indicado no existe o la contraseña no coincide.'); document.location = '/index';";
+                    body += "alert('El email indicado no existe o la contraseña no coincide.'); document.location = '/';";
                     body += "</script></body>";
                     return body;
                 }
@@ -623,12 +643,12 @@ public class App {
             Session session = existsSession(request);
             if (null == session) {
                     body += "<body><script type='text/javascript'>";
-                    body += "alert('No hay ninguna sesion abierta.'); document.location = '/index';";
+                    body += "alert('No hay ninguna sesion abierta.'); document.location = '/';";
                     body += "</script></body>";
             } else {
                 session.invalidate();
                     body += "<body><script type='text/javascript'>";
-                    body += "alert('Adios! Regresa pronto.'); document.location = '/index';";
+                    body += "alert('Adios! Regresa pronto.'); document.location = '/';";
                     body += "</script></body>";
             }
             return body;
