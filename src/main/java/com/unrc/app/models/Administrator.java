@@ -22,13 +22,31 @@ public class Administrator extends Model {
     @Override
     public void afterCreate(){
         super.afterCreate();
+        
         Map<String, Object> json = new HashMap<>();
-        json.put("email", this.get("email"));
+        json.put("email", this.email());
 
-        ElasticSearch.client().prepareIndex("admins", "admin", this.getId().toString())
-                    .setSource(json)
-                    .execute()
-                    .actionGet();
+        ElasticSearch.client()
+                .prepareIndex()
+                .setIndex("admins")
+                .setType("admin")
+                .setId(this.getId().toString())
+                .setSource(json)
+                .execute()
+                .actionGet();
+    }
+    
+    @Override
+    public void beforeDelete(){
+        super.beforeDelete();
+        
+        ElasticSearch.client()
+            .prepareDelete()
+            .setIndex("admins")
+            .setType("admin")
+            .setId(this.getId().toString())
+            .execute()
+            .actionGet();
     }
     
     public static List<Administrator> all(){

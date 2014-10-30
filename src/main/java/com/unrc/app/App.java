@@ -12,8 +12,13 @@ import com.unrc.app.models.Truck;
 import com.unrc.app.models.User;
 import com.unrc.app.models.Vehicle;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
 import org.javalite.activejdbc.Base;
 import spark.ModelAndView;
 import spark.Request;
@@ -44,16 +49,9 @@ public class App {
      */
     public static int sessionLevel(Session session){
         if (null!=session) {
-            Boolean isWebmaster = session.attribute("email").toString().equals("admin");
-            Boolean isAdmin = Administrator.findByEmail(session.attribute("email")) != null;
-            Boolean isUser = User.findByEmail(session.attribute("email")) != null;
-            if (isWebmaster) return 3;
-            if (isAdmin) return 2;
-            if (isUser) return 1;
-            return 0;
-        } else {
-            return 0;
+            return session.attribute("level");
         }
+        return 0;
     }
     
     /** Metodo para convertir una cadena a un entero con un radix 10
@@ -80,6 +78,7 @@ public class App {
     
     public static void main(String[] args) { 
         externalStaticFileLocation("./public"); // Static files 
+        ElasticSearch.client();
         
         // <editor-fold desc="Spark filters (for db connection)">
         Spark.before((request, response) -> {
@@ -241,7 +240,7 @@ public class App {
         );
         //</editor-fold>
         
-        // <editor-fold desc="Sparks for user register">
+        // <editor-fold desc="Sparks for users">
         get("/users/new", 
             (request, response) -> {
                 if (null == existsSession(request)) {
@@ -292,6 +291,35 @@ public class App {
             }
             return body;
         });
+        
+        get("/users/del", 
+             (request, response) -> {
+                 if(sessionLevel(existsSession(request)) >= 2) {
+                     Map<String, Object> attributes = new HashMap<>();
+
+                     List<User> user = User.all();
+
+                     attributes.put("users", user);
+
+                     return new ModelAndView(attributes, "./moustache/userdel.moustache");
+                 } else {
+                     return new ModelAndView(null, "./moustache/notadmin.moustache");
+                 }
+             },
+             new MustacheTemplateEngine()
+         );  
+
+         delete("/users/:id", (request, response) -> {
+             String body = "";
+             User user = User.findById(request.params(":id"));
+             if(null != user){
+                 user.delete();                
+                 body += "El usuario fue correctamente eliminado";
+             } else {
+                 body += "El usuario no fue encontrado en la base de datos!";
+             }
+             return body;
+         });
         //</editor-fold>
         
         // <editor-fold desc="Sparks for city register">
@@ -558,6 +586,52 @@ public class App {
             new MustacheTemplateEngine()
         );
         
+        get("/administrators/search", 
+            (request, response) -> {
+                if(sessionLevel(existsSession(request)) >= 2) {
+                    return new ModelAndView(null, "./moustache/adminsearch.moustache");
+                } else {
+                    return new ModelAndView(null, "./moustache/notadmin.moustache");
+                }
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        get("/administrators/search/response", 
+            (request, response) -> {
+                if(sessionLevel(existsSession(request)) >= 2) {
+                    Map<String, Object> attributes = new HashMap<>();
+                    
+                    Client client = ElasticSearch.client();
+                    
+                    String search_text = request.queryParams("search_text");
+                    
+                    SearchResponse searchResponse = client.prepareSearch("admins")
+                            .setQuery(QueryBuilders.wildcardQuery("email", "*" + search_text + "*"))
+                            .setSize(10)
+                            .execute()
+                            .actionGet();
+                    
+                    List<Administrator> admins = new LinkedList<>();
+                    
+                    searchResponse
+                            .getHits()
+                            .forEach(
+                                (SearchHit h) -> {
+                                    admins.add(Administrator.findById(h.getId()));
+                                }
+                            );
+
+                    attributes.put("administrators", admins);
+                    
+                    return new ModelAndView(attributes, "./moustache/adminsearch_response.moustache");
+                } else {
+                    return new ModelAndView(null, "./moustache/notadmin.moustache");
+                }
+            },
+            new MustacheTemplateEngine()
+        );
+        
         delete("/administrators/:id", (request, response) -> {
             String body = "";
             Administrator admin = Administrator.findById(request.params(":id"));
@@ -630,7 +704,8 @@ public class App {
                 Session session = request.session(true);
                 session.attribute("email", email);
                 session.attribute("user_id", u.getId());
-                session.maxInactiveInterval(60);
+                session.attribute("level", 1);
+                session.maxInactiveInterval(120);
                 body += "<body><script type='text/javascript'>";
                 body += "alert('Bienvenido " + u + "!'); document.location = '/';";
                 body += "</script></body>";
@@ -640,12 +715,18 @@ public class App {
                 if (a != null ? a.pass().equals(pwd) : false) {
                     Session session = request.session(true);
                     session.attribute("email", email);
-                    session.maxInactiveInterval(60);
+                    
+                    if (email.equals("admin"))
+                        session.attribute("level", 3);
+                    else
+                        session.attribute("level", 2);
+                    
+                    session.maxInactiveInterval(120);
                     body += "<body><script type='text/javascript'>";
                     body += "alert('Bienvenido administrador'); document.location = '/';";
                     body += "</script></body>";
                     return body;
-                }else{
+                } else {
                     body += "<body><script type='text/javascript'>";
                     body += "alert('El email indicado no existe o la contraseña no coincide.'); document.location = '/';";
                     body += "</script></body>";
@@ -698,34 +779,7 @@ public class App {
         });
         //</editor-fold>
                
-       get("/users/del", 
-            (request, response) -> {
-                if(sessionLevel(existsSession(request)) == 2) {
-                    Map<String, Object> attributes = new HashMap<>();
-                    
-                    List<User> user = User.all();
-
-                    attributes.put("users", user);
-
-                    return new ModelAndView(attributes, "./moustache/userdel.moustache");
-                } else {
-                    return new ModelAndView(null, "./moustache/notuser.moustache");
-                }
-            },
-            new MustacheTemplateEngine()
-        );  
-       
-        delete("/users/:id", (request, response) -> {
-            String body = "";
-            User user = User.findById(request.params(":id"));
-            if(null != user){
-                user.delete();                
-                body += "El usuario fue correctamente eliminado";
-            } else {
-                body += "El usuario no fue encontrado en la base de datos!";
-            }
-            return body;
-        });
+        
     }
    
 }
