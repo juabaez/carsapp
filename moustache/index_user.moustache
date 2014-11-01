@@ -7,62 +7,41 @@
     <script type="text/javascript" src="jquery.getParams.js"></script>
     <script type="text/javascript" src="extras.js"></script>
 </head>
-<body onload="document.getElementById('cuerpo').style.visibility='visible'">
+<body>
     <div id="header">CarsAPP</div>
-    <div id="cuerpo" style="visibility: hidden">
-        <div id="columnaizq">
-            <div class="popmenu" id="usercp"> UserCP 
-                <div>
-                    <ul>  
-                        <li>
-                                <a href="#" onclick="traer('logout', 'columnacen')">Cerrar sesion</a>
-                        </li>
-                        <li>
-                                <a href="#" onclick="traer('myphones', 'columnacen')">Mis telefonos</a>
-                        </li>    
-                        <li>
-                                <a href="#" onclick="traer('phones/new', 'columnacen')">Agregar telefono</a>
-                        </li>   
-                        <li>
-                                <a href="#" onclick="traer('myvehicles', 'columnacen')">Mis vehiculos</a>
-                        </li>    
-                        <li>
-                                <a href="#" onclick="traer('vehicles/del', 'columnacen')">Eliminar vehiculos</a>
-                        </li>    
-                        <li>
-                                <a href="#" onclick="traer('vehicles/new', 'columnacen')">Nuevo vehiculo</a>
-                        </li>   
-                        <li>
-                                <a href="#" onclick="traer('myposts', 'columnacen')">Mis anuncios</a>
-                        </li>   
-                        <li>
-                                <a href="#" onclick="traer('posts/new', 'columnacen')">Nuevo anuncio</a>
-                        </li>   
-                    </ul>
-                </div>
-            </div>
+    <div id="main_menu"> 
+        <div>UserCP 
+            <ul>  
+                <li onclick="traer('logout', 'content_center')">Cerrar sesion</li>
+                <li onclick="traer('myphones', 'content_center')">Mis telefonos</li>    
+                <li onclick="traer('phones/new', 'content_center')">Agregar telefono</li>   
+                <li onclick="traer('myvehicles', 'content_center')">Mis vehiculos</li>    
+                <li onclick="traer('vehicles/del', 'content_center')">Eliminar vehiculos</li>    
+                <li onclick="traer('vehicles/new', 'content_center')">Nuevo vehiculo</li>   
+                <li onclick="traer('myposts', 'content_center')">Mis anuncios</li>   
+                <li onclick="traer('posts/new', 'content_center')">Nuevo anuncio</li>   
+            </ul>
         </div>
-        <div id="columnader">
-            <div class="popmenu">Registrar
-                <div>
-                    <ul>
-                        <li><a href="#" onclick="traer('users/new', 'columnacen')">Usuario</a></li>
-                        <li><a href="#" onclick="traer('cities/new', 'columnacen')">Ciudad</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="popmenu">Ver
-                <div>
-                    <ul>
-                        <li><a href="#" onclick="traer('users', 'columnacen')">Usuarios</a></li>
-                        <li><a href="#" onclick="traer('cities', 'columnacen')">Ciudades</a></li>
-                        <li><a href="#" onclick="traer('vehicles', 'columnacen')">Vehiculos</a></li>
-                        <li><a href="#" onclick="traer('posts', 'columnacen')">Anuncios</a></li>
-                        <li><a href="#" onclick="traer('phones', 'columnacen')">Telefonos</a></li>
-                    </ul>
-                </div>
-            </div>
+        <div>Registrar
+            <ul>
+                <li onclick="traer('users/new', 'content_center')">Usuario</li>
+                <li onclick="traer('cities/new', 'content_center')">Ciudad</li>
+            </ul>
         </div>
-        <div id="columnacen"></div>  
+        <div>Ver
+            <ul>
+                <li onclick="traer('users', 'content_center')">Usuarios</li>
+                <li onclick="traer('cities', 'content_center')">Ciudades</li>
+                <li onclick="traer('vehicles', 'content_center')">Vehiculos</li>
+                <li onclick="traer('posts', 'content_center')">Anuncios</li>
+                <li onclick="traer('phones', 'content_center')">Telefonos</li>
+            </ul>
+        </div>
+        <br clear="all">
+    </div> 
+    <div id="content">
+        <div id="content_left"></div>
+        <div id="content_right"></div>
+        <div id="content_center"></div> 
     </div>
 </body>

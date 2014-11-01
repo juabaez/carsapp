@@ -1,16 +1,19 @@
-<form id='formulario'>
-    <table class="reg_table">
-        <tr class="tr_header">
-            <td colspan="2">Formulario de registro de administrador</td>
-        </tr><tr>
-            <td>E-Mail:</td>
-            <td><input type=text name='email'></td>
-        </tr><tr>
-            <td>Contraseña:</td>
-            <td><input type=password name='pass'></td>
-		<tr class="tr_header">
-            <td colspan="2" align="center">
-                <input type=button onclick="postear('administrators', 'columnacen', 'formulario')" value="Registrarme" class="s_button">
+<form id="formulario" method="post" action="administrators">
+    <table>
+        <tr class="tr_title">
+            <td colspan="2">Registrar un administrador</td>
+        </tr>
+        <tr>
+            <td class="td_left">E-Mail:</td>
+            <td class="td_right"><input type=text name="email"></td>
+        </tr>
+        <tr>
+            <td class="td_left">Contraseña:</td>
+            <td class="td_right"><input type=password name="pass"></td>
+        </tr>
+		<tr>
+            <td colspan="2">
+                <input type=submit value="Registrar">
             </td>
         </tr>
     </table>

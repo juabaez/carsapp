@@ -1,33 +1,48 @@
-function traer(url, contenedor, formulario) {
-    if (formulario) {
-        $.get(url, $("#" + formulario).serialize(), function(returnData) {
-            escribir(returnData, contenedor);
-        });
-    } else {
-        $.get(url, function(returnData) {
-            escribir(returnData, contenedor);
-        });
-    };    
-};
-
-function postear(url, contenedor, formulario) {
-    $.post(url, $("#" + formulario).serialize(), function(returnData) {
-        escribir(returnData, contenedor);
-    });
-};
-
-function eliminar(url, contenedor, id) {
-    $.ajax({
-        method: 'DELETE',
-        url: url + "/" + document.getElementById(id).value,
-        success: function(returnData){escribir(returnData, contenedor);}
-    });
+function reactivarFields() {
+    document.getElementById("doors").disabled = true;
 };
 
 function escribir(dato, contenedor) {
     $("#" + contenedor).html(dato);
 };
 
-    function reactivarFields() {
-        document.getElementById("doors").disabled = true;
-    }
+function traer(url, contenedor, formulario) {
+    if (formulario) {
+        $.ajax({
+            url: url, 
+            method: 'GET',
+            async: true,
+            data: $("#" + formulario).serialize(), 
+            success: function(returnData) {escribir(returnData, contenedor);}
+        });
+    } else {
+        $.ajax({
+            url: url,
+            method: 'GET',
+            async: true,
+            success: function(returnData) {escribir(returnData, contenedor);}
+        });
+    };    
+};
+
+function postear(url, contenedor, formulario) {
+    $.ajax({
+        url: url, 
+        method: 'POST',
+        async: true,
+        data: $("#" + formulario).serialize(), 
+        success: function(returnData) {escribir(returnData, contenedor);}
+    });
+};
+
+function eliminar(url, id) {
+    $.ajax({
+        method: 'DELETE',
+        url: url + "/" + document.getElementById(id).value,
+        async: true,
+        success: function(returnData) {
+                        alert(returnData);
+                        document.location='/';
+                 }
+    });
+};

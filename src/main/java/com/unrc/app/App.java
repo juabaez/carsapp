@@ -284,10 +284,20 @@ public class App {
                     .address(address)
                     .pass(pass)
                     .setParent(c);
-                if (u.saveIt()) body += "Usuario correctamente registrado!";
-                else body += "El servidor denego el registro con los datos indicados.";
+                if (u.saveIt()) {
+                    body += "<body><script type='text/javascript'>";
+                    body += "alert('Usuario correctamente registrado.'); document.location = '/';";
+                    body += "</script></body>";
+                }
+                else {
+                    body += "<body><script type='text/javascript'>";
+                    body += "alert('El usuario no pudo ser registrado.'); document.location = '/';";
+                    body += "</script></body>";
+                }
             } else {
-                body += "El registro no pudo completarse porque un campo estaba vacio";
+                    body += "<body><script type='text/javascript'>";
+                    body += "alert('No puede haber campos vacios.'); document.location = '/';";
+                    body += "</script></body>";
             }
             return body;
         });
@@ -313,7 +323,7 @@ public class App {
              String body = "";
              User user = User.findById(request.params(":id"));
              if(null != user){
-                 user.delete();                
+                 user.deleteCascade();
                  body += "El usuario fue correctamente eliminado";
              } else {
                  body += "El usuario no fue encontrado en la base de datos!";
@@ -353,10 +363,19 @@ public class App {
                         .state(state)
                         .country(country)
                         .postcode(postcode);
-                    if (c.saveIt()) body += "Ciudad correctamente registrada!";
-                    else body += "El servidor denego el registro con los datos indicados.";
+                    if (c.saveIt()) {
+                        body += "<body><script type='text/javascript'>";
+                        body += "alert('Ciudad correctamente registrada.'); document.location = '/';";
+                        body += "</script></body>";
+                    } else {
+                        body += "<body><script type='text/javascript'>";
+                        body += "alert('El servidor rechazo el registro (Quizas ya existe la ciudad?).'); document.location = '/';";
+                        body += "</script></body>";
+                    }
             } else {
-                body += "El registro no pudo completarse porque algun campo estaba vacio!";
+                        body += "<body><script type='text/javascript'>";
+                        body += "alert('No puede haber ningun campo vacio.'); document.location = '/';";
+                        body += "</script></body>";
             }
             return body;
         });
@@ -434,10 +453,20 @@ public class App {
                         exit = o.saveIt();
                         break;
                 }
-                if (exit == true) body = "Vehiculo correctamente registrado!";
-                else body = "El vehiculo no pudo ser cargado en la base de datos.";
+                if (exit == true) {
+                    body += "<body><script type='text/javascript'>";
+                    body += "alert('El vehiculo fue agregado.'); document.location = '/';";
+                    body += "</script></body>";
+                }
+                else {
+                    body += "<body><script type='text/javascript'>";
+                    body += "alert('El vehiculo no pudo ser agregado.'); document.location = '/';";
+                    body += "</script></body>";
+                }
             } else {
-                body += "El registro no pudo completarse porque algun campo estaba vacio!";
+                body += "<body><script type='text/javascript'>";
+                body += "alert('El registro no pudo completarse porque algun campo estaba vacio!'); document.location = '/';";
+                body += "</script></body>";
             }
             return body;
         });     
@@ -467,10 +496,6 @@ public class App {
             Vehicle v = Vehicle.findById(request.params(":id"));
             
             if (null != v) {
-                List<Post> posts = v.getAll(Post.class);
-                posts.stream().forEach((p) -> {
-                    p.deleteCascade();
-                });
                 v.deleteCascade();
                 body += "El vehiculo fue correctamente eliminado";
             } else {
@@ -520,10 +545,20 @@ public class App {
                     .type(phonetype)
                     .setParent(u);
                 
-                if (p.saveIt()) body += "Telefono correctamente registrado!";
-                else body += "El servidor denego el registro con los datos indicados.";
+                if (p.saveIt()) {
+                    body += "<body><script type='text/javascript'>";
+                    body += "alert('El telefono fue correctamente agregado.'); document.location = '/';";
+                    body += "</script></body>";
+                }
+                else {
+                    body += "<body><script type='text/javascript'>";
+                    body += "alert('El telefono no pudo ser agregado.'); document.location = '/';";
+                    body += "</script></body>";
+                }
             } else {
-                body += "El registro no pudo completarse porque un campo estaba vacio";
+                body += "<body><script type='text/javascript'>";
+                body += "alert('El telefono no pudo ser agregado porque algun campo estaba vacio.'); document.location = '/';";
+                body += "</script></body>";
             }
             return body;
         });
@@ -636,7 +671,7 @@ public class App {
             String body = "";
             Administrator admin = Administrator.findById(request.params(":id"));
             if(null != admin){
-                admin.delete();                
+                admin.deleteCascade();
                 body += "El administrador fue correctamente eliminado";
             } else {
                 body += "El administrador no fue encontrado en la base de datos!";
@@ -683,10 +718,20 @@ public class App {
                     .price(price)
                     .text(text)
                     .setParents(u, v);
-                if (p.saveIt()) body += "Anuncio correctamente publicado!";
-                else body += "El anuncio no pudo ser publicado.";
+                if (p.saveIt()) {                    
+                    body += "<body><script type='text/javascript'>";
+                    body += "alert('Anuncio correctamente publicado'); document.location = '/';";
+                    body += "</script></body>";
+                }
+                else {
+                    body += "<body><script type='text/javascript'>";
+                    body += "alert('El anuncio no pudo ser publicado'); document.location = '/';";
+                    body += "</script></body>";
+                }
             } else {
-                body += "Algunos de los campos esta vacio...";
+                    body += "<body><script type='text/javascript'>";
+                    body += "alert('El anuncio no pudo ser publicado porque alguno de los campos estaba vacio'); document.location = '/';";
+                    body += "</script></body>";
             }
             return body;
         });

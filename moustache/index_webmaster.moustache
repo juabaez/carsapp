@@ -7,51 +7,39 @@
     <script type="text/javascript" src="jquery.getParams.js"></script>
     <script type="text/javascript" src="extras.js"></script>
 </head>
-<body onload="document.getElementById('cuerpo').style.visibility='visible'">
+<body>
     <div id="header">CarsAPP</div>
-    <div id="cuerpo" style="visibility: hidden">
-        <div id="columnaizq">
-            <div class="popmenu" id="admincp">AdminCP
-                <div>
-                    <ul>
-                        <li id="newadmin">
-                                <a href="#" onclick="traer('administrators/new', 'columnacen')">Nuevo administrador</a>
-                        </li>
-                        <li>
-                                <a href="#" onclick="traer('administrators/del', 'columnacen')">Eliminar administrador</a>
-                        </li>
-                        <li>
-                                <a href="#" onclick="traer('administrators/search', 'columnacen')">Buscar administrador</a>
-                        </li>
-                        <li>
-                                <a href="#" onclick="traer('logout', 'columnacen')">Cerrar sesion</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
+    <div id="main_menu"> 
+        <div>AdminCP 
+            <ul>  
+                <li onclick="traer('administrators/new', 'content_center')">Nuevo administrador</li>
+                <li onclick="traer('administrators/del', 'content_center')">Eliminar administrador</li>
+                <li onclick="traer('administrators/search', 'content_center')">Buscar administrador</li>
+                <li onclick="traer('users/del', 'content_center')">Eliminar usuario</li>
+                <li onclick="traer('posts/del', 'content_center')">Eliminar post</li>
+                <li onclick="traer('logout', 'content_center')">Cerrar sesion</li>
+            </ul>
         </div>
-        <div id="columnader">
-                    <div class="popmenu">Registrar
-                <div>
-                    <ul>
-                        <li><a href="#" onclick="traer('users/new', 'columnacen')">Usuario</a></li>
-                        <li><a href="#" onclick="traer('cities/new', 'columnacen')">Ciudad</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="popmenu">Ver
-                <div>
-                    <ul>
-                        <li><a href="#" onclick="traer('users', 'columnacen')">Usuarios</a></li>
-                        <li><a href="#" onclick="traer('cities', 'columnacen')">Ciudades</a></li>
-                        <li><a href="#" onclick="traer('vehicles', 'columnacen')">Vehiculos</a></li>
-                        <li><a href="#" onclick="traer('posts', 'columnacen')">Anuncios</a></li>
-                        <li><a href="#" onclick="traer('phones', 'columnacen')">Telefonos</a></li>
-                    </ul>
-                </div>
-            </div>
+        <div>Registrar
+            <ul>
+                <li onclick="traer('users/new', 'content_center')">Usuario</a></li>
+                <li onclick="traer('cities/new', 'content_center')">Ciudad</a></li>
+            </ul>
         </div>
-        <div id="columnacen"></div>  
+        <div>Ver
+            <ul>
+                <li onclick="traer('users', 'content_center')">Usuarios</a></li>
+                <li onclick="traer('cities', 'content_center')">Ciudades</a></li>
+                <li onclick="traer('vehicles', 'content_center')">Vehiculos</a></li>
+                <li onclick="traer('posts', 'content_center')">Anuncios</a></li>
+                <li onclick="traer('phones', 'content_center')">Telefonos</a></li>
+            </ul>
+        </div>
+        <br clear="all">
+    </div>
+    <div id="content">
+        <div id="content_left"></div>
+        <div id="content_right"></div>
+        <div id="content_center"></div> 
     </div>
 </body>
