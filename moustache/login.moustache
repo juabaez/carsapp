@@ -1,16 +1,16 @@
 <form id='formulario' method="post" action="login">
-    <table class="reg_table">
-        <tr class="tr_header">
-            <td colspan="2"><b>Formulario de inicio de sesion:</b></td>
+    <table>
+        <tr class="tr_title">
+            <td colspan="2">Iniciar sesion</td>
         </tr><tr>
-            <td>Nombre:</td>
-            <td><input type=text name='email'></td>
+            <td class="td_left">E-Mail:</td>
+            <td class="td_right"><input type=text name='email'></td>
         </tr><tr>
-            <td>Password:</td>
-            <td><input type=password name='pwd'></td>
+            <td class="td_left">Contraseña:</td>
+            <td class="td_right"><input type=password name='pwd'></td>
         </tr><tr class="tr_header">
             <td colspan="2" align="center">
-                <input type="submit" value="Iniciar sesion" class="s_button">
+                <input type="submit" value="Iniciar sesion">
             </td>
         </tr>
     </table>

@@ -1,10 +1,10 @@
-<form id="formulario">
-	<table border="0" class="reg_table">
-        <tr class="tr_header">
-            <td colspan="2"><b>Formulario de registro de ciudad</b></td>
-        </tr><tr class="tr_header">
-            <td>Ciudades disponibles</td>
-            <td>
+<form id="formulario" method="post" action="cities">
+	<table>
+        <tr class="tr_title">
+            <td colspan="2"><b>Registrar una ciudad</b></td>
+        </tr><tr class="tr_title">
+            <td class="td_left">Ciudades disponibles</td>
+            <td class="td_right">
                 <select>
                   {{#cities}}
                       <option>{{toString}}</option>
@@ -12,20 +12,20 @@
                 </select>        
             </td>
         </tr><tr>
-            <td>Nombre:</td>
-            <td><input type=text name=name></td>
+            <td class="td_left">Nombre:</td>
+            <td class="td_right"><input type=text name=name></td>
         </tr><tr>
-            <td>Codigo Postal:</td>
-            <td><input type=text name=postcode></td>
+            <td class="td_left">Codigo Postal:</td>
+            <td class="td_right"><input type=text name=postcode></td>
         </tr><tr>
-            <td>Provincia:</td>
-            <td><input type=text name=state></td>
+            <td class="td_left">Provincia:</td>
+            <td class="td_right"><input type=text name=state></td>
         </tr><tr>
-            <td>Pais:</td>
-            <td><input type=text name=country></td>
-        </tr><tr class="tr_header">
-            <td colspan="2" align="center">
-                <input type=button onclick="postear('cities', 'columnacen', 'formulario')" value="Registrar" class="s_button">
+            <td class="td_left">Pais:</td>
+            <td class="td_right"><input type=text name=country></td>
+        </tr><tr>
+            <td colspan="2">
+                <input type=submit value="Registrar">
             </td>
           </tr>
     </table>

@@ -1,20 +1,19 @@
-<form>
-    <table border="0" class="reg_table">
-        <tr class="tr_header">
-            <td colspan="2">Eliminar un vehiculo</td>
-        </tr><tr>
-            <td>Vehiculo</td>
-            <td>
-                <select id="vehicle_id">
-                    {{#vehicles}}
-                        <option value="{{getId}}">{{toString}}</option>
-                    {{/vehicles}}  
-                </select>        
-            </td>
-        </tr><tr class="tr_header">
-            <td colspan="2" align="center">
-                <input type=button onclick="eliminar('vehicles', 'columnacen', 'vehicle_id')" value="Eliminar" class="s_button" />
-            </td>
-        </tr>
-    </table>
-</form>
+<table>
+    <tr class="tr_title">
+        <td colspan="2">Eliminar un vehiculo</td>
+    </tr><tr>
+        <td class="td_left">Vehiculo</td>
+        <td class="td_right">
+            <select id="vehicle_id">
+                <option value="-1" selected style="visibility: hidden; display: none" disabled="true"></option>
+                {{#vehicles}}
+                    <option value="{{getId}}">{{toString}}</option>
+                {{/vehicles}}  
+            </select>        
+        </td>
+    </tr><tr>
+        <td colspan="2">
+            <input type=button onclick="eliminar('vehicles', 'vehicle_id')" value="Eliminar" />
+        </td>
+    </tr>
+</table>

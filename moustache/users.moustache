@@ -1,7 +1,7 @@
-<table class="info_table"> 
-  <tr class="tr_header">
-    <td><b>Nombre</b></td>
-    <td><b>E-Mail</b></td>
+<table> 
+  <tr class="tr_title">
+    <td>Nombre</td>
+    <td>E-Mail</td>
 </tr>
   {{#users}}
     <tr><td>{{toString}}</td>

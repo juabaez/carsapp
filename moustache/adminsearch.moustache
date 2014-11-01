@@ -1,15 +1,15 @@
-<form id="search_form">
-    <table border="0" class="reg_table">
-        <tr class="tr_header">
+<form id="search_form" onsubmit="return false">
+    <table>
+        <tr class="tr_title">
             <td colspan="2">Buscar administradores</td>
         </tr><tr>
-            <td>Ingrese su busqueda: </td>
-            <td>
+            <td class="td_left">Su búsqueda: </td>
+            <td class="td_right">
                 <input type=text name="search_text">      
             </td>
-        </tr><tr class="tr_header">
+        </tr><tr>
             <td colspan="2" align="center">
-                <input type=button value="Buscar" class="s_button"  onclick="traer('administrators/search/response', 'columnacen', 'search_form')" />
+                <input type=button onclick="traer('administrators/search/response', 'content_center', 'search_form')" value="Buscar">
             </td>
         </tr>
     </table>

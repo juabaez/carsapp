@@ -1,25 +1,25 @@
-<form id="formulario">
-    <table border="0" class="reg_table">
-        <tr class="tr_header">
+<form id="formulario" method="post" action="posts">
+    <table>
+        <tr class="tr_title">
             <td colspan="2">Agregar un anuncio</td>
         </tr><tr>
-            <td>Anuncio</td>
-            <td><textarea name="text"></textarea>
+            <td class="tr_left">Anuncio</td>
+            <td class="tr_right"><textarea name="text"></textarea>
         </tr><tr>
-            <td>Precio</td>
-            <td><input type=text name="price" /></td>
+            <td class="tr_left">Precio</td>
+            <td class="tr_right"><input type=text name="price" /></td>
         </tr><tr>
-            <td>Vehiculo</td>
-            <td>
+            <td class="tr_left">Vehiculo</td>
+            <td class="tr_right">
                 <select name='vehicle_id'>
                     {{#vehicles}}
                         <option value="{{getId}}">{{toString}}</option>
                     {{/vehicles}}  
                 </select>        
             </td>
-        </tr><tr class="tr_header">
-            <td colspan="2" align="center">
-                <input type=button onclick="postear('posts', 'columnacen', 'formulario')" value="Agregar" class="s_button" />
+        </tr><tr>
+            <td colspan="2">
+                <input type=submit value="Agregar" />
             </td>
         </tr>
     </table>
