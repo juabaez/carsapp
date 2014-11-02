@@ -18,9 +18,9 @@ import java.util.Map;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.WrapperQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.javalite.activejdbc.Base;
+import org.javalite.activejdbc.DBException;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Session;
@@ -80,6 +80,17 @@ public class App {
     public static void main(String[] args) { 
         externalStaticFileLocation("./public"); // Static files 
         ElasticSearch.client();
+        
+        // <editor-fold desc="Spark routers for ElasticSearch">
+        get("/elastic/clear", (req, res) -> {
+            if(sessionLevel(existsSession(req)) == 3) {
+                ElasticSearch.deleteAllIndexs();
+                return "Indices borrados";
+            } else {
+                return "Está usted perdido???";
+            }
+        });
+        //</editor-fold>
         
         // <editor-fold desc="Spark filters (for db connection)">
         Spark.before((request, response) -> {
@@ -276,7 +287,8 @@ public class App {
                 || (last_name.equals(""))
                 || (pass.equals(""))
                 || (email.equals(""))
-                || (address.equals("")))) {
+                || (address.equals(""))
+                || (null == postcode))) {
                 City c = City.findByPostCode(postcode);
                 User u = new User();
                 u
@@ -286,7 +298,12 @@ public class App {
                     .address(address)
                     .pass(pass)
                     .setParent(c);
-                if (u.saveIt()) {
+                
+                Boolean res = false;
+                try {
+                    res = u.saveIt();
+                } catch (DBException e) {}
+                if (res) {
                     body += "<body><script type='text/javascript'>";
                     body += "alert('Usuario correctamente registrado.'); document.location = '/';";
                     body += "</script></body>";
@@ -332,6 +349,55 @@ public class App {
              }
              return body;
          });
+        
+        get("/users/search", 
+            (request, response) -> {
+                if(sessionLevel(existsSession(request)) >= 1) {
+                    return new ModelAndView(null, "./moustache/usersearch.moustache");
+                } else {
+                    return new ModelAndView(null, "./moustache/notlogged.moustache");
+                }
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        get("/users/search/response", 
+            (request, response) -> {
+                if(sessionLevel(existsSession(request)) >= 1) {
+                    Map<String, Object> attributes = new HashMap<>();
+                    
+                    Client client = ElasticSearch.client();
+                    
+                    String search_text = request.queryParams("search_text").toLowerCase();
+                
+                    if (null == search_text ? true : search_text.equals(""))
+                        return new ModelAndView(attributes, "./moustache/emptysearch.moustache");
+                    
+                    SearchResponse searchResponse = client.prepareSearch("users")
+                            .setQuery(QueryBuilders.wildcardQuery("name", "*" + search_text + "*"))
+                            .setSize(10)
+                            .execute()
+                            .actionGet();
+                    
+                    List<User> users = new LinkedList<>();
+                    
+                    searchResponse
+                            .getHits()
+                            .forEach(
+                                (SearchHit h) -> {
+                                    users.add(User.findById(h.getId()));
+                                }
+                            );
+
+                    attributes.put("users", users);
+                    
+                    return new ModelAndView(attributes, "./moustache/usersearch_response.moustache");
+                } else {
+                    return new ModelAndView(null, "./moustache/notadmin.moustache");
+                }
+            },
+            new MustacheTemplateEngine()
+        );
         //</editor-fold>
         
         // <editor-fold desc="Sparks for city register">
@@ -592,15 +658,24 @@ public class App {
                         body += "<body><script type='text/javascript'>";
                         body += "alert('No puede haber ningun campo vacio.'); document.location = '/';";
                         body += "</script></body>";
-                    }else{
+                    } else {
+                        Boolean res = false;
                         Administrator admin = new Administrator();
-                        admin
-                                .email(email)
-                                .pass(pass)
-                                .saveIt();
+                        try {
+                            res = admin
+                                    .email(email)
+                                    .pass(pass)
+                                    .saveIt();
+                        } catch (DBException e) {}
+                        if (res) {
                             body += "<body><script type='text/javascript'>";
                             body += "alert('Administrador correctamente registrado!.'); document.location = '/';";
                             body += "</script></body>";
+                        } else {
+                            body += "<body><script type='text/javascript'>";
+                            body += "alert('El administrador no pudo ser registrado!.'); document.location = '/';";
+                            body += "</script></body>";
+                        }
                     }
                     return body;
         });
@@ -641,7 +716,10 @@ public class App {
                     
                     Client client = ElasticSearch.client();
                     
-                    String search_text = request.queryParams("search_text");
+                    String search_text = request.queryParams("search_text").toLowerCase();
+                
+                    if (null == search_text ? true : search_text.equals(""))
+                        return new ModelAndView(attributes, "./moustache/emptysearch.moustache");
                     
                     SearchResponse searchResponse = client.prepareSearch("admins")
                             .setQuery(QueryBuilders.wildcardQuery("email", "*" + search_text + "*"))
@@ -755,7 +833,7 @@ public class App {
 
                 Client client = ElasticSearch.client();
 
-                String search_text = request.queryParams("search_text");
+                String search_text = request.queryParams("search_text").toLowerCase();
                 
                 if (null == search_text ? true : search_text.equals(""))
                     return new ModelAndView(attributes, "./moustache/emptysearch.moustache");
@@ -814,8 +892,6 @@ public class App {
             return body;
         });
         //</editor-fold>
-        
-
         
         // <editor-fold desc="Sparks for user session management">
         post("/login", (request, response) -> {
@@ -900,14 +976,7 @@ public class App {
             }
             return body;
         });
-        
-        get("/clear/elastic", (req, res) -> {
-            ElasticSearch.deleteAllIndexs();
-            return "Indices borrados";
-        });
         //</editor-fold>
-               
         
     }
-   
 }
