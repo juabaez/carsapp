@@ -338,17 +338,17 @@ public class App {
              new MustacheTemplateEngine()
          );  
 
-         delete("/users/:id", (request, response) -> {
-             String body = "";
-             User user = User.findById(request.params(":id"));
-             if(null != user){
-                 user.deleteCascade();
-                 body += "El usuario fue correctamente eliminado";
-             } else {
-                 body += "El usuario no fue encontrado en la base de datos!";
-             }
-             return body;
-         });
+        delete("/users/:id", (request, response) -> {
+            String body = "";
+            User user = User.findById(request.params(":id"));
+            if(null != user){
+                user.deleteCascade();
+                body += "El usuario fue correctamente eliminado";
+            } else {
+                body += "El usuario no fue encontrado en la base de datos!";
+            }
+            return body;
+        });
         
         get("/users/search", 
             (request, response) -> {
@@ -571,6 +571,55 @@ public class App {
             }
             return body;
         });
+        
+        get("/vehicles/search", 
+            (request, response) -> {
+                if(sessionLevel(existsSession(request)) >= 1) {
+                    return new ModelAndView(null, "./moustache/vehiclesearch.moustache");
+                } else {
+                    return new ModelAndView(null, "./moustache/notlogged.moustache");
+                }
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        get("/vehicles/search/response", 
+            (request, response) -> {
+                if(sessionLevel(existsSession(request)) >= 1) {
+                    Map<String, Object> attributes = new HashMap<>();
+                    
+                    Client client = ElasticSearch.client();
+                    
+                    String search_text = request.queryParams("search_text").toLowerCase();
+                
+                    if (null == search_text ? true : search_text.equals(""))
+                        return new ModelAndView(attributes, "./moustache/emptysearch.moustache");
+                    
+                    SearchResponse searchResponse = client.prepareSearch("vehicles")
+                            .setQuery(QueryBuilders.multiMatchQuery(search_text, "name", "brand"))
+                            .setSize(10)
+                            .execute()
+                            .actionGet();
+                    
+                    List<Vehicle> vehicles = new LinkedList<>();
+                    
+                    searchResponse
+                            .getHits()
+                            .forEach(
+                                (SearchHit h) -> {
+                                    vehicles.add(Vehicle.findById(h.getId()));
+                                }
+                            );
+
+                    attributes.put("vehicles", vehicles);
+                    
+                    return new ModelAndView(attributes, "./moustache/vehiclesearch_response.moustache");
+                } else {
+                    return new ModelAndView(null, "./moustache/notlogged.moustache");
+                }
+            },
+            new MustacheTemplateEngine()
+        );
         // </editor-fold>
         
         // <editor-fold desc="Sparks for phones register">

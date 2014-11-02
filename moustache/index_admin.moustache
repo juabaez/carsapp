@@ -15,6 +15,7 @@
                 <li onclick="traer('administrators/search', 'content_center')">Buscar administrador</li>
                 <li onclick="traer('posts/search', 'content_center')">Buscar anuncios</li>  
                 <li onclick="traer('users/search', 'content_center')">Buscar usuarios</li>  
+                <li onclick="traer('vehicles/search', 'content_center')">Buscar vehiculos</li>  
                 <li onclick="traer('users/del', 'content_center')">Eliminar usuarios</li>
                 <li onclick="traer('posts/del', 'content_center')">Eliminar anuncios</li>
                 <li onclick="traer('logout', 'content_center')">Cerrar sesion</li>
