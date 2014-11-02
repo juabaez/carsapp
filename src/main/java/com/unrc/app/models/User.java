@@ -10,32 +10,10 @@ public class User extends Model {
     static {
         validatePresenceOf("first_name", "last_name", "pass", "email", "address", "city_id");
     }
-  
-    public static List<User> all(){
-        return User.findAll();
-    }
-    
-    @Override
-    public boolean saveIt(){
-        return super.saveIt();
-    }
 
     public User firstName(String s) {
         this.set("first_name", s);
         return this;
-    }
-  
-    @Override
-    public void afterCreate(){
-        super.afterCreate();
-        Map<String, Object> json = new HashMap<>();
-        json.put("name", this.toString());
-        json.put("email", this.get("email"));
-
-        ElasticSearch.client().prepareIndex("users", "user", this.getId().toString())
-                    .setSource(json)
-                    .execute()
-                    .actionGet();
     }
 
     public User lastName(String s) {
@@ -107,5 +85,35 @@ public class User extends Model {
 
     public String pass() {
         return this.getString("pass");
+    }    
+    
+    @Override
+    public final void afterCreate(){
+        super.afterCreate();
+        
+        Map<String, Object> json = new HashMap<>();
+        json.put("name", this.toString());
+        json.put("email", this.get("email"));
+
+        ElasticSearch.client().prepareIndex()
+                .setIndex("users")
+                .setType("user")
+                .setId(this.getId().toString())
+                .setSource(json)
+                .execute()
+                .actionGet();
+    }  
+    
+    @Override
+    public final void beforeDelete(){
+        super.beforeDelete();
+        
+        ElasticSearch.client()
+                .prepareDelete()
+                .setIndex("users")
+                .setType("user")
+                .setId(this.getId().toString())
+                .execute()
+                .actionGet();
     }
 }

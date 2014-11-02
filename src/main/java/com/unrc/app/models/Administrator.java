@@ -2,55 +2,12 @@ package com.unrc.app.models;
 
 import com.unrc.app.ElasticSearch;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.javalite.activejdbc.Model;
 
 public class Administrator extends Model {
     static {
         validatePresenceOf("pass", "email");
-    }
-    
-    public boolean createAdmin(String email, String pass){
-        Administrator admin = new Administrator();
-        admin
-                .email("email")
-                .pass("pass");
-        return admin.saveIt();
-    }    
-    
-    @Override
-    public void afterCreate(){
-        super.afterCreate();
-        
-        Map<String, Object> json = new HashMap<>();
-        json.put("email", this.email());
-
-        ElasticSearch.client()
-                .prepareIndex()
-                .setIndex("admins")
-                .setType("admin")
-                .setId(this.getId().toString())
-                .setSource(json)
-                .execute()
-                .actionGet();
-    }
-    
-    @Override
-    public void beforeDelete(){
-        super.beforeDelete();
-        
-        ElasticSearch.client()
-            .prepareDelete()
-            .setIndex("admins")
-            .setType("admin")
-            .setId(this.getId().toString())
-            .execute()
-            .actionGet();
-    }
-    
-    public static List<Administrator> all(){
-        return Administrator.findAll();
     }
     
     @Override
@@ -89,6 +46,36 @@ public class Administrator extends Model {
     
     public static Administrator findByEmail(String email) {
         return Administrator.findFirst("email = ?", email);
+    }
+    
+    @Override
+    public final void afterCreate(){
+        super.afterCreate();
+        
+        Map<String, Object> json = new HashMap<>();
+        json.put("email", this.email());
+
+        ElasticSearch.client()
+                .prepareIndex()
+                .setIndex("admins")
+                .setType("admin")
+                .setId(this.getId().toString())
+                .setSource(json)
+                .execute()
+                .actionGet();
+    }
+    
+    @Override
+    public final void beforeDelete(){
+        super.beforeDelete();
+        
+        ElasticSearch.client()
+                .prepareDelete()
+                .setIndex("admins")
+                .setType("admin")
+                .setId(this.getId().toString())
+                .execute()
+                .actionGet();
     }
     
 }

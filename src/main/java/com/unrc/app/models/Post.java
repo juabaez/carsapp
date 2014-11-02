@@ -16,17 +16,11 @@ public class Post extends Model {
         return this;
     }
 
-    @Override
-    public String toString(){
-        return this.getString("text");
-    }
-
     public String text(){
         return this.getString("text");
     }
 
     public String author(){
-        System.out.println((User.class).toString());
         return this.parent(User.class).toString();
     }
 
@@ -40,7 +34,6 @@ public class Post extends Model {
     }
     
     public String vehicle(){
-        System.out.println((Vehicle.class).toString());
         return this.parent(Vehicle.class).toString();
     }
 
@@ -80,22 +73,38 @@ public class Post extends Model {
             return Post.find(query);
         } else return null;
     }
-  
-    public static List<Post> all(){
-        return Post.findAll();
+
+    @Override
+    public String toString(){
+        return this.getString("text");
     }
           
     @Override
-    public void afterCreate(){
+    public final void afterCreate(){
+        Map<String, Object> json = new HashMap<>();
+        
+        json.put("text", this.text());
+        json.put("author", this.author());
+        json.put("vehicle", this.vehicle());
 
-    Map<String, Object> json = new HashMap<>();
-    json.put("text", this.text());
-    json.put("author", this.author());
-    json.put("vehicle", this.vehicle());
-    json.put("id", this.getId());
-
-    ElasticSearch.client().prepareIndex("posts", "post")
+        ElasticSearch.client().prepareIndex()
+                .setIndex("posts")
+                .setType("post")
+                .setId(this.getId().toString())
                 .setSource(json)
+                .execute()
+                .actionGet();
+    }  
+    
+    @Override
+    public final void beforeDelete(){
+        super.beforeDelete();
+        
+        ElasticSearch.client()
+                .prepareDelete()
+                .setIndex("posts")
+                .setType("post")
+                .setId(this.getId().toString())
                 .execute()
                 .actionGet();
     }
