@@ -120,3 +120,9 @@ body{
 #content_center .td_right{
     text-align: left;
 }
+
+.del_link{
+    color: red; 
+    font-weight: bold; 
+    text-decoration: none;
+}

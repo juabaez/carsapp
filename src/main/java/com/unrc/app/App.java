@@ -671,12 +671,16 @@ public class App {
         
         delete("/administrators/:id", (request, response) -> {
             String body = "";
-            Administrator admin = Administrator.findById(request.params(":id"));
-            if(null != admin){
-                admin.deleteCascade();
-                body += "El administrador fue correctamente eliminado";
+            if(sessionLevel(existsSession(request)) == 3) {
+                Administrator admin = Administrator.findById(request.params(":id"));
+                if(null != admin){
+                    admin.deleteCascade();
+                    body += "El administrador fue correctamente eliminado";
+                } else {
+                    body += "El administrador no fue encontrado en la base de datos!";
+                }
             } else {
-                body += "El administrador no fue encontrado en la base de datos!";
+                body += "Usted no tiene permisos para acceder al sitio que intenta";
             }
             return body;
         });
@@ -778,6 +782,37 @@ public class App {
             },
             new MustacheTemplateEngine()
         );
+        
+        get("/posts/del", 
+            (request, response) -> {
+                if(sessionLevel(existsSession(request)) >= 2) {
+                    Map<String, Object> attributes = new HashMap<>();
+                    
+                    List<Post> posts = Post.findAll();
+
+                    attributes.put("posts", posts);
+
+                    return new ModelAndView(attributes, "./moustache/postdel.moustache");
+                } else {
+                    return new ModelAndView(null, "./moustache/notadmin.moustache");
+                }
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        delete("/posts/:id", (request, response) -> {
+            String body = "";
+            
+            Post p = Post.findById(request.params(":id"));
+            
+            if (null != p) {
+                p.deleteCascade();
+                body += "El anuncio fue correctamente eliminado";
+            } else {
+                body += "El anuncio no fue encontrado en la base de datos!";
+            }
+            return body;
+        });
         //</editor-fold>
         
 
