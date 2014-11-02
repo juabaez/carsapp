@@ -46,3 +46,15 @@ function eliminar(url, id) {
                  }
     });
 };
+
+function eliminarDirecto(url, id) {
+    $.ajax({
+        method: 'DELETE',
+        url: url + "/" + id,
+        async: true,
+        success: function(returnData) {
+                        alert(returnData);
+                        document.location='/';
+                 }
+    });
+};
