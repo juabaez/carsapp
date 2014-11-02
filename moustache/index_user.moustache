@@ -21,6 +21,7 @@
                 <li onclick="traer('phones/new', 'content_center')">Agregar telefono</li>  
                 <li onclick="traer('vehicles/del', 'content_center')">Eliminar vehiculos</li>  
                 <li onclick="traer('posts/search', 'content_center')">Buscar anuncios</li>  
+                <li onclick="traer('users/search', 'content_center')">Buscar usuarios</li>  
             </ul>
         </div>
         <div>Registrar

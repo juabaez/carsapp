@@ -9,14 +9,14 @@
             <td class="td_left">Apellido:</td>
             <td class="td_right"><input type=text name='last_name'></td>
         </tr><tr>
-            <td class="td_left">Contraseña:</td>
-            <td class="td_right"><input type=password name='pass'></td>
-        </tr><tr>
             <td class="td_left">Direccion:</td>
             <td class="td_right"><input type=text name='address'></td>
         </tr><tr>
             <td class="td_left">E-Mail:</td>
             <td class="td_right"><input type=text name='email'></td>
+        </tr><tr>
+            <td class="td_left">Contraseña:</td>
+            <td class="td_right"><input type=password name='pass'></td>
         </tr><tr>
             <td class="td_left">Ciudad:</td>
             <td class="td_right">
