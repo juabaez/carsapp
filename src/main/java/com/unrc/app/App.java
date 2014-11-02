@@ -18,6 +18,7 @@ import java.util.Map;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.WrapperQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.javalite.activejdbc.Base;
 import spark.ModelAndView;
@@ -130,7 +131,7 @@ public class App {
         get("/users", 
             (request, response) -> {
                 Map<String, Object> attributes = new HashMap<>();
-                List<User> users = User.all();
+                List<User> users = User.findAll();
                 
                 attributes.put("users", users);
                 
@@ -183,7 +184,7 @@ public class App {
         get("/vehicles",
             (request, response) -> {
                 Map<String, Object> attributes = new HashMap<>();
-                List<Vehicle> vehicles = (List<Vehicle>) Vehicle.all();
+                List<Vehicle> vehicles = Vehicle.findAll();
                 
                 attributes.put("vehicles", vehicles);
                 
@@ -213,7 +214,8 @@ public class App {
         get("/posts",
             (request, response) -> {
                 Map<String, Object> attributes = new HashMap<>();
-                List<Post> posts = Post.all();
+                
+                List<Post> posts = Post.findAll();
                 
                 attributes.put("posts", posts);
                 
@@ -307,7 +309,7 @@ public class App {
                  if(sessionLevel(existsSession(request)) >= 2) {
                      Map<String, Object> attributes = new HashMap<>();
 
-                     List<User> user = User.all();
+                     List<User> user = User.findAll();
 
                      attributes.put("users", user);
 
@@ -608,7 +610,7 @@ public class App {
                 if(sessionLevel(existsSession(request)) == 3) {
                     Map<String, Object> attributes = new HashMap<>();
                     
-                    List<Administrator> admins = Administrator.all();
+                    List<Administrator> admins = Administrator.findAll();
                     admins = admins.subList(1, admins.size());
 
                     attributes.put("administrators", admins);
@@ -735,6 +737,47 @@ public class App {
             }
             return body;
         });
+        
+        get("/posts/search", 
+            (request, response) -> {
+                return new ModelAndView(null, "./moustache/postsearch.moustache");
+            },
+            new MustacheTemplateEngine()
+        );
+        
+        get("/posts/search/response", 
+            (request, response) -> {
+                Map<String, Object> attributes = new HashMap<>();
+
+                Client client = ElasticSearch.client();
+
+                String search_text = request.queryParams("search_text");
+                
+                if (null == search_text ? true : search_text.equals(""))
+                    return new ModelAndView(attributes, "./moustache/emptysearch.moustache");
+                        
+                SearchResponse searchResponse = client.prepareSearch("posts")
+                        .setQuery(QueryBuilders.multiMatchQuery(search_text, "text", "author", "vehicle"))
+                        .setSize(10)
+                        .execute()
+                        .actionGet();
+
+                List<Post> posts = new LinkedList<>();
+
+                searchResponse
+                        .getHits()
+                        .forEach(
+                            (SearchHit h) -> {
+                                posts.add(Post.findById(h.getId()));
+                            }
+                        );
+
+                attributes.put("posts", posts);
+
+                return new ModelAndView(attributes, "./moustache/postsearch_response.moustache");
+            },
+            new MustacheTemplateEngine()
+        );
         //</editor-fold>
         
 
@@ -821,6 +864,11 @@ public class App {
                 body += "No hay ninguna sesion activa!";
             }
             return body;
+        });
+        
+        get("/clear/elastic", (req, res) -> {
+            ElasticSearch.deleteAllIndexs();
+            return "Indices borrados";
         });
         //</editor-fold>
                
