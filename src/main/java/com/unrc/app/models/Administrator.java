@@ -1,6 +1,6 @@
 package com.unrc.app.models;
 
-import com.unrc.app.ElasticSearch;
+import com.unrc.app.controllers.ElasticSearchController;
 import java.util.HashMap;
 import java.util.Map;
 import org.javalite.activejdbc.Model;
@@ -55,7 +55,7 @@ public class Administrator extends Model {
         Map<String, Object> json = new HashMap<>();
         json.put("email", this.email());
 
-        ElasticSearch.client()
+        ElasticSearchController.client()
                 .prepareIndex()
                 .setIndex("admins")
                 .setType("admin")
@@ -69,7 +69,7 @@ public class Administrator extends Model {
     public final void beforeDelete(){
         super.beforeDelete();
         
-        ElasticSearch.client()
+        ElasticSearchController.client()
                 .prepareDelete()
                 .setIndex("admins")
                 .setType("admin")
@@ -77,5 +77,4 @@ public class Administrator extends Model {
                 .execute()
                 .actionGet();
     }
-    
 }
