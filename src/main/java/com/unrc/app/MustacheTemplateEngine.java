@@ -14,7 +14,7 @@ import com.github.mustachejava.MustacheFactory;
 
 public class MustacheTemplateEngine extends TemplateEngine {
 
-    private MustacheFactory mustacheFactory;
+    private final MustacheFactory mustacheFactory;
 
     /**
      * Constructs a mustache template engine

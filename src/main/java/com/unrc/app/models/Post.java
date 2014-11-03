@@ -1,6 +1,6 @@
 package com.unrc.app.models;
 
-import com.unrc.app.ElasticSearch;
+import com.unrc.app.controllers.ElasticSearchController;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +87,7 @@ public class Post extends Model {
         json.put("author", this.author());
         json.put("vehicle", this.vehicle());
 
-        ElasticSearch.client().prepareIndex()
+        ElasticSearchController.client().prepareIndex()
                 .setIndex("posts")
                 .setType("post")
                 .setId(this.getId().toString())
@@ -100,7 +100,7 @@ public class Post extends Model {
     public final void beforeDelete(){
         super.beforeDelete();
         
-        ElasticSearch.client()
+        ElasticSearchController.client()
                 .prepareDelete()
                 .setIndex("posts")
                 .setType("post")
