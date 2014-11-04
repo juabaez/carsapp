@@ -3,14 +3,14 @@
         <tr class="tr_title">
             <td colspan="2">Agregar un anuncio</td>
         </tr><tr>
-            <td class="tr_left">Anuncio</td>
-            <td class="tr_right"><textarea name="text"></textarea>
+            <td class="td_left">Anuncio</td>
+            <td class="td_right"><textarea name="text"></textarea>
         </tr><tr>
-            <td class="tr_left">Precio</td>
-            <td class="tr_right"><input type=text name="price" /></td>
+            <td class="td_left">Precio</td>
+            <td class="td_right"><input type=text name="price" /></td>
         </tr><tr>
-            <td class="tr_left">Vehiculo</td>
-            <td class="tr_right">
+            <td class="td_left">Vehiculo</td>
+            <td class="td_right">
                 <select name='vehicle_id'>
                     {{#vehicles}}
                         <option value="{{getId}}">{{toString}}</option>

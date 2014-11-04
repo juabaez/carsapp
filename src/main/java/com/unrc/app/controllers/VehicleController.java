@@ -1,5 +1,6 @@
 package com.unrc.app.controllers;
 
+import static com.unrc.app.TypesHelper.valueOf;
 import static com.unrc.app.controllers.VisitorController.existsSession;
 import com.unrc.app.models.Bike;
 import com.unrc.app.models.Car;
@@ -61,12 +62,12 @@ public class VehicleController {
         Integer user_id = request.session(false).attribute("user_id");
 
         String body = "";
-        boolean exit = (name.equals("") || brand.equals("") || (null == Integer.valueOf(year)) || plate.equals(""));
+        boolean exit = (name.equals("") || brand.equals("") || (null == valueOf(year)) || plate.equals(""));
 
         if (!exit){
             switch(type) {
                 case "car":
-                    Integer passengers = Integer.valueOf(request.queryParams("passengers"));
+                    Integer passengers = valueOf(request.queryParams("passengers"));
                     Car c = new Car();
                     c
                         .passengers(passengers)
@@ -78,7 +79,7 @@ public class VehicleController {
                     exit = c.saveIt();
                     break;
                 case "bike":
-                    Integer displacement = Integer.valueOf(request.queryParams("displacement"));
+                    Integer displacement = valueOf(request.queryParams("displacement"));
                     Bike b = new Bike();
                     b
                         .displacement(displacement)
@@ -90,7 +91,7 @@ public class VehicleController {
                     exit = b.saveIt();
                     break;
                 case "truck":
-                    Integer max_load = Integer.valueOf(request.queryParams("max_load"));
+                    Integer max_load = valueOf(request.queryParams("max_load"));
                     Truck t = new Truck();
                     t
                         .maxLoad(max_load)

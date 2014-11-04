@@ -14,13 +14,13 @@ public class PhoneTest{
     @Before
     public void before(){
         Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/carsapp_test", "root", "");
-        System.out.println("UserTest setup");
+        System.out.println("PhoneTest setup");
         Base.openTransaction();
     }
 
     @After
     public void after(){
-        System.out.println("UserTest tearDown");
+        System.out.println("PhoneTest tearDown");
         Base.rollbackTransaction();
         Base.close();
     }

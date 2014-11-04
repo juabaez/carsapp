@@ -1,5 +1,6 @@
 package com.unrc.app.controllers;
 
+import static com.unrc.app.TypesHelper.valueOf;
 import static com.unrc.app.controllers.VisitorController.existsSession;
 import com.unrc.app.models.Post;
 import com.unrc.app.models.User;
@@ -68,7 +69,7 @@ public class PostController {
         Vehicle v = Vehicle.findById(vehicle_id);
 
         String body = "";
-        boolean exit = text.equals("") || null == Integer.valueOf(price) || null == u || null == v;
+        boolean exit = text.equals("") || null == valueOf(price) || null == u || null == v;
 
         if (!exit) {
             Post p = new Post();

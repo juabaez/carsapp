@@ -1,5 +1,6 @@
 package com.unrc.app.controllers;
 
+import static com.unrc.app.TypesHelper.valueOf;
 import com.unrc.app.models.City;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +39,7 @@ public class CityController {
         if (!((name.equals(""))
             || (state.equals(""))
             || (country.equals(""))
-            || (null == Integer.valueOf(postcode)))) {
+            || (null == valueOf(postcode)))) {
                 City c = new City();
                 c
                     .name(name)

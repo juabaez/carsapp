@@ -32,7 +32,7 @@ public class PhoneController {
                 break;
         }
 
-        if (null != (Integer.valueOf(num))) {
+        if (!num.equals("")) {
             User u = User.findById(user_id);
             Phone p = new Phone();
             p
@@ -57,6 +57,7 @@ public class PhoneController {
         }
         return body;
     }
+    
     public static ModelAndView getPhones(Request request, Response response){
         Map<String, Object> attributes = new HashMap<>();
         List<Phone> phones = Phone.all();

@@ -52,9 +52,9 @@ public class Phone extends Model {
             case "work":
                 return "Trabajo";
             case "personal":
-                return "Celular";
+                return "Móvil";
         }
-        return "Celular";
+        return "Personal";
     }
     
     public Phone num(String i) {
@@ -62,8 +62,8 @@ public class Phone extends Model {
         return this;
     }
     
-    public int num(){
-        return this.getInteger("num");
+    public String num(){
+        return this.getString("num");
     }
     
     public String toString(){
